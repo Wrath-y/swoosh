@@ -20,7 +20,8 @@ class Loader
     {
         // 注册命名空间定义
         self::addNamespace([
-            'zkami'    => CORE_PATH . DS,
+            'zkami'    => CORE_PATH,
+            'app'   =>APP_PATH,
         ]);
         spl_autoload_register('self::autoload');
     }
