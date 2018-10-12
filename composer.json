@@ -1,0 +1,11 @@
+{
+  "require": {
+      "symfony/console": "~3.3"
+  },
+  "repositories": {
+    "packagist": {
+        "type": "composer",
+        "url": "https://packagist.phpcomposer.com"
+    }
+  }
+}
