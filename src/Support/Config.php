@@ -39,6 +39,7 @@ class Config
                 $config = $config[$keyNext];
             }
         }
+
         return $config;
     }
 }

@@ -3,17 +3,36 @@
 namespace Src\Provider;
 
 use Src\App;
-use Src\Server\HttpServer;
+use Swoole\Http\Server;
+use Src\Event\HttpEvent;
 
 class HttpServiceProvider extends AbstractProvider
 {
     protected $serviceName = 'http';
 
+    protected $onList = [
+        'onRequest'=>'Request',
+        'onStart'=>'Start',
+        'onShutdown'=>'Shutdown',
+        'onWorkerStart'=>'WorkerStart',
+        'onWorkerStop'=>'WorkerStop',
+        'onConnect'=>'Connect',
+        'onClose'=>'Close',
+        'onTask'=>'Task',
+        'onFinish'=>'Finish',
+    ];
+
     public function register()
     {
         $this->app->set($this->serviceName, function () {
-            $server = App::getSupport()->get('config')->get('server');
-            return new HttpServer($server['host'], $server['port']);
+            $config = App::getSupport()->get('config')->get('server');
+            $server = new Server($config['host'], $config['port']);
+            $http = new HttpEvent();
+            foreach ($this->onList as $function => $event){
+                $server->on($event,[$http,$function]);
+            }
+
+            return $server;
         });
     }
 }
