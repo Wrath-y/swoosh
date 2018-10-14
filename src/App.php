@@ -21,6 +21,7 @@ class App
             (new Dotenv($root))->load();
         }
 
+        // load config
         self::$support = new Core();
         self::$support->set('config',function (){
             return new Config();
