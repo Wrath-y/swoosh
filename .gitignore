@@ -1,4 +1,4 @@
 .vscode
-./vendor
+vendor
 composer.lock
 .env
