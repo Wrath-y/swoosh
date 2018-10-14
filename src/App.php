@@ -10,7 +10,7 @@ use Src\Support\Core;
 class App
 {
     private static $path;
-    protected static $app;
+    protected static $support;
     private $server;
 
     public function __construct($root)
@@ -21,8 +21,8 @@ class App
             (new Dotenv($root))->load();
         }
 
-        self::$app = new Core();
-        self::$app->set('config',function (){
+        self::$support = new Core();
+        self::$support->set('config',function (){
             return new Config();
         });
     }
@@ -38,9 +38,9 @@ class App
         return self::$path.$path;
     }
 
-    public static function getApp()
+    public static function getSupport()
     {
-        return self::$app;
+        return self::$support;
     }
 
     /**
@@ -51,12 +51,12 @@ class App
     public function initializeServices($arrConfig)
     {
         foreach ($arrConfig as $className){
-            (new $className(self::$app))->register();
+            (new $className(self::$support))->register();
         }
     }
 
     public function start()
     {
-        self::$app->get('http')->start();
+        self::$support->get('http')->start();
     }
 }
