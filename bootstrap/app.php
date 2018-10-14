@@ -1,9 +1,10 @@
 <?php
 
-$app = new swoole_http_server('127.0.0.1', 8081);
+$app = new \Src\App(dirname(__DIR__));
 
-$app->on('request', function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
-    $response->end("hello world");
-});
+$app->initializeServices([
+    \Src\Provider\HttpServiceProvider::class,
+]);
 
 return $app;
+
