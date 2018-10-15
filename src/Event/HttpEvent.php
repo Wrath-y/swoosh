@@ -19,7 +19,7 @@ class HttpEvent
      */
     public function onRequest(Request $request, Response $response)
     {
-        $response->end("ok");
+        $response->end(123);
     }
 
     /**

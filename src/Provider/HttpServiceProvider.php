@@ -29,7 +29,7 @@ class HttpServiceProvider extends AbstractProvider
             $server = new Server($config['host'], $config['port']);
             $http = new HttpEvent();
             foreach ($this->onList as $function => $event){
-                $server->on($event,[$http,$function]);
+                $server->on($event, [$http, $function]);
             }
 
             return $server;
