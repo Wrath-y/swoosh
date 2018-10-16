@@ -17,7 +17,7 @@ class App
     {
         self::$path = $root;
         // prioritize loading environment variables
-        if(file_exists(self::getPath('/.env'))){
+        if (file_exists(self::getPath('/.env'))){
             (new Dotenv($root))->load();
         }
 
@@ -39,9 +39,9 @@ class App
         return self::$path.$path;
     }
 
-    public static function getSupport()
+    public static function getSupport(string $name)
     {
-        return self::$support;
+        return self::$support->get($name);
     }
 
     /**
