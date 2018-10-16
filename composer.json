@@ -3,7 +3,9 @@
     "symfony/console": "~3.3",
     "symfony/var-dumper": "^4.1",
     "vlucas/phpdotenv": "^2.5",
-    "symfony/routing": "^4.1"
+    "symfony/routing": "^4.1",
+    "doctrine/annotations": "^1.6",
+    "doctrine/cache": "^1.8"
   },
   "repositories": {
     "packagist": {
