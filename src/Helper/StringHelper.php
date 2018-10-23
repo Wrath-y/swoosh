@@ -1,8 +1,8 @@
 <?php
 
-namespace Src\Tool;
+namespace Src\Helper;
 
-class Str
+class StringHelper
 {
     /**
      * Determine if a given string starts with a given substring.
@@ -13,8 +13,8 @@ class Str
      */
     public static function startsWith($haystack, $needles)
     {
-        foreach ((array) $needles as $needle) {
-            if ($needle != '' && substr($haystack, 0, strlen($needle)) === (string) $needle) {
+        foreach ((array)$needles as $needle) {
+            if ($needle != '' && strpos($haystack, $needle) === 0) {
                 return true;
             }
         }
@@ -33,7 +33,7 @@ class Str
     public static function endsWith($haystack, $needles)
     {
         foreach ((array) $needles as $needle) {
-            if (substr($haystack, -strlen($needle)) === (string) $needle) {
+            if (substr($haystack, -strlen($needle)) === $needle) {
                 return true;
             }
         }

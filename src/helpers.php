@@ -1,6 +1,6 @@
 <?php
 
-use Src\Tool\Str;
+use Src\Helper\StringHelper;
 
 /**
  * @param      $key
@@ -30,7 +30,7 @@ function env($key, $default = null)
             return null;
     }
 
-    if (strlen($value) > 1 && Str::startsWith($value, '"') && Str::endsWith($value, '"')) {
+    if (strlen($value) > 1 && StringHelper::startsWith($value, '"') && StringHelper::endsWith($value, '"')) {
         return substr($value, 1, -1);
     }
 
