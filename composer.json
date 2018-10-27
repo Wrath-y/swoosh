@@ -1,9 +1,7 @@
 {
   "require": {
     "symfony/var-dumper": "^4.1",
-    "vlucas/phpdotenv": "^2.5",
-    "doctrine/annotations": "^1.6",
-    "doctrine/cache": "^1.8"
+    "vlucas/phpdotenv": "^2.5"
   },
   "repositories": {
     "packagist": {

@@ -11,7 +11,6 @@ class App
 {
     private static $path;
     protected static $support;
-    private $server;
 
     public function __construct($root)
     {

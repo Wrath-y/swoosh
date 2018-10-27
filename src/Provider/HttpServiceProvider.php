@@ -4,6 +4,7 @@ namespace Src\Provider;
 
 use Src\App;
 use Swoole\Http\Server;
+use Swoole\Table;
 use Src\Event\HttpEvent;
 
 class HttpServiceProvider extends AbstractProvider

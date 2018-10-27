@@ -9,4 +9,7 @@ return [
         'App\Controllers\Admin',
         'App\Controllers\API',
     ],
+    'routeTable' => [
+        'size' => env('SIZE', 8192),
+    ],
 ];

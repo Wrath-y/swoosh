@@ -19,6 +19,8 @@ abstract class AbstractProvider
 
     protected $app;
 
+    public $table;
+
     public function __construct(Core &$app)
     {
         $this->app = $app;
