@@ -50,9 +50,9 @@ class DocResource
         ]);
     }
 
-    public function setShow(string $url, string $class)
+    public function setShow(string $url, string $class, string $matchParam = '')
     {
-        $this->routeTableServer->set('get@' . $url . '{/id}', [
+        $this->routeTableServer->set('get@' . $url . $matchParam ?? '{/id}', [
             'type' => 'get',
             'controller' => $class,
             'method' => 'show',
