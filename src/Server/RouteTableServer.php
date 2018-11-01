@@ -14,18 +14,28 @@ class RouteTableServer
         $config = App::getSupport('config')->get('routeTable');
         $this->table = new Table($config['size']);
         $this->table->column('type', Table::TYPE_STRING, 6);
-        $this->table->column('url', Table::TYPE_STRING, 100);
-        $this->table->column('controller', Table::TYPE_STRING, 20);
+        $this->table->column('controller', Table::TYPE_STRING, 40);
         $this->table->column('method', Table::TYPE_STRING, 20);
         $this->table->create();
     }
 
-    public function set($key, $value)
+    public function set(string $key, array $value): bool
     {
-        $this->table[$key] = $value;
+        return $this->table->set($key, $value);
     }
 
-    public function get($key)
+    public function get(string $key): array
     {
+        return $this->table->get($key);
+    }
+
+    public function exist(string $key): bool
+    {
+        return $this->table->exist($key);
+    }
+
+    public function count(): int
+    {
+        return $this->table->count();
     }
 }

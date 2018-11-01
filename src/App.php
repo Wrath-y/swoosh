@@ -15,12 +15,12 @@ class App
     public function __construct($root)
     {
         self::$path = $root;
-        // prioritize loading environment variables
+        // Prioritize loading environment variables
         if (file_exists(self::getPath('/.env'))){
             (new Dotenv($root))->load();
         }
 
-        // load config
+        // Load config
         self::$support = new Core();
         self::$support->set('config',function (){
             return new Config();
@@ -44,7 +44,7 @@ class App
     }
 
     /**
-     * initialization service
+     * Initialization service
      *
      * @param $arrConfig
      */
