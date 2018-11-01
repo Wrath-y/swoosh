@@ -7,11 +7,10 @@ use Src\Server\RouteTableServer;
 
 class RouteTableServiceProvider extends AbstractProvider
 {
-    protected $serviceName = 'routeTableService';
+    protected $serviceName = 'routeTableServer';
 
     public function register()
     {
-        new RouteTableServer();
         $this->app->set($this->serviceName, function () {
             return new RouteTableServer();
         });

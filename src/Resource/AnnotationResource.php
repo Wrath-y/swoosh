@@ -11,7 +11,6 @@ class AnnotationResource
 {
     protected $namespaces = [];
     protected $scanNamespaces = [];
-    protected $annotations = null;
 
     public function __construct(array $bootScan)
     {
@@ -20,9 +19,9 @@ class AnnotationResource
     }
 
     /**
-     * @param array $namespaces 配置文件中bootScan的命名空间
+     * Scan the bootScan to get the real path
      */
-    public function addScanNamespace()
+    public function scanNamespace()
     {
         foreach ($this->namespaces as $namespace) {
             $nsPath = ComposerHelper::getDirByNamespace($namespace);
@@ -33,16 +32,15 @@ class AnnotationResource
 
     public function getDefinitions()
     {
-        // 获取扫描的PHP文件
+        // Get the PHP file under bootScan
         $classNames = $this->registerLoaderAndScanBean();
-
         foreach ($classNames as $className) {
             $this->parseAnnotations($className);
         }
     }
 
     /**
-     * 注册加载器和扫描PHP文件
+     * Get the PHP files
      *
      * @return array
      */
@@ -58,7 +56,7 @@ class AnnotationResource
     }
 
     /**
-     * 扫描目录下PHP文件
+     * Scan the PHP file
      *
      * @param string $dir
      * @param string $namespace
@@ -93,9 +91,11 @@ class AnnotationResource
     }
 
     /**
-     * parse annotations
+     * Parse annotations and save to the swoole_table
      *
      * @param string $className
+     * @param string $methodAnnotation[1] Get
+     * @param string $methodAnnotation[2] demo/{id}
      *
      * @return null
      */
@@ -104,24 +104,33 @@ class AnnotationResource
         if (!class_exists($className) && !interface_exists($className)) {
             return null;
         }
+        // Parse the class by reflection
         $reflectionClass = new \ReflectionClass($className);
+        $docResource = new DocResource();
+        // Annotation of the parsing class
         $methodAnnotations = $reflectionClass->getDocComment();
-        if ($methodAnnotations && preg_match('/@(.+?)\(\'(.+?)\'\)\n/i', $methodAnnotations, $methodAnnotation)) {
-            $valiLength = count($methodAnnotation);
-            if ($valiLength === 3 && $methodAnnotation[1] === 'Map') {
-                DocResource::getRestful($methodAnnotation[2]);
-            }
+        // Save to swoole_table
+        if ($methodAnnotations && preg_match('/@Map\(\'(.+?)\'\)\n/i', $methodAnnotations, $methodAnnotation) && isset($methodAnnotation[1])) {
+            $docResource->setRestful($methodAnnotation[1], $className);
+
+            return;
         }
-        // 解析方法
+        // Parse the method by reflection
         $publicMethods = $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
         foreach ($publicMethods as $method) {
-            $methodName = $method->getName();
-            // 解析方法注解
+            // Annotation of the parsing method
             $methodAnnotations = $method->getDocComment();
-            preg_match('/@(.+?)\n/i', $methodAnnotations, $methodAnnotation);
-            dd($methodAnnotation);
-            $this->annotations;
-            $this->annotations[$className]['method'][$methodName][get_class($methodAnnotations)][] = $methodAnnotations;
+            if (!$methodAnnotations) {
+                continue;
+            }
+            // Save to swoole_table
+            if (preg_match('/@(.+?)\(\'(.+?)\'\)\n/i', $methodAnnotations, $methodAnnotation)) {
+                if ($methodAnnotation[1] == 'Get' && preg_match('/{/i', $methodAnnotation[2])) {
+                    $docResource->setShow($methodAnnotation[2], $className);
+                } else {
+                    $docResource->setByType($methodAnnotation[1], $methodAnnotation[2], $className);
+                }
+            }
         }
     }
 }

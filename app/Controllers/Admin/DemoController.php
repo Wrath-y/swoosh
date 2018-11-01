@@ -11,7 +11,7 @@ class DemoController
 {
     /**
      * this test
-     * @Get("demo")
+     * @Get('demo/{id}')
      */
     public function Demo()
     {

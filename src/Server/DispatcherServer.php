@@ -13,7 +13,7 @@ class DispatcherServer
     {
         $bootScan =  App::getSupport('config')->get('bootScan');
         $resource = new AnnotationResource($bootScan);
-        $resource->addScanNamespace();
+        $resource->scanNamespace();
         $resource->getDefinitions();
     }
 }
