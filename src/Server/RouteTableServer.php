@@ -24,7 +24,7 @@ class RouteTableServer
         return $this->table->set($key, $value);
     }
 
-    public function get(string $key): array
+    public function get(string $key)
     {
         return $this->table->get($key);
     }
