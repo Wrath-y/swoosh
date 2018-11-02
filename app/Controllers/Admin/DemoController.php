@@ -5,7 +5,7 @@ namespace App\Controllers\Admin;
 /**
  * DemoController
  *
- * @Mapp('demo')
+ * @Map('demo')
  */
 class DemoController
 {

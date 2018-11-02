@@ -38,4 +38,14 @@ class RouteTableServer
     {
         return $this->table->count();
     }
+
+    public function all()
+    {
+        $arr = [];
+        foreach ($this->table as $key => $value) {
+            $arr[$key] = $value;
+        }
+
+        return $arr;
+    }
 }

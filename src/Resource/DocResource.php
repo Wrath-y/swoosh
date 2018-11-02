@@ -12,6 +12,7 @@ class DocResource
     {
         $this->routeTableServer = App::getSupport('routeTableServer');
     }
+
     public function setRestful(string $url, string $class)
     {
         $this->setIndex($url, $class);
@@ -52,6 +53,7 @@ class DocResource
 
     public function setShow(string $url, string $class, string $matchParam = '')
     {
+        $this->routeTableServer->all();
         $this->routeTableServer->set('get@' . $url . $matchParam ?? '{/id}', [
             'type' => 'get',
             'controller' => $class,
