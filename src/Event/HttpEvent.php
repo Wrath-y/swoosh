@@ -19,7 +19,7 @@ class HttpEvent
      */
     public function onRequest(Request $request, Response $response)
     {
-        $response->end(123);
+        dd($request);
     }
 
     /**
