@@ -127,11 +127,8 @@ class AnnotationResource
             }
             // Save to swoole_table
             if (preg_match('/@(.+?)\(\'(.+?)\'\)\n/i', $methodAnnotations, $methodAnnotation)) {
-                if ($methodAnnotation[1] == 'Get' && preg_match('/(.+?)\/{.+?}/i', $methodAnnotation[2], $url)) {
-                    $docResource->setShow($url[1], $className);
-                } else {
-                    $docResource->setByType($methodAnnotation[1], $methodAnnotation[2], $className);
-                }
+                $url = preg_replace('/\d+/i', '{}', $methodAnnotation[2]);
+                $docResource->setByType($methodAnnotation[1], $url, $className);
             }
         }
     }

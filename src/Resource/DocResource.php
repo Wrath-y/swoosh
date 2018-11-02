@@ -15,25 +15,25 @@ class DocResource
 
     public function setRestful(string $url, string $class)
     {
-        $this->setIndex($url, $class);
-        $this->setShow($url, $class);
+        $this->setGet($url, $class);
+        $url = $url . '/{}';
+        $this->setGet($url, $class);
         $this->setPost($url, $class);
-        $this->setUpdate($url, $class);
+        $this->setPut($url, $class);
         $this->setDelete($url, $class);
-        dd($this->routeTableServer->all());
     }
 
     public function setByType(string $type, string $url, string $class)
     {
         switch ($type) {
             case 'Get':
-                $this->setIndex($url, $class);
+                $this->setGet($url, $class);
                 break;
             case 'Post':
                 $this->setPost($url, $class);
                 break;
             case 'Update':
-                $this->setUpdate($url, $class);
+                $this->setPut($url, $class);
                 break;
             case 'Delete':
                 $this->setDelete($url, $class);
@@ -43,21 +43,12 @@ class DocResource
         }
     }
 
-    public function setIndex(string $url, string $class)
+    public function setGet(string $url, string $class)
     {
         $this->routeTableServer->set('get@' . $url, [
             'type' => 'get',
             'controller' => $class,
             'method' => 'index',
-        ]);
-    }
-
-    public function setShow(string $url, string $class)
-    {
-        $this->routeTableServer->set('get@' . $url . '/{}', [
-            'type' => 'get',
-            'controller' => $class,
-            'method' => 'show',
         ]);
     }
 
@@ -70,9 +61,9 @@ class DocResource
         ]);
     }
 
-    public function setUpdate(string $url, string $class)
+    public function setPut(string $url, string $class)
     {
-        $this->routeTableServer->set('put@' . $url . '/{}', [
+        $this->routeTableServer->set('put@' . $url, [
             'type' => 'put',
             'controller' => $class,
             'method' => 'update',
@@ -81,7 +72,7 @@ class DocResource
 
     public function setDelete(string $url, string $class)
     {
-        $this->routeTableServer->set('delete@' . $url . '/{}', [
+        $this->routeTableServer->set('delete@' . $url, [
             'type' => 'delete',
             'controller' => $class,
             'method' => 'destroy',
