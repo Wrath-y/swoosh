@@ -19,7 +19,13 @@ class HttpEvent
      */
     public function onRequest(Request $request, Response $response)
     {
-        dd($request);
+        switch ($request->server['request_method']) {
+            case 'GET':
+                # code...
+                break;
+            default:
+                break;
+        }
     }
 
     /**
