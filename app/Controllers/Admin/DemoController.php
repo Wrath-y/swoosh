@@ -5,13 +5,13 @@ namespace App\Controllers\Admin;
 /**
  * DemoController
  *
- * @Map('demo')
+ * @Map('/demo')
  */
 class DemoController
 {
     /**
      * this test
-     * @Get('demo/{id}')
+     * @Get('/demo/{id}')
      */
     public function Demo()
     {
