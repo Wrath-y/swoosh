@@ -94,10 +94,10 @@ class AnnotationResource
      * Parse annotations and save to the swoole_table
      *
      * @param string $className
+     * @param string $classAnnotation[1] demo
      * @param string $methodAnnotation[1] Get
      * @param string $methodAnnotation[2] demo/{id}
      * @param string $url[1] demo
-     * @param string $url[2] {id}
      *
      * @return null
      */
@@ -110,10 +110,10 @@ class AnnotationResource
         $reflectionClass = new \ReflectionClass($className);
         $docResource = new DocResource();
         // Annotation of the parsing class
-        $methodAnnotations = $reflectionClass->getDocComment();
+        $classAnnotations = $reflectionClass->getDocComment();
         // Save to swoole_table
-        if ($methodAnnotations && preg_match('/@Map\(\'(.+?)\'\)\n/i', $methodAnnotations, $methodAnnotation) && isset($methodAnnotation[1])) {
-            $docResource->setRestful($methodAnnotation[1], $className);
+        if ($classAnnotations && preg_match('/@Map\(\'(.+?)\'\)/i', $classAnnotations, $classAnnotation)) {
+            $docResource->setRestful($classAnnotation[1], $className);
 
             return;
         }
@@ -127,8 +127,8 @@ class AnnotationResource
             }
             // Save to swoole_table
             if (preg_match('/@(.+?)\(\'(.+?)\'\)\n/i', $methodAnnotations, $methodAnnotation)) {
-                if ($methodAnnotation[1] == 'Get' && preg_match('/(.+?)\/({.+?})/i', $methodAnnotation[2], $url)) {
-                    $docResource->setShow($url[1], $className, $url[2]);
+                if ($methodAnnotation[1] == 'Get' && preg_match('/(.+?)\/{.+?}/i', $methodAnnotation[2], $url)) {
+                    $docResource->setShow($url[1], $className);
                 } else {
                     $docResource->setByType($methodAnnotation[1], $methodAnnotation[2], $className);
                 }

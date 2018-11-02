@@ -20,6 +20,7 @@ class DocResource
         $this->setPost($url, $class);
         $this->setUpdate($url, $class);
         $this->setDelete($url, $class);
+        dd($this->routeTableServer->all());
     }
 
     public function setByType(string $type, string $url, string $class)
@@ -29,13 +30,13 @@ class DocResource
                 $this->setIndex($url, $class);
                 break;
             case 'Post':
-                $this->setIndex($url, $class);
+                $this->setPost($url, $class);
                 break;
             case 'Update':
-                $this->setIndex($url, $class);
+                $this->setUpdate($url, $class);
                 break;
             case 'Delete':
-                $this->setIndex($url, $class);
+                $this->setDelete($url, $class);
                 break;
             default:
                 break;
@@ -51,10 +52,9 @@ class DocResource
         ]);
     }
 
-    public function setShow(string $url, string $class, string $matchParam = '')
+    public function setShow(string $url, string $class)
     {
-        $this->routeTableServer->all();
-        $this->routeTableServer->set('get@' . $url . $matchParam ?? '{/id}', [
+        $this->routeTableServer->set('get@' . $url . '/{}', [
             'type' => 'get',
             'controller' => $class,
             'method' => 'show',
@@ -72,7 +72,7 @@ class DocResource
 
     public function setUpdate(string $url, string $class)
     {
-        $this->routeTableServer->set('put@' . $url . '{id}', [
+        $this->routeTableServer->set('put@' . $url . '/{}', [
             'type' => 'put',
             'controller' => $class,
             'method' => 'update',
@@ -81,7 +81,7 @@ class DocResource
 
     public function setDelete(string $url, string $class)
     {
-        $this->routeTableServer->set('delete@' . $url . '{id}', [
+        $this->routeTableServer->set('delete@' . $url . '/{}', [
             'type' => 'delete',
             'controller' => $class,
             'method' => 'destroy',
