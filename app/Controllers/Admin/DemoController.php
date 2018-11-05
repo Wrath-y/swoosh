@@ -5,16 +5,47 @@ namespace App\Controllers\Admin;
 /**
  * DemoController
  *
- * @Map('/demo')
+ * @Mapp('/demo')
  */
 class DemoController
 {
     /**
-     * this test
+     * @Get('/demo')
+     */
+    public function index()
+    {
+        return 'index';
+    }
+
+    /**
      * @Get('/demo/{id}')
      */
-    public function Demo()
+    public function show($id)
     {
-        return 'hello';
+        return 'show';
+    }
+
+    /**
+     * @Put('/demo/{id}')
+     */
+    public function update($id)
+    {
+        return 'update';
+    }
+
+    /**
+     * @Post('/demo')
+     */
+    public function store()
+    {
+        return 'store';
+    }
+
+    /**
+     * @Delete('/demo/{id}')
+     */
+    public function destroy($id)
+    {
+        return 'destroy';
     }
 }

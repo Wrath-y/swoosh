@@ -7,7 +7,7 @@ use Src\Server\RouteTableServer;
 
 class RouteTableServiceProvider extends AbstractProvider
 {
-    protected $serviceName = 'routeTableServer';
+    protected $serviceName = 'routeTable';
 
     public function register()
     {
