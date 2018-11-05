@@ -114,7 +114,6 @@ class AnnotationResource
         // Save to swoole_table
         if ($classAnnotations && preg_match('/@Map\(\'(.+?)\'\)/i', $classAnnotations, $classAnnotation)) {
             $docResource->setRestful($classAnnotation[1], $className);
-
             return;
         }
         // Parse the method by reflection
@@ -126,8 +125,8 @@ class AnnotationResource
                 continue;
             }
             // Save to swoole_table
-            if (preg_match('/@(.+?)\(\'(.+?)\'\)\n/i', $methodAnnotations, $methodAnnotation)) {
-                $url = preg_replace('/\d+/i', '{}', $methodAnnotation[2]);
+            if (preg_match('/@(.+?)\(\'(.+?)\'\)/i', $methodAnnotations, $methodAnnotation)) {
+                $url = preg_replace('/\{\w+\}/i', '{}', $methodAnnotation[2]);
                 $docResource->setByType($methodAnnotation[1], $url, $className);
             }
         }

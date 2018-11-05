@@ -6,11 +6,11 @@ use Src\App;
 
 class DocResource
 {
-    private $routeTableServer;
+    private $routeTable;
 
     public function __construct()
     {
-        $this->routeTableServer = App::getSupport('routeTableServer');
+        $this->routeTable = App::getSupport('routeTable');
     }
 
     public function setRestful(string $url, string $class)
@@ -45,36 +45,40 @@ class DocResource
 
     public function setGet(string $url, string $class)
     {
-        $this->routeTableServer->set('get@' . $url, [
+        $method = 'index';
+        if (preg_match('/\{/i', $url)) {
+            $method = 'show';
+        }
+        $this->routeTable->set('get@' . $url, [
             'type' => 'get',
-            'controller' => $class,
-            'method' => 'index',
+            'controller' => '\\' . $class,
+            'method' => $method,
         ]);
     }
 
     public function setPost(string $url, string $class)
     {
-        $this->routeTableServer->set('post@' . $url, [
+        $this->routeTable->set('post@' . $url, [
             'type' => 'post',
-            'controller' => $class,
+            'controller' => '\\' . $class,
             'method' => 'store',
         ]);
     }
 
     public function setPut(string $url, string $class)
     {
-        $this->routeTableServer->set('put@' . $url, [
+        $this->routeTable->set('put@' . $url, [
             'type' => 'put',
-            'controller' => $class,
+            'controller' => '\\' . $class,
             'method' => 'update',
         ]);
     }
 
     public function setDelete(string $url, string $class)
     {
-        $this->routeTableServer->set('delete@' . $url, [
+        $this->routeTable->set('delete@' . $url, [
             'type' => 'delete',
-            'controller' => $class,
+            'controller' => '\\' . $class,
             'method' => 'destroy',
         ]);
     }

@@ -6,7 +6,6 @@ use Src\App;
 use Swoole\Http\Server;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
-use Src\Server\RequestServer;
 use Src\Servers\ResponseServer;
 
 class HttpEvent
@@ -20,13 +19,15 @@ class HttpEvent
      */
     public function onRequest(Request $request, Response $response)
     {
-        $requestServer = new RequestServer();
-        switch ($request->server['request_method']) {
-            case 'GET':
-                $requestServer->get($request);
-                break;
-            default:
-                break;
+        $table = App::getSupport('routeTable');
+        $dispatcher = App::getSupport('dispatcher');
+
+        $replace_uri = preg_replace('/\d+/i', '{}', $request->server['request_uri']);
+        $type = strtolower($request->server['request_method']);
+        $routes = $table->all();
+
+        if (isset($routes[$type . '@' . $replace_uri])) {
+            $res = $dispatcher->handle($request, $routes[$type . '@' . $replace_uri], $request);
         }
     }
 
