@@ -32,7 +32,7 @@ class DocResource
             case 'Post':
                 $this->setPost($url, $class);
                 break;
-            case 'Update':
+            case 'Put':
                 $this->setPut($url, $class);
                 break;
             case 'Delete':
