@@ -19,6 +19,7 @@ class DispatcherServer
 
     public function handle(Request $request, $route)
     {
+        App::getSupport('request')->set($request);
         preg_match('/\d+/i', $request->server['request_uri'], $params);
 
         return call_user_func_array([$route['controller'], $route['method']], $params);

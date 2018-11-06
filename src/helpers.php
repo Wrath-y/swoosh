@@ -1,5 +1,6 @@
 <?php
 
+use Src\App;
 use Src\Helper\StringHelper;
 
 /**
@@ -39,7 +40,7 @@ function env($key, $default = null)
 
 if (!function_exists('dd')) {
     /**
-     * 调试打印
+     * print
      *
      * @param $var
      */
@@ -49,5 +50,35 @@ if (!function_exists('dd')) {
             \Symfony\Component\VarDumper\VarDumper::dump($var);
         }
         exit(0);
+    }
+}
+
+if (!function_exists('request')) {
+    /**
+     * Get an instance of the current request or an input item from the request.
+     *
+     * @param  array|string  $key
+     */
+    function request($key = null)
+    {
+        if (is_array($key)) {
+            return App::getSupport('request')->only($key);
+        }
+
+        return App::getSupport('request')->get($key);
+    }
+}
+
+if (!function_exists('response')) {
+    /**
+     * Convert response data to JSON
+     *
+     * @param  array|string  $data
+     */
+    function response($data)
+    {
+        if (is_string($data)) {
+            return $data;
+        }
     }
 }
