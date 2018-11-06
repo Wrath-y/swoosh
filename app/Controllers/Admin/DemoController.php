@@ -38,6 +38,7 @@ class DemoController
      */
     public function store()
     {
+        dd(request());
         return 'store';
     }
 
