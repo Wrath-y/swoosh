@@ -19,11 +19,8 @@ class DispatcherServer
 
     public function handle(Request $request, $route)
     {
-        $class = new \ReflectionClass($route['controller']);
-        $method = $class->getMethod($route['method']);
-        foreach ($method->getParameters() as $parameter) {
-            $paramName = $parameter->getName();
-            
-        }
+        preg_match('/\d+/i', $request->server['request_uri'], $params);
+
+        return call_user_func_array([$route['controller'], $route['method']], $params);
     }
 }

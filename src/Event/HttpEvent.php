@@ -25,9 +25,9 @@ class HttpEvent
         $replace_uri = preg_replace('/\d+/i', '{}', $request->server['request_uri']);
         $type = strtolower($request->server['request_method']);
         $routes = $table->all();
-
         if (isset($routes[$type . '@' . $replace_uri])) {
-            $res = $dispatcher->handle($request, $routes[$type . '@' . $replace_uri], $request);
+            $res = $dispatcher->handle($request, $routes[$type . '@' . $replace_uri]);
+            $response->end($res);
         }
     }
 
