@@ -13,6 +13,9 @@ class Kernel extends Base
      * @var array
      */
     protected $middleware = [
-        AuthMiddleware::class,
+    ];
+
+    protected $routeMiddleware = [
+        'auth' => AuthMiddleware::class,
     ];
 }
