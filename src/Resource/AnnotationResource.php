@@ -112,9 +112,16 @@ class AnnotationResource
         // Annotation of the parsing class
         $classAnnotations = $reflectionClass->getDocComment();
         // Save to swoole_table
-        if ($classAnnotations && preg_match('/@Map\(\'(.+?)\'\)/i', $classAnnotations, $classAnnotation)) {
-            $docResource->setRestful($classAnnotation[1], $className);
-            return;
+        if ($classAnnotations) {
+            // Set middleware
+            if (preg_match('/@Mid\(\'(.+?)\'\)/i', $classAnnotations, $middleware)) {
+                $docResource->setMiddleware($middleware[1]);
+            }
+            if (preg_match('/@Map\(\'(.+?)\'\)/i', $classAnnotations, $classAnnotation)) {
+                $docResource->setRestful($classAnnotation[1], $className);
+                return;
+            }
+            
         }
         // Parse the method by reflection
         $publicMethods = $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
@@ -123,6 +130,10 @@ class AnnotationResource
             $methodAnnotations = $method->getDocComment();
             if (!$methodAnnotations) {
                 continue;
+            }
+            // Set middleware
+            if (preg_match('/@Mid\(\'(.+?)\'\)/i', $methodAnnotations, $methodAnnotation)) {
+                $docResource->setMiddleware($methodAnnotation[1]);
             }
             // Save to swoole_table
             if (preg_match('/@(.+?)\(\'(.+?)\'\)/i', $methodAnnotations, $methodAnnotation)) {
