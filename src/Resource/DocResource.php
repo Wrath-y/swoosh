@@ -7,10 +7,16 @@ use Src\App;
 class DocResource
 {
     private $routeTable;
+    private $middleware;
 
     public function __construct()
     {
         $this->routeTable = App::getSupport('routeTable');
+    }
+
+    public function setMiddleware(string $middleware)
+    {
+        $this->middleware = $middleware;
     }
 
     public function setRestful(string $url, string $class)
@@ -23,24 +29,27 @@ class DocResource
         $this->setDelete($url, $class);
     }
 
-    public function setByType(string $type, string $url, string $class)
+    public function setByType(string $type, string $con, string $class)
     {
         switch ($type) {
             case 'Get':
-                $this->setGet($url, $class);
+                $this->setGet($con, $class);
                 break;
             case 'Post':
-                $this->setPost($url, $class);
+                $this->setPost($con, $class);
                 break;
             case 'Put':
-                $this->setPut($url, $class);
+                $this->setPut($con, $class);
                 break;
             case 'Delete':
-                $this->setDelete($url, $class);
+                $this->setDelete($con, $class);
                 break;
             default:
                 break;
         }
+
+        // Revert middleware
+        $this->setMiddleware('');
     }
 
     public function setGet(string $url, string $class)
@@ -53,6 +62,7 @@ class DocResource
             'type' => 'get',
             'controller' => '\\' . $class,
             'method' => $method,
+            'middleware' => $this->middleware,
         ]);
     }
 
@@ -62,6 +72,7 @@ class DocResource
             'type' => 'post',
             'controller' => '\\' . $class,
             'method' => 'store',
+            'middleware' => $this->middleware,
         ]);
     }
 
@@ -71,6 +82,7 @@ class DocResource
             'type' => 'put',
             'controller' => '\\' . $class,
             'method' => 'update',
+            'middleware' => $this->middleware,
         ]);
     }
 
@@ -80,6 +92,7 @@ class DocResource
             'type' => 'delete',
             'controller' => '\\' . $class,
             'method' => 'destroy',
+            'middleware' => $this->middleware,
         ]);
     }
 }

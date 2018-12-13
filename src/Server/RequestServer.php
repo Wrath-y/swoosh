@@ -4,10 +4,12 @@ namespace Src\Server;
 
 use Src\App;
 use Swoole\Http\Request;
+use Swoole\Http\Response;
 
 class RequestServer
 {
-    protected $request = [];
+    public $request;
+    public $response;
 
     public function get($key = null)
     {
@@ -33,8 +35,9 @@ class RequestServer
         return $res;
     }
 
-    public function set(Request $request)
+    public function set(Request $request, Response $response)
     {
         $this->request = $request;
+        $this->response = $response;
     }
 }

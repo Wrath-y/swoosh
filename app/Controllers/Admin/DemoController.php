@@ -2,12 +2,16 @@
 
 namespace App\Controllers\Admin;
 
+use App\Controllers\Controller;
+
+
 /**
  * DemoController
  *
- * @Mapp('/demo')
+ * @Map('/demo')
+ * @Mid('auth')
  */
-class DemoController
+class DemoController extends Controller
 {
     /**
      * @Get('/demo')

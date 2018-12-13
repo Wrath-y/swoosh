@@ -2,9 +2,11 @@
 
 namespace Src\Server;
 
-use Src\Resource\AnnotationResource;
 use Src\App;
-use Swoole\Http\Request;
+use App\Kernel;
+use Src\Server\RequestServer;
+use Src\Server\ResponseServer;
+use Src\Resource\AnnotationResource;
 
 class DispatcherServer
 {
@@ -17,11 +19,28 @@ class DispatcherServer
         $resource->getDefinitions();
     }
 
-    public function handle(Request $request, $route)
+    public function handle(RequestServer $request, ResponseServer $response, $route)
     {
-        App::getSupport('request')->set($request);
-        preg_match('/\d+/i', $request->server['request_uri'], $params);
+        preg_match('/\d+/i', $request->request->server['request_uri'], $params);
+        $kernel = new Kernel();
+        $middleware = $kernel->getMiddleware();
+        dd($middleware);
+        $middleware = $middleware + 'App\\Middlewares\\' . ucfirst($route['']);
+        $destination = $this->getDestination($request, $response, $controller, $route['method'], $params);
 
-        return call_user_func_array([$route['controller'], $route['method']], $params);
+        // Execution middleware
+        $pipeline = array_reduce(
+            array_reverse($middleware),
+            $this->getInitialSlice(),
+            $this->prepareDestination($destination)
+        );
+    }
+
+    // Get Controller Closure
+    public function getDestination(RequestServer $request, ResponseServer $response, string $controller, string $action, string $paraData)
+    {
+        return function () use ($controller, $request, $response, $action, $paraData) {
+            return call_user_func_array([new $controller($request, $response), $action], $paraData);
+        };
     }
 }
