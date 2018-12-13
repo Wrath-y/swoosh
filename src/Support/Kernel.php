@@ -12,8 +12,15 @@ class Kernel
      */
     protected $middleware;
 
+    protected $routeMiddleware;
+
     public function getMiddleware(): array
     {
         return $this->middleware;
+    }
+
+    public function getRouteMiddleware(string $key): string
+    {
+        return isset($this->routeMiddleware[$key]) ? $this->routeMiddleware[$key] : '';
     }
 }
