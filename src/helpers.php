@@ -69,16 +69,46 @@ if (!function_exists('request')) {
     }
 }
 
-if (!function_exists('response')) {
+if (!function_exists('success')) {
     /**
-     * Convert response data to JSON
+     * Convert success data to JSON
      *
      * @param  array|string  $data
      */
-    function response($data)
+    function success($data)
     {
+        $response = [
+            'status' => 'success',
+            'code' => 0,
+        ];
         if (is_string($data)) {
-            return $data;
+            $response['data'] = $data;
+        } else {
+            $response['data'] = json_encode($data, JSON_UNESCAPED_UNICODE);
         }
+
+        return $response;
+    }
+}
+
+if (!function_exists('error')) {
+    /**
+     * Convert error data to JSON
+     *
+     * @param  array|string  $data
+     */
+    function error(int $code, $data)
+    {
+        $response = [
+            'status' => 'error',
+            'code' => $code,
+        ];
+        if (is_string($data)) {
+            $response['data'] = $data;
+        } else {
+            $response['data'] = json_encode($data, JSON_UNESCAPED_UNICODE);
+        }
+
+        return $response;
     }
 }
