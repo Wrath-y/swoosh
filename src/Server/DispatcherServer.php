@@ -32,29 +32,31 @@ class DispatcherServer
             $this->getInitialSlice(),
             $this->prepareDestination($destination)
         );
+
+        return $pipeline($request);
     }
 
     // Get Controller Closure
     public function getDestination(RequestServer $request, ResponseServer $response, string $controller, string $action, string $paraData)
     {
         return function () use ($controller, $request, $response, $action, $paraData) {
-            return call_user_func_array([new $controller($request, $response), $action], $paraData);
+            return call_user_func_array([new $controller($request, $response), $action], [$paraData]);
         };
     }
 
     protected function getInitialSlice()
     {
         return function ($stack, $pipe) {
-            return function ($passable) use ($stack, $pipe) {
-                return (new $pipe())->handle($passable, $stack);
+            return function (RequestServer $request) use ($stack, $pipe) {
+                return (new $pipe())->handle($request, $stack);
             };
         };
     }
 
     protected function prepareDestination(\Closure $destination)
     {
-        return function ($passable) use ($destination) {
-            return $destination($passable);
+        return function (RequestServer $request) use ($destination) {
+            return $destination($request);
         };
     }
 }

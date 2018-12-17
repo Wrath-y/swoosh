@@ -18,6 +18,7 @@ class DemoController extends Controller
      */
     public function index()
     {
+        print_r('index');
         return 'index';
     }
 

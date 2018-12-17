@@ -13,7 +13,7 @@ class ResponseServer extends Response
         $this->response = $response;
     }
 
-    public function end(string $html = '')
+    public function end($html = null)
     {
         if ( is_string($html) ) {
             $this->header('Content-Type', 'text/html; charset=UTF-8');
@@ -25,12 +25,12 @@ class ResponseServer extends Response
         $this->response->end($html);
     }
 
-    public function header(string $key, string $value, $ucwords = null)
+    public function header($key, $value, $ucwords = null)
     {
         $this->response->header($key, $value, $ucwords);
     }
 
-    public function cookie(string $name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null)
+    public function cookie($name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null)
     {
         $this->response->cookie($name, $value, $expires, $path, $domain, $secure, $httponly);
     }
@@ -39,7 +39,7 @@ class ResponseServer extends Response
     /**
      * @param $code 404, 200
      */
-    public function status(int $code)
+    public function status($code)
     {
         $this->response->status($code);
     }
