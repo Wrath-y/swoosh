@@ -18,7 +18,7 @@ class DemoController extends Controller
      */
     public function index()
     {
-        return success('success');
+        return success('index');
     }
 
     /**
@@ -26,7 +26,7 @@ class DemoController extends Controller
      */
     public function show($id)
     {
-        return 'show';
+        return success('show');
     }
 
     /**
