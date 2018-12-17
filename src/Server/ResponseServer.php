@@ -17,7 +17,7 @@ class ResponseServer extends Response
     {
         if ( is_string($html) ) {
             $this->header('Content-Type', 'text/html; charset=UTF-8');
-        }else{
+        } else {
             $this->header('Content-Type', 'application/json; charset=UTF-8');
             $html = json_encode($html, JSON_UNESCAPED_UNICODE);
         }

@@ -4,6 +4,7 @@ namespace Src\Server;
 
 use Src\App;
 use App\Kernel;
+use Src\Helper\ErrorHelper;
 use Src\Server\RequestServer;
 use Src\Server\ResponseServer;
 use Src\Resource\AnnotationResource;
@@ -19,7 +20,21 @@ class DispatcherServer
         $resource->getDefinitions();
     }
 
-    public function handle(RequestServer $request, ResponseServer $response, $route)
+    public function handle(RequestServer $request, ResponseServer $response)
+    {
+        $table = App::getSupport('routeTable');
+        $replace_uri = preg_replace('/\d+/i', '{}', $request->request->server['request_uri']);
+        $type = strtolower($request->request->server['request_method']);
+        $routes = $table->all();
+        switch (isset($routes[$type . '@' . $replace_uri])) {
+            case true:
+                return $this->dispatch($request, $response, $routes[$type . '@' . $replace_uri]);
+            case false:
+                return error(ErrorHelper::ROUTE_ERROR_CODE, ErrorHelper::ROUTE_ERROR_MSG);
+        }
+    }
+
+    public function dispatch(RequestServer $request, ResponseServer $response, $route)
     {
         preg_match('/\d+/i', $request->request->server['request_uri'], $params);
         $kernel = new Kernel();
