@@ -112,3 +112,17 @@ if (!function_exists('error')) {
         return $response;
     }
 }
+
+if (!function_exists('redirect')) {
+    /**
+     * Convert error data to JSON
+     *
+     * @param  array|string  $data
+     */
+    function redirect(string $url)
+    {
+        $response = App::getSupport('response');
+        $response->header('Location', env('SERVER_HOST') . ':' . env('SERVER_PORT') . $url);
+        $response->status(302);
+    }
+}
