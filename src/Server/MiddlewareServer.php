@@ -9,5 +9,5 @@ abstract class MiddlewareServer implements MiddlewareInterface
 {
     protected $request;
 
-    public function handler(RequestServer $request, $next);
+    abstract function handle(RequestServer $request, $next);
 }
