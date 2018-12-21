@@ -4,6 +4,7 @@ namespace Src\Server;
 
 use Src\App;
 use App\Kernel;
+use Src\Support\Core;
 use Src\Helper\ErrorHelper;
 use Src\Server\RequestServer;
 use Src\Server\ResponseServer;
@@ -11,10 +12,13 @@ use Src\Resource\AnnotationResource;
 
 class DispatcherServer
 {
-    public function __construct()
+    private $app;
+
+    public function __construct(Core &$app)
     {
+        $this->app = $app;
         // Get routes
-        $bootScan =  App::getSupport('config')->get('bootScan');
+        $bootScan = $this->app->get('config')->get('bootScan');
         $resource = new AnnotationResource($bootScan);
         $resource->scanNamespace();
         $resource->getDefinitions();
@@ -22,7 +26,7 @@ class DispatcherServer
 
     public function handle(RequestServer $request, ResponseServer $response)
     {
-        $table = App::getSupport('routeTable');
+        $table = $this->app->get('routeTable');
         $replace_uri = preg_replace('/\d+/i', '{}', $request->request->server['request_uri']);
         $type = strtolower($request->request->server['request_method']);
         $routes = $table->all();
@@ -37,7 +41,8 @@ class DispatcherServer
     public function dispatch(RequestServer $request, ResponseServer $response, $route)
     {
         preg_match('/\d+/i', $request->request->server['request_uri'], $params);
-        $kernel = new Kernel();
+        $kernel = new Kernel($this->app);
+        $kernel->bootstrap();
         $middleware = $kernel->getMiddleware();
         $middleware = $middleware + [$kernel->getRouteMiddleware($route['middleware'])];
         $destination = $this->getDestination($request, $response, $route['controller'], $route['method'], end($params));

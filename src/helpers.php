@@ -62,10 +62,10 @@ if (!function_exists('request')) {
     function request($key = null)
     {
         if (is_array($key)) {
-            return App::getSupport('request')->only($key);
+            return App::get('request')->only($key);
         }
 
-        return App::getSupport('request')->get($key);
+        return App::get('request')->get($key);
     }
 }
 
@@ -121,7 +121,7 @@ if (!function_exists('redirect')) {
      */
     function redirect(string $url)
     {
-        $response = App::getSupport('response');
+        $response = App::get('response');
         $response->header('Location', env('SERVER_HOST') . ':' . env('SERVER_PORT') . $url);
         $response->status(302);
     }

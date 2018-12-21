@@ -11,7 +11,7 @@ class DocResource
 
     public function __construct()
     {
-        $this->routeTable = App::getSupport('routeTable');
+        $this->routeTable = App::get('routeTable');
     }
 
     public function setMiddleware(string $middleware)

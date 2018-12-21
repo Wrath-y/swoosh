@@ -12,4 +12,7 @@ return [
     'routeTable' => [
         'size' => env('SIZE', 8192),
     ],
+    'aliases' => [
+        'PHPRedis' => Src\Support\Facades\Redis::class,
+    ],
 ];

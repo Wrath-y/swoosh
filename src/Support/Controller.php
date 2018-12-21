@@ -22,19 +22,4 @@ abstract class Controller
         $this->request = $request;
         $this->response = $response;
     }
-
-    /**
-     * redirect
-     *
-     * @param $url
-     * @return bool
-     */
-    public function redirect(string $url)
-    {
-        $this->response->header("Location", $url);
-        $this->response->status(302);
-        $this->response->end('');
-
-        return true;
-    }
 }
