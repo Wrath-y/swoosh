@@ -16,7 +16,8 @@ class RequestServer
         if (is_null($key)) {
             return $this->request;
         }
-        $arr = array_merge($this->request->post, $this->request->get);
+
+        $arr = array_merge($this->request->post ?? [], $this->request->get ?? []);
         if (isset($arr[$key])) {
             return $arr[$key];
         }
@@ -25,7 +26,7 @@ class RequestServer
     public function only(array $key)
     {
         $res = [];
-        $arr = array_merge($this->request->post, $this->request->get);
+        $arr = array_merge($this->request->post ?? [], $this->request->get ?? []);
         foreach ($key as $k) {
             if (isset($arr[$k])) {
                 $res = $arr[$k];

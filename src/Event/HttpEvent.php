@@ -3,12 +3,19 @@
 namespace Src\Event;
 
 use Src\App;
+use Src\Support\Core;
 use Swoole\Http\Server;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 
 class HttpEvent
 {
+    private $app;
+
+    public function __construct(Core &$app)
+    {
+        $this->app = $app;
+    }
     /**
      * Execute when requested
      *
@@ -18,9 +25,9 @@ class HttpEvent
      */
     public function onRequest(Request $swrequest, Response $swresponse)
     {
-        $dispatcher = App::getSupport('dispatcher');
-        $request = App::getSupport('request');
-        $response = App::getSupport('response');
+        $dispatcher = $this->app->get('dispatcher');
+        $request = $this->app->get('request');
+        $response = $this->app->get('response');
         $request->set($swrequest, $swresponse);
         $response->set($swresponse);
 

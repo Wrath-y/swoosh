@@ -43,7 +43,7 @@ class JWTHelper
      * @param string $Token The token to be verified
      * @return bool|string
      */
-    public static function verifyToken(string $Token)
+    public static function verifyToken($Token)
     {
         $tokens = explode('.', $Token);
         if (count($tokens) != 3) {

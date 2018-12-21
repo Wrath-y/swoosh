@@ -26,9 +26,9 @@ class HttpServiceProvider extends AbstractProvider
     public function register()
     {
         $this->app->set($this->serviceName, function () {
-            $config = App::getSupport('config')->get('server');
+            $config = $this->app->get('config')->get('server');
             $server = new Server($config['host'], $config['port']);
-            $http = new HttpEvent();
+            $http = new HttpEvent($this->app);
             foreach ($this->onList as $function => $event){
                 $server->on($event, [$http, $function]);
             }

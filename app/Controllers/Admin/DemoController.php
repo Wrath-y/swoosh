@@ -18,6 +18,7 @@ class DemoController extends Controller
      */
     public function index()
     {
+        dd(\PHPRedis::test());
         return success('index');
     }
 

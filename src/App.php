@@ -10,7 +10,7 @@ use Src\Support\Core;
 class App
 {
     private static $path;
-    protected static $support;
+    protected static $app;
 
     public function __construct($root)
     {
@@ -21,8 +21,8 @@ class App
         }
 
         // Load config
-        self::$support = new Core();
-        self::$support->set('config',function (){
+        self::$app = new Core();
+        self::$app->set('config', function (){
             return new Config();
         });
     }
@@ -30,33 +30,33 @@ class App
     /**
      * Get the path of the relative project
      *
-     * @param $path
+     * @param string $path
      * @return string
      */
-    public static function getPath($path='')
+    public static function getPath(string $path='')
     {
         return self::$path.$path;
     }
 
-    public static function getSupport(string $name)
+    public static function get(string $name)
     {
-        return self::$support->get($name);
+        return self::$app->get($name);
     }
 
     /**
      * Initialization service
      *
-     * @param $arrConfig
+     * @param array $bootstraps
      */
-    public function initializeServices($arrConfig)
+    public function initializeServices(array $bootstraps)
     {
-        foreach ($arrConfig as $className){
-            (new $className(self::$support))->register();
+        foreach ($bootstraps as $className){
+            (new $className(self::$app))->register();
         }
     }
 
     public function start()
     {
-        self::$support->get('http')->start();
+        self::$app->get('http')->start();
     }
 }

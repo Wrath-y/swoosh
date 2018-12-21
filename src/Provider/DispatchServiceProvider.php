@@ -12,7 +12,7 @@ class DispatchServiceProvider extends AbstractProvider
     public function register()
     {
         $this->app->set($this->serviceName, function () {
-            return new DispatcherServer();
+            return new DispatcherServer($this->app);
         });
     }
 }
