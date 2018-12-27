@@ -26,7 +26,7 @@ class HttpServiceProvider extends AbstractProvider
     public function register()
     {
         $this->app->set($this->serviceName, function () {
-            $config = $this->app->get('config')->get('server');
+            $config = $this->app->get('config')->get('app.server');
             $server = new Server($config['host'], $config['port']);
             $server->set([
                 'daemonize' => $config['daemonize'],

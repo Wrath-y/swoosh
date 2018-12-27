@@ -12,7 +12,9 @@ class RedisServiceProvider extends AbstractProvider
     public function register()
     {
         $this->app->set($this->serviceName, function () {
-            return new RedisManager();
+            $config = $this->app->get('config')->get('database.redis');
+
+            return new RedisManager($config);
         });
     }
 }

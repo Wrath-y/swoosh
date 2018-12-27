@@ -12,7 +12,7 @@ class AnnotationResource
     protected $namespaces = [];
     protected $scanNamespaces = [];
 
-    public function __construct(array $bootScan)
+    public function __construct(array $bootScan = [])
     {
         $this->namespaces = $bootScan;
 
@@ -63,7 +63,7 @@ class AnnotationResource
      *
      * @return array
      */
-    protected function scanPhpFile(string $dir, string $namespace)
+    public function scanPhpFile(string $dir, string $namespace = '')
     {
         if (!is_dir($dir)) {
             return [];

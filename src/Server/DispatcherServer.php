@@ -18,7 +18,7 @@ class DispatcherServer
     {
         $this->app = $app;
         // Get routes
-        $bootScan = $this->app->get('config')->get('bootScan');
+        $bootScan = $this->app->get('config')->get('app.bootScan');
         $resource = new AnnotationResource($bootScan);
         $resource->scanNamespace();
         $resource->getDefinitions();
