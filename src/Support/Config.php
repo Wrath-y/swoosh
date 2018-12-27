@@ -3,6 +3,7 @@
 namespace Src\Support;
 
 use Src\App;
+use Src\Resource\AnnotationResource;
 
 class Config
 {
@@ -10,8 +11,12 @@ class Config
 
     public function __construct()
     {
-        $path = App::getPath('/config/app.php');
-        $this->config = include $path;
+        $path = App::getPath('/config');
+        $configFiles = (new AnnotationResource)->scanPhpFile($path);
+        foreach ($configFiles as $file) {
+            $file = explode('\\', $file)[1];
+            $this->config[$file] = include $path . "/$file.php";
+        }
     }
 
     public function set($key, $value)
