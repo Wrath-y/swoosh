@@ -82,7 +82,7 @@ class RedisManager
     protected function connector()
     {
         switch ($this->driver) {
-            case 'phpredis':
+            case 'swredis':
                 return new Connectors\SwRedisConnector;
             case 'hredis':
                 return new Connectors\HRedisConnector;
