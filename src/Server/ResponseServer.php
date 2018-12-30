@@ -42,6 +42,6 @@ class ResponseServer extends Response
      */
     public function status($http_code, $reason = NULL)
     {
-        $this->response->status($code, $reason);
+        $this->response->status($http_code, $reason);
     }
 }
