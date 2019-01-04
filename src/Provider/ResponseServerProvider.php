@@ -8,11 +8,9 @@ use Src\Server\ResponseServer;
 
 class ResponseServerProvider extends AbstractProvider
 {
-    protected $serviceName = 'response';
-
     public function register()
     {
-        $this->app->set($this->serviceName,function (){
+        $this->app->set('response',function (){
             return new ResponseServer();
         });
     }

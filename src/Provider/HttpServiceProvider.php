@@ -9,8 +9,6 @@ use Src\Event\HttpEvent;
 
 class HttpServiceProvider extends AbstractProvider
 {
-    protected $serviceName = 'http';
-
     protected $onList = [
         'onRequest'=>'Request',
         'onStart'=>'Start',
@@ -25,7 +23,7 @@ class HttpServiceProvider extends AbstractProvider
 
     public function register()
     {
-        $this->app->set($this->serviceName, function () {
+        $this->app->set('http', function () {
             $config = $this->app->get('config')->get('app.server');
             $server = new Server($config['host'], $config['port']);
             $server->set([

@@ -7,11 +7,9 @@ use Src\Server\RequestServer;
 
 class RequestProvider extends AbstractProvider
 {
-    protected $serviceName = 'request';
-
     public function register()
     {
-        $this->app->set($this->serviceName, function () {
+        $this->app->set('request', function () {
             return new RequestServer();
         });
     }

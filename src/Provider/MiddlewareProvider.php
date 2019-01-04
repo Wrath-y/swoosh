@@ -7,11 +7,9 @@ use Src\Server\MiddlewareServer;
 
 class MiddlewareProvider extends AbstractProvider
 {
-    protected $serviceName = 'middleware';
-
     public function register()
     {
-        $this->app->set($this->serviceName, function () {
+        $this->app->set('middleware', function () {
             return new MiddlewareServer();
         });
     }

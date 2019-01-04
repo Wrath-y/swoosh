@@ -7,11 +7,9 @@ use Src\Server\DispatcherServer;
 
 class DispatchServiceProvider extends AbstractProvider
 {
-    protected $serviceName = 'dispatcher';
-
     public function register()
     {
-        $this->app->set($this->serviceName, function () {
+        $this->app->set('dispatcher', function () {
             return new DispatcherServer($this->app);
         });
     }
