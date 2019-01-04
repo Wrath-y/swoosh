@@ -7,11 +7,9 @@ use Src\Server\Redis\RedisManager;
 
 class RedisServiceProvider extends AbstractProvider
 {
-    protected $serviceName = 'php_redis';
-
     public function register()
     {
-        $this->app->set($this->serviceName, function () {
+        $this->app->set('php_redis', function () {
             $config = $this->app->get('config')->get('database.redis');
 
             return new RedisManager($config);
