@@ -87,10 +87,7 @@ class Connector
             'TCP Provider: Error code 0x68',
             'Name or service not known',
         ];
-        if (in_array($message, $arrMsg)) {
-            return true;
-        }
 
-        return false;
+        return in_array($message, $arrMsg);
     }
 }
