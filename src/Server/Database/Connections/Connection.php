@@ -59,6 +59,13 @@ class Connection implements ConnectionInterface
     protected $recordsModified = false;
 
     /**
+     * The default fetch mode of the connection.
+     *
+     * @var int
+     */
+    protected $fetchMode = PDO::FETCH_OBJ;
+
+    /**
      * Create a new database connection instance.
      *
      * @param  \PDO|\Closure     $pdo
@@ -274,16 +281,104 @@ class Connection implements ConnectionInterface
         return $this->pdo;
     }
 
+    /**
+     * Run an insert statement against the database.
+     *
+     * @param  string  $query
+     * @param  array   $bindings
+     * @return bool
+     */
+    public function insert($query, $bindings = [])
+    {
+        return $this->statement($query, $bindings);
+    }
+
+    /**
+     * Run an update statement against the database.
+     *
+     * @param  string  $query
+     * @param  array   $bindings
+     * @return int
+     */
+    public function update($query, $bindings = [])
+    {
+        return $this->affectingStatement($query, $bindings);
+    }
+
+    /**
+     * Run a delete statement against the database.
+     *
+     * @param  string  $query
+     * @param  array   $bindings
+     * @return int
+     */
+    public function delete($query, $bindings = [])
+    {
+        return $this->affectingStatement($query, $bindings);
+    }
+
+    /**
+     * Run a select statement against the database.
+     *
+     * @param  string  $query
+     * @param  array  $bindings
+     * @param  bool  $useReadPdo
+     * @return array
+     */
     public function select($query, $bindings = [])
     {
         return $this->run($query, $bindings, function ($query, $bindings) {
-            $statement = $this->prepared($this->getPdoForSelect()->prepare($query));
+            $statement = $this->prepared($this->getPdo()->prepare($query));
 
             $this->bindValues($statement, $this->prepareBindings($bindings));
 
             $statement->execute();
 
             return $statement->fetchAll();
+        });
+    }
+
+    /**
+     * Execute an SQL statement and return the boolean result.
+     *
+     * @param  string  $query
+     * @param  array   $bindings
+     * @return bool
+     */
+    public function statement($query, $bindings = [])
+    {
+        return $this->run($query, $bindings, function ($query, $bindings) {
+            $statement = $this->getPdo()->prepare($query);
+
+            $this->bindValues($statement, $this->prepareBindings($bindings));
+
+            $this->recordsHaveBeenModified();
+
+            return $statement->execute();
+        });
+    }
+
+    /**
+     * Run an SQL statement and get the number of rows affected.
+     *
+     * @param  string  $query
+     * @param  array   $bindings
+     * @return int
+     */
+    public function affectingStatement($query, $bindings = [])
+    {
+        return $this->run($query, $bindings, function ($query, $bindings) {
+            $statement = $this->getPdo()->prepare($query);
+
+            $this->bindValues($statement, $this->prepareBindings($bindings));
+
+            $statement->execute();
+
+            $this->recordsHaveBeenModified(
+                ($count = $statement->rowCount()) > 0
+            );
+
+            return $count;
         });
     }
 
@@ -298,16 +393,6 @@ class Connection implements ConnectionInterface
         $statement->setFetchMode($this->fetchMode);
 
         return $statement;
-    }
-
-    /**
-     * Get the PDO connection to use for a select query.
-     *
-     * @return \PDO
-     */
-    protected function getPdoForSelect()
-    {
-        return $this->getPdo();
     }
 
     /**

@@ -10,6 +10,7 @@ $app->initializeServices([
     Src\Provider\RequestProvider::class,
     Src\Provider\ResponseServerProvider::class,
     Src\Provider\RedisServiceProvider::class,
+    Src\Provider\DatabaseProvider::class,
 ]);
 
 return $app;
