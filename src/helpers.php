@@ -38,6 +38,13 @@ function env($key, $default = null)
     return $value;
 }
 
+function tap($value, $callback)
+{
+    $callback($value);
+
+    return $value;
+}
+
 if (!function_exists('dd')) {
     /**
      * print
