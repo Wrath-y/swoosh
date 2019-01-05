@@ -4,7 +4,7 @@ namespace Src\Server\Database\Query;
 
 use Src\Server\Database\ConnectionInterface;
 
-class Build
+class Builder
 {
     /**
      * The database connection instance.
