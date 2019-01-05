@@ -68,7 +68,8 @@ class Connector
     protected function causedByLostConnection(Exception $e)
     {
         $message = $e->getMessage();
-        $arrMsg = [
+
+        return in_array($message, [
             'server has gone away',
             'no connection to the server',
             'Lost connection',
@@ -86,8 +87,6 @@ class Connector
             'Physical connection is not usable',
             'TCP Provider: Error code 0x68',
             'Name or service not known',
-        ];
-
-        return in_array($message, $arrMsg);
+        ]);
     }
 }

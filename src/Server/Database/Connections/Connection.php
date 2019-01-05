@@ -5,10 +5,15 @@ namespace Src\Server\Database\Connections;
 use PDO;
 use PDOException;
 use PDOStatement;
+use Src\Server\Database\Query\Builder;
+use Src\Server\Database\TransactionManager;
 use Src\Server\Database\ConnectionInterface;
+use Src\Server\Database\Query\Grammars\Grammar;
 
 class Connection implements ConnectionInterface
 {
+    use TransactionManager;
+
     /**
      * The active PDO connection.
      *
@@ -43,6 +48,13 @@ class Connection implements ConnectionInterface
      * @var callable
      */
     protected $reconnector;
+
+    /**
+     * The query grammar implementation.
+     *
+     * @var \Src\Database\Query\Grammars\Grammar
+     */
+    protected $queryGrammar;
 
     /**
      * The number of active transactions.
@@ -106,7 +118,7 @@ class Connection implements ConnectionInterface
      */
     protected function getDefaultQueryGrammar()
     {
-        return new QueryGrammar;
+        return new Grammar;
     }
 
     /**
@@ -138,6 +150,31 @@ class Connection implements ConnectionInterface
     public function getPostProcessor()
     {
         return $this->postProcessor;
+    }
+
+    /**
+     * Begin a fluent query against a database table.
+     *
+     * @param  string  $table
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function table($table)
+    {
+        return $this->query()->from($table);
+    }
+
+    /**
+     * Get a new query builder instance.
+     *
+     * @return \Src\Database\Query\Builder
+     */
+    public function query()
+    {
+        return new Builder(
+            $this,
+            $this->getQueryGrammar(),
+            $this->getPostProcessor()
+        );
     }
 
     /**
@@ -222,7 +259,7 @@ class Connection implements ConnectionInterface
     {
         $message = $e->getMessage();
 
-        $arrMsg = [
+        return in_array($message, [
             'server has gone away',
             'no connection to the server',
             'Lost connection',
@@ -235,9 +272,7 @@ class Connection implements ConnectionInterface
             'Resource deadlock avoided',
             'Transaction() on null',
             'child connection forced to terminate due to client_idle_limit',
-        ];
-
-        return in_array($message, $arrMsg);
+        ]);
     }
 
     /**
