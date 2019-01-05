@@ -3,6 +3,7 @@
 namespace Src\Server\Database;
 
 use Src\Support\Core;
+use Src\Server\Database\Connections\Connection;
 
 class DatabaseManager
 {
@@ -99,9 +100,6 @@ class DatabaseManager
     {
         $name = $name ? : $this->getDefaultConnection();
 
-        // To get the database connection configuration, we will just pull each of the
-        // connection configurations and get the configurations for the given name.
-        // If the configuration doesn't exist, we'll throw an exception and bail.
         $connections = $this->app->get('config')->get('database.connections');
 
         if (is_null($config = ($connections[$name] ?? null))) {
@@ -109,6 +107,47 @@ class DatabaseManager
         }
 
         return $config;
+    }
+
+    protected function configure(Connection $connection, $type)
+    {
+        $connection->setReconnector(function ($connection) {
+            $this->reconnect($connection->getName());
+        });
+
+        return $connection;
+    }
+
+    public function reconnect($name = null)
+    {
+        $this->disconnect($name = $name ? : $this->getDefaultConnection());
+
+        if (!isset($this->connections[$name])) {
+            return $this->connection($name);
+        }
+
+        return $this->refreshPdoConnections($name);
+    }
+
+    public function disconnect($name = null)
+    {
+        if (isset($this->connections[$name = $name ? : $this->getDefaultConnection()])) {
+            $this->connections[$name]->disconnect();
+        }
+    }
+
+    /**
+     * Refresh the PDO connections on a given connection.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Database\Connection
+     */
+    protected function refreshPdoConnections($name)
+    {
+        $fresh = $this->makeConnection($name);
+
+        return $this->connections[$name]
+            ->setPdo($fresh->getPdo());
     }
 
     /**
