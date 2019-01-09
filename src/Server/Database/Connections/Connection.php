@@ -156,7 +156,7 @@ class Connection implements ConnectionInterface
      * Begin a fluent query against a database table.
      *
      * @param  string  $table
-     * @return \Illuminate\Database\Query\Builder
+     * @return \Src\Server\Database\Query\Builder
      */
     public function table($table)
     {
@@ -166,7 +166,7 @@ class Connection implements ConnectionInterface
     /**
      * Get a new query builder instance.
      *
-     * @return \Src\Database\Query\Builder
+     * @return \Src\Server\Database\Query\Builder
      */
     public function query()
     {
@@ -357,7 +357,6 @@ class Connection implements ConnectionInterface
      *
      * @param  string  $query
      * @param  array  $bindings
-     * @param  bool  $useReadPdo
      * @return array
      */
     public function select($query, $bindings = [])

@@ -2,6 +2,7 @@
 
 namespace Src\Server\Database\Query;
 
+use Exception;
 use Src\Server\Database\ConnectionInterface;
 
 class Builder
@@ -9,37 +10,23 @@ class Builder
     /**
      * The database connection instance.
      *
-     * @var \Server\Server\Database\ConnectionInterface
+     * @var \Src\Server\Database\ConnectionInterface
      */
     public $connection;
 
     /**
      * The database query grammar instance.
      *
-     * @var \Server\Server\Database\Query\Grammars\Grammar
+     * @var Src\Server\Database\Query\Grammars\Grammar
      */
     public $grammar;
 
     /**
      * The database query post processor instance.
      *
-     * @var \Server\Server\Database\Query\Processors\Processor
+     * @var Src\Server\Database\Query\Processors\Processor
      */
     public $processor;
-
-    /**
-     * The current query value bindings.√ß
-     *
-     * @var array
-     */
-    public $bindings = [
-        'select' => [],
-        'join' => [],
-        'where' => [],
-        'having' => [],
-        'order' => [],
-        'union' => [],
-    ];
 
     /**
      * An aggregate function and column to be run.
@@ -168,6 +155,20 @@ class Builder
     ];
 
     /**
+     * The current query value bindings.
+     *
+     * @var array
+     */
+    public $bindings = [
+        'select' => [],
+        'join' => [],
+        'where' => [],
+        'having' => [],
+        'order' => [],
+        'union' => [],
+    ];
+
+    /**
      * Create a new query builder instance.
      *
      * @param  Src\Server\Database\ConnectionInterface  $connection
@@ -179,5 +180,169 @@ class Builder
         $this->connection = $connection;
         $this->grammar = $grammar ? : $connection->getQueryGrammar();
         $this->processor = $processor ? : $connection->getPostProcessor();
+    }
+
+    /**
+     * Set the table which the query is targeting.
+     *
+     * @param  string  $table
+     * @return $this
+     */
+    public function from($table)
+    {
+        $this->from = $table;
+
+        return $this;
+    }
+
+    /**
+     * Set the columns to be selected.
+     *
+     * @param  array|mixed  $columns
+     * @return $this
+     */
+    public function select($columns = ['*'])
+    {
+        $this->columns = is_array($columns) ? $columns : func_get_args();
+
+        return $this;
+    }
+
+    /**
+     * Execute the query as a "select" statement.
+     *
+     * @param  array  $columns
+     */
+    public function get($columns = ['*'])
+    {
+        $original = $this->columns;
+
+        if (is_null($original)) {
+            $this->columns = $columns;
+        }
+
+        $results = $this->processor->processSelect($this, $this->runSelect());
+
+        $this->columns = $original;
+
+        return $results;
+    }
+
+    /**
+     * Run the query as a "select" statement against the connection.
+     *
+     * @return array
+     */
+    protected function runSelect()
+    {
+        return $this->connection->select($this->toSql(), $this->getBindings());
+    }
+
+    /**
+     * Get the SQL representation of the query.
+     *
+     * @return string
+     */
+    public function toSql()
+    {
+        return $this->grammar->compileSelect($this);
+    }
+
+    /**
+     * Get the current query value bindings in a flattened array.
+     *
+     * @return array
+     */
+    public function getBindings()
+    {
+        return flatten($this->bindings);
+    }
+
+    public function where($column, $operator = null, $value = null, $boolean = 'and')
+    {
+        if (is_array($column)) {
+            return $this->addArrayOfWheres($column, $boolean);
+        }
+
+        list($operator, $value) = $this->prepareValueAndOperator(
+            $operator,
+            $value,
+            func_num_args() == 2
+        );
+
+        $type = 'Basic';
+
+        $this->wheres[] = compact(
+            'type',
+            'column',
+            'operator',
+            'value',
+            'boolean'
+        );
+
+        $this->addBinding($value, 'where');
+
+        return $this;
+    }
+
+    /**
+     * Prepare the value and operator for a where clause.
+     *
+     * @param  string  $operator
+     * @param  string  $value
+     * @param  bool  $useDefault
+     * @return array
+     *
+     * @throws \Exception
+     */
+    public function prepareValueAndOperator($operator, $value, $useDefault = false)
+    {
+        if ($useDefault) {
+            return ['=', $operator];
+        } elseif ($this->invalidOperatorAndValue($operator, $value)) {
+            throw new Exception('Illegal operator and value combination.');
+        }
+
+
+        return [$operator, $value];
+    }
+
+    /**
+     * Determine if the given operator and value combination is legal.
+     *
+     * Prevents using Null values with invalid operators.
+     *
+     * @param  string  $operator
+     * @param  mixed  $value
+     * @return bool
+     */
+    protected function invalidOperatorAndValue($operator, $value)
+    {
+        return is_null($value) && in_array($operator, $this->operators) &&
+            !in_array($operator, ['=', '<>', '!=']);
+    }
+
+    /**
+     * Add a binding to the query.
+     *
+     * @param  mixed   $value
+     * @param  string  $type
+     * @return $this
+     *
+     * @throws \Exception
+     */
+    public function addBinding($value, $type = 'where')
+    {
+        if (!array_key_exists($type, $this->bindings)) {
+            throw new Exception("Invalid binding type: {$type}.");
+        }
+
+        if (is_array($value)) {
+            $this->bindings[$type] = array_values(array_merge($this->bindings[$type], $value));
+        } else {
+            $this->bindings[$type][] = $value;
+        }
+
+        return $this;
     }
 }
