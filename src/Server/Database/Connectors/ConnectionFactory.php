@@ -4,7 +4,6 @@ namespace Src\Server\Database\Connectors;
 
 use Src\Support\Core;
 use Src\Server\Database\Connections\Connection;
-use Src\Server\Database\Connections\MySqlConnector;
 use Src\Server\Database\Connections\MySqlConnection;
 
 class ConnectionFactory

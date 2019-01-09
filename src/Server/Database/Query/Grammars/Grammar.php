@@ -3,10 +3,10 @@
 namespace Src\Server\Database\Query\Grammars;
 
 use Src\Server\Database\Query\Builder;
-use Src\Server\Database\Query\Grammar;
+use Src\Server\Database\Query\Grammar as BaseGrammar;
 use Src\Server\Database\Query\JoinClause;
 
-class Grammar extends Grammar
+class Grammar extends BaseGrammar
 {
     /**
      * The grammar specific operators.
@@ -125,6 +125,18 @@ class Grammar extends Grammar
     }
 
     /**
+     * Compile the "from" portion of the query.
+     *
+     * @param  \Src\Server\Database\Query\Builder  $query
+     * @param  string  $table
+     * @return string
+     */
+    protected function compileFrom(Builder $query, $table)
+    {
+        return 'from ' . $this->wrapTable($table);
+    }
+
+    /**
      * Compile the "select *" portion of the query.
      *
      * @param  \Src\Server\Database\Query\Builder  $query
@@ -179,6 +191,19 @@ class Grammar extends Grammar
     }
 
     /**
+     * Get an array of all the where clauses for the query.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @return array
+     */
+    protected function compileWheresToArray($query)
+    {
+        return array_map(function ($where) use ($query) {
+            return $where['boolean'] . ' ' . $this->{"where{$where['type']}"}($query, $where);
+        }, $query->wheres);
+    }
+
+    /**
      * Format the where clause statements into one string.
      *
      * @param  \Src\Server\Database\Query\Builder  $query
@@ -204,6 +229,17 @@ class Grammar extends Grammar
         $value = $this->parameter($where['value']);
 
         return $this->wrap($where['column']) . ' ' . $where['operator'] . ' ' . $value;
+    }
+
+    /**
+     * Remove the leading boolean from a statement.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    protected function removeLeadingBoolean($value)
+    {
+        return preg_replace('/and |or /i', '', $value, 1);
     }
 
     /**

@@ -15,5 +15,6 @@ return [
     ],
     'aliases' => [
         'PHPRedis' => Src\Support\Facades\Redis::class,
+        'DB' => Src\Support\Facades\Database::class,
     ],
 ];

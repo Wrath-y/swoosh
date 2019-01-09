@@ -6,7 +6,7 @@ use Closure;
 use Exception;
 use Throwable;
 
-class TransactionManager
+trait TransactionManager
 {
     public function transaction(Closure $callback, $attempts = 1)
     {

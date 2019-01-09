@@ -109,7 +109,7 @@ class DatabaseManager
         return $config;
     }
 
-    protected function configure(Connection $connection, $type)
+    protected function configure(Connection $connection)
     {
         $connection->setReconnector(function ($connection) {
             $this->reconnect($connection->getName());

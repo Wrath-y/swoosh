@@ -18,8 +18,7 @@ class DemoController extends Controller
      */
     public function index()
     {
-        \PHPRedis::set('key', 'value');
-        dd(\PHPRedis::get('key'));
+        dd(\DB::table('test')->get());
         return success('index');
     }
 

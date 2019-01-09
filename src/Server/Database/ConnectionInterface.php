@@ -15,23 +15,6 @@ interface ConnectionInterface
     public function table($table);
 
     /**
-     * Get a new raw query expression.
-     *
-     * @param  mixed  $value
-     * @return \Illuminate\Database\Query\Expression
-     */
-    public function raw($value);
-
-    /**
-     * Run a select statement and return a single result.
-     *
-     * @param  string  $query
-     * @param  array   $bindings
-     * @return mixed
-     */
-    public function selectOne($query, $bindings = []);
-
-    /**
      * Run a select statement against the database.
      *
      * @param  string  $query
@@ -86,14 +69,6 @@ interface ConnectionInterface
     public function affectingStatement($query, $bindings = []);
 
     /**
-     * Run a raw, unprepared query against the PDO connection.
-     *
-     * @param  string  $query
-     * @return bool
-     */
-    public function unprepared($query);
-
-    /**
      * Prepare the query bindings for execution.
      *
      * @param  array  $bindings
@@ -132,19 +107,4 @@ interface ConnectionInterface
      * @return void
      */
     public function rollBack();
-
-    /**
-     * Get the number of active transactions.
-     *
-     * @return int
-     */
-    public function transactionLevel();
-
-    /**
-     * Execute the given callback in "dry run" mode.
-     *
-     * @param  \Closure  $callback
-     * @return array
-     */
-    public function pretend(Closure $callback);
 }

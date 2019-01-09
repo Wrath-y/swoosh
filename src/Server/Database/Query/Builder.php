@@ -4,6 +4,7 @@ namespace Src\Server\Database\Query;
 
 use Exception;
 use Src\Server\Database\ConnectionInterface;
+use Src\Server\Database\Query\Processors\Processor;
 
 class Builder
 {

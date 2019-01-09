@@ -3,12 +3,15 @@
 namespace Src\Server\Database\Connections;
 
 use PDO;
+use Closure;
+use Exception;
 use PDOException;
 use PDOStatement;
 use Src\Server\Database\Query\Builder;
 use Src\Server\Database\TransactionManager;
 use Src\Server\Database\ConnectionInterface;
 use Src\Server\Database\Query\Grammars\Grammar;
+use Src\Server\Database\Query\Processors\Processor;
 
 class Connection implements ConnectionInterface
 {
@@ -122,6 +125,26 @@ class Connection implements ConnectionInterface
     }
 
     /**
+     * Set the query post processor to the default implementation.
+     *
+     * @return void
+     */
+    public function useDefaultPostProcessor()
+    {
+        $this->postProcessor = $this->getDefaultPostProcessor();
+    }
+
+    /**
+     * Get the default post processor instance.
+     *
+     * @return \Illuminate\Database\Query\Processors\Processor
+     */
+    protected function getDefaultPostProcessor()
+    {
+        return new Processor;
+    }
+
+    /**
      * Get the connection resolver for the given driver.
      *
      * @param  string  $driver
@@ -224,7 +247,7 @@ class Connection implements ConnectionInterface
         try {
             $result = $callback($query, $bindings);
         } catch (Exception $e) {
-            throw $e->getMessage();
+            throw $e;
         }
 
         return $result;
@@ -232,47 +255,7 @@ class Connection implements ConnectionInterface
 
     protected function handleQueryException(PDOException $e, $query, $bindings, Closure $callback)
     {
-        if ($this->transactions >= 1) {
-            throw $e;
-        }
-
-        return $this->tryAgainIfCausedByLostConnection(
-            $e,
-            $query,
-            $bindings,
-            $callback
-        );
-    }
-
-    protected function tryAgainIfCausedByLostConnection(PDOException $e, $query, $bindings, Closure $callback)
-    {
-        if ($this->causedByLostConnection($e->getPrevious())) {
-            $this->reconnect();
-
-            return $this->runQueryCallback($query, $bindings, $callback);
-        }
-
         throw $e;
-    }
-
-    protected function causedByLostConnection(Exception $e)
-    {
-        $message = $e->getMessage();
-
-        return in_array($message, [
-            'server has gone away',
-            'no connection to the server',
-            'Lost connection',
-            'is dead or not enabled',
-            'Error while sending',
-            'decryption failed or bad record mac',
-            'server closed the connection unexpectedly',
-            'SSL connection has been closed unexpectedly',
-            'Error writing data to the connection',
-            'Resource deadlock avoided',
-            'Transaction() on null',
-            'child connection forced to terminate due to client_idle_limit',
-        ]);
     }
 
     /**
