@@ -4,6 +4,7 @@ namespace Src\Server\Database\Query\Grammars;
 
 use Src\Server\Database\Query\Builder;
 use Src\Server\Database\Query\Grammar;
+use Src\Server\Database\Query\JoinClause;
 
 class Grammar extends Grammar
 {
@@ -142,6 +143,24 @@ class Grammar extends Grammar
     }
 
     /**
+     * Compile the "join" portions of the query.
+     *
+     * @param  \Src\Server\Database\Query\Builder  $query
+     * @param  array  $joins
+     * @return string
+     */
+    protected function compileJoins(Builder $query, $joins)
+    {
+        array_walk($joins, function (&$join) {
+            $table = $this->wrapTable($join->table);
+
+            $join = trim("{$join->type} join {$table} {$this->compileWheres($join)}");
+        });
+
+        return implode(' ', $joins);
+    }
+
+    /**
      * Compile the "where" portions of the query.
      *
      * @param  \Src\Server\Database\Query\Builder  $query
@@ -168,20 +187,9 @@ class Grammar extends Grammar
      */
     protected function concatenateWhereClauses($query, $sql)
     {
-        $conjunction = 'where';
+        $conjunction = $query instanceof JoinClause ? 'on' : 'where';
 
         return $conjunction . ' ' . $this->removeLeadingBoolean(implode(' ', $sql));
-    }
-
-    /**
-     * Remove the leading boolean from a statement.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    protected function removeLeadingBoolean($value)
-    {
-        return preg_replace('/and |or /i', '', $value, 1);
     }
 
     /**

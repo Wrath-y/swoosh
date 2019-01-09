@@ -229,6 +229,35 @@ class Builder
     }
 
     /**
+     * Add a join clause to the query.
+     *
+     * @param  string  $table
+     * @param  string  $first
+     * @param  string|null  $operator
+     * @param  string|null  $second
+     * @param  string  $type
+     * @return $this
+     */
+    public function join($table, $first, $operator = null, $second = null, $type = 'inner')
+    {
+        $join = new JoinClause($this, $type, $table);
+
+        if ($first instanceof Closure) {
+            call_user_func($first, $join);
+
+            $this->joins[] = $join;
+
+            $this->addBinding($join->getBindings(), 'join');
+        } else {
+            $this->joins[] = $join->on($first, $operator, $second);
+
+            $this->addBinding($join->getBindings(), 'join');
+        }
+
+        return $this;
+    }
+
+    /**
      * Run the query as a "select" statement against the connection.
      *
      * @return array
@@ -281,6 +310,30 @@ class Builder
         );
 
         $this->addBinding($value, 'where');
+
+        return $this;
+    }
+
+    /**
+     * Add a "where" clause comparing two columns to the query.
+     *
+     * @param  string|array  $first
+     * @param  string|null  $operator
+     * @param  string|null  $second
+     * @param  string|null  $boolean
+     * @return \Illuminate\Database\Query\Builder|static
+     */
+    public function whereColumn($first, $operator = null, $second = null, $boolean = 'and')
+    {
+        $type = 'Column';
+
+        $this->wheres[] = compact(
+            'type',
+            'first',
+            'operator',
+            'second',
+            'boolean'
+        );
 
         return $this;
     }
