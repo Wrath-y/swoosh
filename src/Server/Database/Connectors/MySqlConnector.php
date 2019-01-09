@@ -2,6 +2,8 @@
 
 namespace Src\Server\Database\Connectors;
 
+use PDO;
+
 class MySqlConnector extends Connector
 {
     /**
@@ -74,6 +76,17 @@ class MySqlConnector extends Connector
         $connection->prepare(
             "set names '{$config['charset']}'" . $this->getCollation($config)
         )->execute();
+    }
+
+    /**
+     * Get the collation for the configuration.
+     *
+     * @param  array  $config
+     * @return string
+     */
+    protected function getCollation(array $config)
+    {
+        return isset($config['collation']) ? " collate '{$config['collation']}'" : '';
     }
 
     protected function configureTimezone($connection, array $config)

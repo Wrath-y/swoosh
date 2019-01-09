@@ -45,7 +45,7 @@ abstract class Grammar
      */
     public function wrapTable($table)
     {
-        return $this->wrap($this->tablePrefix . $table, true);
+        return $this->wrap($table, true);
     }
 
     /**

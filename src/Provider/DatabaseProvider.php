@@ -3,6 +3,8 @@
 namespace Src\Provider;
 
 use Src\App;
+use Src\Server\Database\DatabaseManager;
+use Src\Server\Database\Connectors\ConnectionFactory;
 
 class DatabaseProvider extends AbstractProvider
 {
