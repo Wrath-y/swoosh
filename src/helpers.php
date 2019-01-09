@@ -45,6 +45,29 @@ function tap($value, $callback)
     return $value;
 }
 
+/**
+ * Flatten a multi-dimensional array into a single level.
+ *
+ * @param  array  $array
+ * @param  int  $depth
+ * @return array
+ */
+function flatten($array, $depth = INF) {
+    $result = [];
+
+    foreach ($array as $item) {
+        if (!is_array($item)) {
+            $result[] = $item;
+        } elseif ($depth === 1) {
+            $result = array_merge($result, array_values($item));
+        } else {
+            $result = array_merge($result, flatten($item, $depth - 1));
+        }
+    }
+
+    return $result;
+}
+
 if (!function_exists('dd')) {
     /**
      * print
