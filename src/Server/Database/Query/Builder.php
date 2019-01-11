@@ -322,7 +322,7 @@ class Builder
      * @param  string|null  $operator
      * @param  string|null  $second
      * @param  string|null  $boolean
-     * @return \Illuminate\Database\Query\Builder|static
+     * @return \Src\Server\Database\Query\Builder|static
      */
     public function whereColumn($first, $operator = null, $second = null, $boolean = 'and')
     {
@@ -398,5 +398,15 @@ class Builder
         }
 
         return $this;
+    }
+
+    /**
+     * Get the database connection instance.
+     *
+     * @return \Src\Server\Database\ConnectionInterface
+     */
+    public function getConnection()
+    {
+        return $this->connection;
     }
 }

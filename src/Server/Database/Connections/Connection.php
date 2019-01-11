@@ -137,7 +137,7 @@ class Connection implements ConnectionInterface
     /**
      * Get the default post processor instance.
      *
-     * @return \Illuminate\Database\Query\Processors\Processor
+     * @return \Src\Server\Database\Query\Processors\Processor
      */
     protected function getDefaultPostProcessor()
     {
@@ -463,5 +463,10 @@ class Connection implements ConnectionInterface
         if (!$this->recordsModified) {
             $this->recordsModified = $value;
         }
+    }
+
+    public function getName()
+    {
+        return isset($this->config['name']) ? $this->config['name'] : '';
     }
 }

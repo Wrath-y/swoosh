@@ -68,6 +68,27 @@ function flatten($array, $depth = INF) {
     return $result;
 }
 
+function snake($camelCaps, $separator = '_')
+{
+    return strtolower(preg_replace('/([a-z])([A-Z])/', '$1' . $separator . '$2', $camelCaps));
+}
+
+function startsWith($haystack, $needles) {
+    foreach ((array)$needles as $needle) {
+        if ($needle !== '' && substr($haystack, 0, strlen($needle)) === (string)$needle) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function camelize($uncamelized_words, $separator = '_')
+{
+    $uncamelized_words = $separator . str_replace($separator, " ", strtolower($uncamelized_words));
+    return ltrim(str_replace(" ", "", ucwords($uncamelized_words)), $separator);
+}
+
 if (!function_exists('dd')) {
     /**
      * print

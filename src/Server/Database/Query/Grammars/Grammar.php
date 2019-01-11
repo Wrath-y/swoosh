@@ -193,7 +193,7 @@ class Grammar extends BaseGrammar
     /**
      * Get an array of all the where clauses for the query.
      *
-     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  \Src\Server\Database\Query\Builder  $query
      * @return array
      */
     protected function compileWheresToArray($query)
