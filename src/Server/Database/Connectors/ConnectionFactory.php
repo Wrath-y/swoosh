@@ -70,7 +70,7 @@ class ConnectionFactory
      * Create a connector instance based on the configuration.
      *
      * @param  array  $config
-     * @return \Illuminate\Database\Connectors\ConnectorInterface
+     * @return \Src\Server\Database\Connectors\ConnectorInterface
      */
     public function createConnector(array $config)
     {

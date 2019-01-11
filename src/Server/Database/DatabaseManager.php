@@ -140,7 +140,7 @@ class DatabaseManager
      * Refresh the PDO connections on a given connection.
      *
      * @param  string  $name
-     * @return \Illuminate\Database\Connection
+     * @return \Src\Server\Database\Connection
      */
     protected function refreshPdoConnections($name)
     {
