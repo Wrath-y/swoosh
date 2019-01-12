@@ -2,6 +2,7 @@
 
 namespace Src\Server\Database\Eloquent;
 
+use Closure;
 use Exception;
 use Src\Server\Database\Eloquent\Relations\Relation;
 use Src\Server\Database\Query\Builder as QueryBuilder;
@@ -113,6 +114,16 @@ class Builder
         $this->query->from($model->getTable());
 
         return $this;
+    }
+
+    /**
+     * Get the underlying query builder instance.
+     *
+     * @return \Src\Server\Database\Query\Builder
+     */
+    public function getQuery()
+    {
+        return $this->query;
     }
 
     /**
@@ -252,5 +263,25 @@ class Builder
     protected function isNestedUnder($relation, $name)
     {
         return strpos($name, '.') && startsWith($name, $relation . '.');
+    }
+
+    public function where($column, $operator = null, $value = null, $boolean = 'and')
+    {
+        if ($column instanceof Closure) {
+            $column($query = $this->model->newModelQuery());
+
+            $this->query->addNestedWhereQuery($query->getQuery(), $boolean);
+        } else {
+            $this->query->where(...func_get_args());
+        }
+
+        return $this;
+    }
+
+    public function __call($method, $parameters)
+    {
+        $this->query->{$method}(...$parameters);
+
+        return $this;
     }
 }

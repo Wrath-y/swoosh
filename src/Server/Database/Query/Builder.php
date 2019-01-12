@@ -2,9 +2,11 @@
 
 namespace Src\Server\Database\Query;
 
+use Closure;
 use Exception;
 use Src\Server\Database\ConnectionInterface;
 use Src\Server\Database\Query\Processors\Processor;
+use Src\Server\Database\Eloquent\Builder as EloquentBuilder;
 
 class Builder
 {
@@ -337,6 +339,98 @@ class Builder
         );
 
         return $this;
+    }
+
+    public function whereIn($column, $values, $boolean = 'and', $not = false)
+    {
+        $type = $not ? 'NotIn' : 'In';
+
+        if ($values instanceof EloquentBuilder) {
+            $values = $values->getQuery();
+        }
+
+        if ($values instanceof self) {
+            return $this->whereInExistingQuery(
+                $column,
+                $values,
+                $boolean,
+                $not
+            );
+        }
+
+        if ($values instanceof Closure) {
+            return $this->whereInSub($column, $values, $boolean, $not);
+        }
+
+        $this->wheres[] = compact('type', 'column', 'values', 'boolean');
+
+        foreach ($values as $value) {
+            $this->addBinding($value, 'where');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add an external sub-select to the query.
+     *
+     * @param  string   $column
+     * @param  \Src\Server\Database\Query\Builder|static  $query
+     * @param  string   $boolean
+     * @param  bool     $not
+     * @return $this
+     */
+    protected function whereInExistingQuery($column, $query, $boolean, $not)
+    {
+        $type = $not ? 'NotInSub' : 'InSub';
+
+        $this->wheres[] = compact('type', 'column', 'query', 'boolean');
+
+        $this->addBinding($query->getBindings(), 'where');
+
+        return $this;
+    }
+
+    /**
+     * Add a where in with a sub-select to the query.
+     *
+     * @param  string   $column
+     * @param  \Closure $callback
+     * @param  string   $boolean
+     * @param  bool     $not
+     * @return $this
+     */
+    protected function whereInSub($column, Closure $callback, $boolean, $not)
+    {
+        $type = $not ? 'NotInSub' : 'InSub';
+
+        call_user_func($callback, $query = $this->forSubQuery());
+
+        $this->wheres[] = compact('type', 'column', 'query', 'boolean');
+
+        $this->addBinding($query->getBindings(), 'where');
+
+        return $this;
+    }
+
+    /**
+     * Get a new instance of the query builder.
+     *
+     * @return \Src\Server\Database\Query\Builder
+     */
+    public function newQuery()
+    {
+        return new static($this->connection, $this->grammar, $this->processor);
+    }
+
+    /**
+     * Create a new query instance for a sub-query.
+     *
+     * @return \Src\Server\Database\Query\Builder
+     */
+    protected function forSubQuery()
+    {
+        return $this->newQuery();
     }
 
     /**

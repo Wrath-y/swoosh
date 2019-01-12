@@ -2,11 +2,15 @@
 
 namespace Src\Server\Database\Eloquent\Traits;
 
+use Exception;
+
 trait AttributeTrait
 {
     protected $attributes = [];
 
     protected $original = [];
+
+    protected $casts = [];
 
     public function setRawAttributes(array $attributes, $sync = false)
     {
@@ -128,6 +132,44 @@ trait AttributeTrait
             default:
                 return $value;
         }
+    }
+
+    /**
+     * Get a relationship.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public function getRelationValue($key)
+    {
+        if ($this->relationLoaded($key)) {
+            return $this->relations[$key];
+        }
+
+        if (method_exists($this, $key)) {
+            return $this->getRelationshipFromMethod($key);
+        }
+    }
+
+    /**
+     * Get a relationship value from a method.
+     *
+     * @param  string  $method
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    protected function getRelationshipFromMethod($method)
+    {
+        $relation = $this->$method();
+
+        if (!$relation instanceof Relation) {
+            throw new Exception(get_class($this) . '::' . $method . ' must return a relationship instance.');
+        }
+
+        return tap($relation->getResults(), function ($results) use ($method) {
+            $this->setRelation($method, $results);
+        });
     }
 
     public function fromJson($value, $asObject = false)

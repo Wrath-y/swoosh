@@ -2,8 +2,19 @@
 
 namespace Src\Server\Database\Eloquent\Traits;
 
+use Src\Server\Database\Eloquent\Model;
+use Src\Server\Database\Eloquent\Builder;
+use Src\Server\Database\Eloquent\Relations\BelongsTo;
+
 trait RelationShip
 {
+    /**
+     * The loaded relationships for the model.
+     *
+     * @var array
+     */
+    protected $relations = [];
+
     public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null)
     {
         if (is_null($relation)) {
@@ -82,5 +93,10 @@ trait RelationShip
         $this->relations[$relation] = $value;
 
         return $this;
+    }
+
+    public function relationLoaded($key)
+    {
+        return array_key_exists($key, $this->relations);
     }
 }

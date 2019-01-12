@@ -2,6 +2,9 @@
 
 namespace Src\Server\Database\Eloquent\Relations;
 
+use Src\Server\Database\Eloquent\Model;
+use Src\Server\Database\Eloquent\Builder;
+
 class BelongsTo extends Relation
 {
     /**
@@ -60,7 +63,6 @@ class BelongsTo extends Relation
     {
         if (static::$constraints) {
             $table = $this->related->getTable();
-
             $this->query->where($table . '.' . $this->ownerKey, '=', $this->child->{$this->foreignKey});
         }
     }
@@ -73,9 +75,10 @@ class BelongsTo extends Relation
      */
     public function addEagerConstraints(array $models)
     {
-        $key = $this->related->getTable() . '.' . $this->ownerKey;
-
-        $this->query->whereIn($key, $this->getEagerModelKeys($models));
+        if (static::$constraints) {
+            $key = $this->related->getTable() . '.' . $this->ownerKey;
+            $this->query->whereIn($key, $this->getEagerModelKeys($models));
+        }
     }
 
     /**
@@ -119,7 +122,7 @@ class BelongsTo extends Relation
     public function initRelation(array $models, $relation)
     {
         foreach ($models as $model) {
-            $model->setRelation($relation, $this->getDefaultFor($model));
+            $model->setRelation($relation, null);
         }
 
         return $models;
@@ -133,7 +136,7 @@ class BelongsTo extends Relation
      * @param  string  $relation
      * @return array
      */
-    public function match(array $models, array $results, $relation)
+    public function match(array $models, $results, $relation)
     {
         $foreign = $this->foreignKey;
 
@@ -152,5 +155,10 @@ class BelongsTo extends Relation
         }
 
         return $models;
+    }
+
+    public function getResults()
+    {
+        return $this->query->first() ? : null;
     }
 }

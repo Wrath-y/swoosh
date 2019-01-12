@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Admin;
 
+use App\Models\Order;
 use App\Controllers\Controller;
 
 
@@ -18,7 +19,9 @@ class DemoController extends Controller
      */
     public function index()
     {
-        dd(\DB::table('test')->get());
+        dd(
+            Order::where('id', 27)->with('user')->get()
+        );
         return success('index');
     }
 

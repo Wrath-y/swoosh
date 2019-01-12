@@ -3,6 +3,7 @@
 namespace Src\Provider;
 
 use Src\App;
+use Src\Server\Database\Eloquent\Model;
 use Src\Server\Database\DatabaseManager;
 use Src\Server\Database\Connectors\ConnectionFactory;
 
@@ -20,5 +21,7 @@ class DatabaseProvider extends AbstractProvider
         $this->app->set('db.connection', function () {
             return $this->app['db']->connection();
         });
+
+        Model::setConnectionResolver($this->app->get('db'));
     }
 }
