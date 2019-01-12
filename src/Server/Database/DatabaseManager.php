@@ -4,8 +4,9 @@ namespace Src\Server\Database;
 
 use Src\Support\Core;
 use Src\Server\Database\Connections\Connection;
+use Src\Server\Database\Eloquent\ConnectionResolverInterface;
 
-class DatabaseManager
+class DatabaseManager implements ConnectionResolverInterface
 {
     /**
      * The Core instance.
@@ -61,6 +62,17 @@ class DatabaseManager
     public function getDefaultConnection()
     {
         return $this->app->get('config')->get('database.default');
+    }
+
+    /**
+     * Set the default connection name.
+     *
+     * @param  string  $name
+     * @return void
+     */
+    public function setDefaultConnection($name)
+    {
+        $this->app['config']['database.default'] = $name;
     }
 
     /**

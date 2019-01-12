@@ -2,6 +2,10 @@
 
 namespace Src\Server\Database\Eloquent\Relations;
 
+use Closure;
+use Src\Server\Database\Eloquent\Model;
+use Src\Server\Database\Eloquent\Builder;
+
 abstract class Relation
 {
     /**
@@ -31,9 +35,14 @@ abstract class Relation
     {
         $previous = static::$constraints;
 
-        static::$constraints = $previous;
+        static::$constraints = false;
 
-        return call_user_func($callback);
+        try {
+            return call_user_func($callback);
+        }
+        finally {
+            static::$constraints = $previous;
+        }
     }
 
     /**
@@ -81,4 +90,11 @@ abstract class Relation
      * @return array
      */
     abstract public function match(array $models, $results, $relation);
+
+    /**
+     * Get the results of the relationship.
+     *
+     * @return mixed
+     */
+    abstract public function getResults();
 }

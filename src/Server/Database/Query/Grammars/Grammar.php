@@ -231,6 +231,15 @@ class Grammar extends BaseGrammar
         return $this->wrap($where['column']) . ' ' . $where['operator'] . ' ' . $value;
     }
 
+    protected function whereIn(Builder $query, $where)
+    {
+        if (!empty($where['values'])) {
+            return $this->wrap($where['column']) . ' in (' . $this->parameterize($where['values']) . ')';
+        }
+
+        return '0 = 1';
+    }
+
     /**
      * Remove the leading boolean from a statement.
      *

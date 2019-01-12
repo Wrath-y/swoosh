@@ -89,6 +89,93 @@ function camelize($uncamelized_words, $separator = '_')
     return ltrim(str_replace(" ", "", ucwords($uncamelized_words)), $separator);
 }
 
+function class_basename($class)
+{
+    $class = is_object($class) ? get_class($class) : $class;
+
+    return basename(str_replace('\\', '/', $class));
+}
+
+function pluralize($string)
+{
+    $plural = [
+        ['/(quiz)$/i', "$1zes"],
+        ['/^(ox)$/i', "$1en"],
+        ['/([m|l])ouse$/i', "$1ice"],
+        ['/(matr|vert|ind)ix|ex$/i', "$1ices"],
+        ['/(x|ch|ss|sh)$/i', "$1es"],
+        ['/([^aeiouy]|qu)y$/i', "$1ies"],
+        ['/([^aeiouy]|qu)ies$/i', "$1y"],
+        ['/(hive)$/i', "$1s"],
+        ['/(?:([^f])fe|([lr])f)$/i', "$1$2ves"],
+        ['/sis$/i', "ses"],
+        ['/([ti])um$/i', "$1a"],
+        ['/(buffal|tomat)o$/i', "$1oes"],
+        ['/(bu)s$/i', "$1ses"],
+        ['/(alias|status)$/i', "$1es"],
+        ['/(octop|vir)us$/i', "$1i"],
+        ['/(ax|test)is$/i', "$1es"],
+        ['/s$/i', "s"],
+        ['/$/', "s"],
+        ["/s$/", ""],
+        ["/(n)ews$/", "$1ews"],
+        ["/([ti])a$/", "$1um"],
+        ["/((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$/", "$1$2sis"],
+        ["/(^analy)ses$/", "$1sis"],
+        ["/([^f])ves$/", "$1fe"],
+        ["/(hive)s$/", "$1"],
+        ["/(tive)s$/", "$1"],
+        ["/([lr])ves$/", "$1f"],
+        ["/([^aeiouy]|qu)ies$/", "$1y"],
+        ["/(s)eries$/", "$1eries"],
+        ["/(m)ovies$/", "$1ovie"],
+        ["/(x|ch|ss|sh)es$/", "$1"],
+        ["/([m|l])ice$/", "$1ouse"],
+        ["/(bus)es$/", "$1"],
+        ["/(o)es$/", "$1"],
+        ["/(shoe)s$/", "$1"],
+        ["/(cris|ax|test)es$/", "$1is"],
+        ["/([octop|vir])i$/", "$1us"],
+        ["/(alias|status)es$/", "$1"],
+        ["/^(ox)en/", "$1"],
+        ["/(vert|ind)ices$/", "$1ex"],
+        ["/(matr)ices$/", "$1ix"],
+        ["/(quiz)zes$/", "$1"],
+    ];
+
+    $irregular = [
+        ['move', 'moves'],
+        ['sex', 'sexes'],
+        ['child', 'children'],
+        ['man', 'men'],
+        ['person', 'people']
+    ];
+
+    $uncountable = [
+        'sheep',
+        'fish',
+        'series',
+        'species',
+        'money',
+        'rice',
+        'information',
+        'equipment'
+    ];
+
+    if (in_array(strtolower($string), $uncountable)) return $string;
+
+    foreach ($irregular as $noun) {
+        if (strtolower($string) == $noun[0])
+            return $noun[1];
+    }
+
+    foreach ($plural as $pattern) {
+        if (preg_match($pattern[0], $string))
+            return preg_replace($pattern[0], $pattern[1], $string);
+    }
+    return $string;
+}  
+
 if (!function_exists('dd')) {
     /**
      * print

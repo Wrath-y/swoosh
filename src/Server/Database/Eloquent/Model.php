@@ -6,7 +6,7 @@ use Src\Server\Database\Query\Builder as QueryBuilder;
 use Src\Server\Database\Eloquent\Traits\AttributeTrait;
 use Src\Server\Database\Eloquent\Traits\RelationShip;
 
-abstract class Model implements ConnectionResolverInterface
+abstract class Model
 {
     use AttributeTrait, RelationShip;
 
@@ -208,6 +208,17 @@ abstract class Model implements ConnectionResolverInterface
     }
 
     /**
+     * Set the connection resolver instance.
+     *
+     * @param  \Src\Server\Database\ConnectionResolverInterface  $resolver
+     * @return void
+     */
+    public static function setConnectionResolver(ConnectionResolverInterface $resolver)
+    {
+        static::$resolver = $resolver;
+    }
+
+    /**
      * Create a new instance of the given model.
      *
      * @param  array  $attributes
@@ -262,11 +273,16 @@ abstract class Model implements ConnectionResolverInterface
             return str_replace(
                 '\\',
                 '',
-                snake(class_basename($this))
+                snake(pluralize(class_basename($this)))
             );
         }
 
         return $this->table;
+    }
+
+    public function __get($key)
+    {
+        return $this->getAttribute($key);
     }
 
     public function __call($method, $parameters)
@@ -278,7 +294,7 @@ abstract class Model implements ConnectionResolverInterface
         return $this->newQuery()->$method(...$parameters);
     }
 
-    public function __callStatic($method, $arguments)
+    public static function __callStatic($method, $arguments)
     {
         return (new static)->$method(...$arguments);
     }
