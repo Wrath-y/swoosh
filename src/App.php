@@ -55,8 +55,18 @@ class App
         }
     }
 
-    public function start()
+    public function start($type = '')
     {
-        self::$app->get('http')->start();
+        switch ($type) {
+            case 'ws':
+                self::$app->get('ws')->start();
+                break;
+            case 'http':
+            default:
+                self::$app->get('http')->start();
+                break;
+        }
+        
+        
     }
 }

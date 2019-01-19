@@ -12,10 +12,11 @@ class HttpEvent
 {
     private $app;
 
-    public function __construct(Core &$app)
+    public function __construct(Core $app)
     {
         $this->app = $app;
     }
+
     /**
      * Execute when requested
      *

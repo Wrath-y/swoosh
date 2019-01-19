@@ -44,8 +44,9 @@ class DispatcherServer
         $kernel = new Kernel($this->app);
         $kernel->bootstrap();
         $middleware = $kernel->getMiddleware();
-        $middleware = $middleware + [$kernel->getRouteMiddleware($route['middleware'])];
+        $middleware = array_filter($middleware + [$kernel->getRouteMiddleware($route['middleware'])]);
         $destination = $this->getDestination($request, $response, $route['controller'], $route['method'], end($params));
+
         // Execution middleware
         $pipeline = array_reduce(
             array_reverse($middleware),

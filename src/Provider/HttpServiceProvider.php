@@ -2,9 +2,7 @@
 
 namespace Src\Provider;
 
-use Src\App;
 use Swoole\Http\Server;
-use Swoole\Table;
 use Src\Event\HttpEvent;
 
 class HttpServiceProvider extends AbstractProvider
@@ -24,7 +22,7 @@ class HttpServiceProvider extends AbstractProvider
     public function register()
     {
         $this->app->set('http', function () {
-            $config = $this->app->get('config')->get('app.server');
+            $config = $this->app->get('config')->get('app.http');
             $server = new Server($config['host'], $config['port']);
             $server->set([
                 'daemonize' => $config['daemonize'],
