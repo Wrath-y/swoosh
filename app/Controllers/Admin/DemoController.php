@@ -2,7 +2,6 @@
 
 namespace App\Controllers\Admin;
 
-use App\Models\Order;
 use App\Controllers\Controller;
 
 
