@@ -4,25 +4,18 @@ namespace App\Services;
 
 class ChatService extends Service
 {
-    public function userList(): array
+    public function userList()
     {
-        return \PHPRedis::lrange('users', 0, -1);
+        return \PHPRedis::hvals('userss');
     }
 
-    public function create(string $data): int
+    public function set($data)
     {
-        return \PHPRedis::lpush('users', $data);
+        return \PHPRedis::hset('userss', $data['name'], json_encode($data));
     }
 
-    public function update(string $data): int
+    public function delete($name)
     {
-        $users = \PHPRedis::lrange('users', 0, -1);
-        foreach ($users as $key => $user) {
-            if ($data->name === $user->name) {
-                return \PHPRedis::lset('users', $key, $data);
-            }
-        }
-
-        return 0;
+        return \PHPRedis::hdel('userss', $name);
     }
 }

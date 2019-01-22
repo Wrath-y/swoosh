@@ -16,27 +16,18 @@ class ChatController extends Controller
     }
 
     /**
-     * @Put('/api/users')
-     */
-    public function update()
-    {
-        return ChatService::update(request('data'));
-    }
-
-    /**
      * @Post('/api/users')
      */
     public function store()
     {
-        dd(request());
-        return 'store';
+        return success(ChatService::set(request('data')));
     }
 
     /**
-     * @Delete('/demo/{id}')
+     * @Delete('/api/users')
      */
-    public function destroy($id)
+    public function destroy()
     {
-        return 'destroy';
+        return success(ChatService::delete(request('name')));
     }
 }

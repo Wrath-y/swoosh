@@ -202,8 +202,11 @@ if (!function_exists('request')) {
         if (is_array($key)) {
             return App::get('request')->only($key);
         }
+        if (is_string($key)) {
+            return App::get('request')->get($key);
+        }
 
-        return App::get('request')->get($key);
+        return App::get('request');
     }
 }
 
@@ -215,17 +218,11 @@ if (!function_exists('success')) {
      */
     function success($data)
     {
-        $response = [
+        return [
             'status' => 'success',
             'code' => 0,
+            'data' => $data
         ];
-        if (is_string($data)) {
-            $response['data'] = $data;
-        } else {
-            $response['data'] = json_encode($data, JSON_UNESCAPED_UNICODE);
-        }
-
-        return $response;
     }
 }
 
@@ -237,17 +234,11 @@ if (!function_exists('error')) {
      */
     function error(int $code, $data)
     {
-        $response = [
+        return [
             'status' => 'error',
             'code' => $code,
+            'data' => $data
         ];
-        if (is_string($data)) {
-            $response['data'] = $data;
-        } else {
-            $response['data'] = json_encode($data, JSON_UNESCAPED_UNICODE);
-        }
-
-        return $response;
     }
 }
 

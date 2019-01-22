@@ -31,7 +31,7 @@ class WebSocketEvent
         $server->push($request->fd, json_encode([
             'fd' => $request->fd,
             'data' => 'Start ws',
-        ]));
+        ], JSON_UNESCAPED_SLASHES));
     }
 
     /**
@@ -47,12 +47,12 @@ class WebSocketEvent
             $server->push($data->target_id, json_encode([
                 'fd' => $frame->fd,
                 'data' => $data,
-            ]));
+            ], JSON_UNESCAPED_SLASHES));
         } else {
             $server->push($frame->fd, json_encode([
                 'fd' => $frame->fd,
                 'data' => 'Target connection has closed',
-            ]));
+            ], JSON_UNESCAPED_SLASHES));
         }
     }
 

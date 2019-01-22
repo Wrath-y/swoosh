@@ -20,8 +20,8 @@ class HttpEvent
     /**
      * Execute when requested
      *
-     * @param Request $request
-     * @param Response $response
+     * @param Swoole\Http\Request $swrequest
+     * @param Swoole\Http\Response $swresponse
      * @return ResponseServer
      */
     public function onRequest(Request $swrequest, Response $swresponse)
