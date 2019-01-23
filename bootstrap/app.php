@@ -7,11 +7,11 @@ $app->initializeServices([
     Src\Provider\DispatchServiceProvider::class,
     Src\Provider\MiddlewareProvider::class,
     Src\Provider\HttpServiceProvider::class,
-    Src\Provider\WebSocketServiceProvider::class,
     Src\Provider\RequestProvider::class,
     Src\Provider\ResponseServerProvider::class,
     Src\Provider\RedisServiceProvider::class,
     Src\Provider\DatabaseProvider::class,
+    Src\Provider\WebSocketServiceProvider::class,
 ]);
 
 return $app;
