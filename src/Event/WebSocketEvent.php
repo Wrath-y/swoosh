@@ -3,9 +3,11 @@
 namespace Src\Event;
 
 use Src\Support\Core;
+use Src\Support\Kernel;
 use Swoole\Http\Request;
 use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server;
+use App\Services\ChatService;
 
 class WebSocketEvent
 {
@@ -18,6 +20,8 @@ class WebSocketEvent
     public function __construct(Core $app)
     {
         $this->app = $app;
+        $kernel = new Kernel($this->app);
+        $kernel->bootstrap();
     }
 
     /**
@@ -29,9 +33,8 @@ class WebSocketEvent
     public function onOpen(Server $server, Request $request)
     {
         $server->push($request->fd, json_encode([
-            'fd' => $request->fd,
-            'data' => 'Start ws',
-        ], JSON_UNESCAPED_SLASHES));
+            'fd' => $request->fd
+        ]));
     }
 
     /**
@@ -43,32 +46,42 @@ class WebSocketEvent
     public function onMessage(Server $server, Frame $frame)
     {
         $data = json_decode($frame->data);
-        if (! empty($data->target_id) && $server->connection_info($data->target_id)) {
-            $server->push($data->target_id, json_encode([
-                'fd' => $frame->fd,
+        if ($data === 'fetchUserList') {
+            foreach ($server->connections as $fd) {
+                $server->push($fd, $frame->data);
+            }
+        } else if (! empty($data->fd) && $server->connection_info($data->fd)) {
+            $server->push($data->fd, json_encode([
+                'source_fd' => $frame->fd,
                 'data' => $data,
-            ], JSON_UNESCAPED_SLASHES));
+            ]));
         } else {
+            print_r();
             $server->push($frame->fd, json_encode([
-                'fd' => $frame->fd,
                 'data' => 'Target connection has closed',
-            ], JSON_UNESCAPED_SLASHES));
+            ]));
         }
     }
 
     /**
      * Execute when receive message from client
      *
-     * @param Swoole\WebSocket\Server $request
-     * @param Swoole\WebSocket\Frame $frame
+     * @param Swoole\WebSocket\Server $server
+     * @param $fd
      */
     public function onClose($server, $fd)
     {
-        foreach ($server->connections as $fd) {
-            $server->push($fd, json_encode([
-                'fd' => $fd,
-                'data' => $fd . ' close',
-            ]));
+        $user_list = ChatService::userList();
+        foreach ($user_list as $user) {
+            if (strpos($user, ":$fd}")) {
+                $user = json_decode($user);
+                ChatService::delete($user->name);
+                break;
+            }
+        }
+        $data = json_encode('fetchUserList');
+        foreach ($server->connections as $f) {
+            $server->push($f, $data);
         }
     }
 }
