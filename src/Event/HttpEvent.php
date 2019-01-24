@@ -7,6 +7,7 @@ use Src\Support\Core;
 use Swoole\Http\Server;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
+use Src\Server\Redis\RedisManager;
 
 class HttpEvent
 {
@@ -33,6 +34,7 @@ class HttpEvent
         $response->set($swresponse);
 
         $res = $dispatcher->handle($request, $response);
+
         $response->end($res);
     }
 
@@ -43,6 +45,8 @@ class HttpEvent
      */
     public function onStart(Server $server)
     {
+        $redis = $this->app->get('php_redis');
+        dd($redis->connection());
     }
 
     /**
