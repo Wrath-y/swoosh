@@ -9,12 +9,13 @@ use Src\Helper\ErrorHelper;
 use Src\Server\RequestServer;
 use Src\Server\ResponseServer;
 use Src\Resource\AnnotationResource;
+use Src\Support\Contexts\RequestContext;
 
 class DispatcherServer
 {
     private $app;
 
-    public function __construct(Core &$app)
+    public function __construct(Core $app)
     {
         $this->app = $app;
         // Get routes
@@ -26,6 +27,8 @@ class DispatcherServer
 
     public function handle(RequestServer $request, ResponseServer $response)
     {
+        $this->beforeDispatch($request, $response);
+        $request = RequestContext::getRequest();
         $table = $this->app->get('routeTable');
         $replace_uri = preg_replace('/\d+/i', '{}', $request->request->server['request_uri']);
         $type = strtolower($request->request->server['request_method']);
@@ -79,5 +82,11 @@ class DispatcherServer
         return function (RequestServer $request) use ($destination) {
             return $destination($request);
         };
+    }
+
+    protected function beforeDispatch(RequestServer $request, ResponseServer $response)
+    {
+        RequestContext::setRequest($request);
+        RequestContext::setResponse($response);
     }
 }
