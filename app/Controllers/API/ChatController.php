@@ -12,7 +12,7 @@ class ChatController extends Controller
      */
     public function index()
     {
-        return success(ChatService::userList());
+        return '123';
     }
 
     /**
