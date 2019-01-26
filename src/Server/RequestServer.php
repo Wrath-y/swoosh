@@ -11,7 +11,7 @@ class RequestServer
     public $request;
     public $response;
 
-    public function set(Request $request, Response $response)
+    public function __construct(Request $request, Response $response)
     {
         if ($request->server['request_method'] === 'POST' && is_null($request->post) && $post_data = $request->rawContent()) {
             $request->post = json_decode($post_data, true);

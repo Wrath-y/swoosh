@@ -3,19 +3,25 @@
 namespace Src\Event;
 
 use Src\App;
+use App\Kernel;
 use Src\Support\Core;
 use Swoole\Http\Server;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
+use Src\Server\RequestServer;
+use Src\Server\ResponseServer;
 use Src\Server\Redis\RedisManager;
+use Src\Support\Contexts\RequestContext;
 
 class HttpEvent
 {
     private $app;
+    private $pool;
 
     public function __construct(Core $app)
     {
         $this->app = $app;
+        $this->pool = new \SplQueue;
     }
 
     /**
@@ -28,14 +34,10 @@ class HttpEvent
     public function onRequest(Request $swrequest, Response $swresponse)
     {
         $dispatcher = $this->app->get('dispatcher');
-        $request = $this->app->get('request');
-        $response = $this->app->get('response');
-        $request->set($swrequest, $swresponse);
-        $response->set($swresponse);
+        $request = new RequestServer($swrequest, $swresponse);
+        $response = new ResponseServer($swresponse);
 
-        $res = $dispatcher->handle($request, $response);
-
-        $response->end($res);
+        $dispatcher->handle($request, $response);
     }
 
     /**
@@ -45,8 +47,6 @@ class HttpEvent
      */
     public function onStart(Server $server)
     {
-        $redis = $this->app->get('php_redis');
-        dd($redis->connection());
     }
 
     /**
@@ -65,6 +65,8 @@ class HttpEvent
      */
     public function onWorkerStart(Server $server)
     {
+        $kernel = new Kernel($this->app);
+        $kernel->bootstrap();
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'mode' => env('MODE', 'pool'),
     'bootScan'  => [
         'App\Controllers\Admin',
         'App\Controllers\API',
