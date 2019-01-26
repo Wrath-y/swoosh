@@ -3,6 +3,7 @@
 namespace Src\Server;
 
 use Swoole\Http\Response;
+use Src\Server\Database\Eloquent\Model;
 
 class ResponseServer
 {
@@ -15,12 +16,15 @@ class ResponseServer
 
     public function end($html = null)
     {
-        if ( is_string($html) ) {
-            $this->header('Content-Type', 'text/html; charset=UTF-8');
-        } else {
-            $this->header('Content-Type', 'application/json; charset=UTF-8');
-            $html = json_encode($html, JSON_UNESCAPED_UNICODE);
+        $this->header('Content-Type', 'application/json; charset=UTF-8');
+        if (is_array($html) && current($html) instanceof Model) {
+            foreach ($html as &$value) {
+                $value = $value->getAttributes();
+            }
+        } else if (is_object($html && $html instanceof Model)) {
+            $html = $html->getAttributes();
         }
+        $html = json_encode($html, JSON_UNESCAPED_UNICODE);
 
         $this->response->end($html);
     }

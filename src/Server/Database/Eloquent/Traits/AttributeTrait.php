@@ -30,6 +30,11 @@ trait AttributeTrait
         return $this;
     }
 
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
     public function getAttribute($key)
     {
         if (!$key) {

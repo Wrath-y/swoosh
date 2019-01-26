@@ -5,21 +5,10 @@ namespace Src\Server\Database\Connectors;
 use Src\Support\Core;
 use Src\Server\Database\Connections\Connection;
 use Src\Server\Database\Connections\MySqlConnection;
+use Src\App;
 
 class ConnectionFactory
 {
-    /**
-     * The Core instance.
-     *
-     * @var \Src\Support\Core
-     */
-    protected $app;
-
-    public function __construct(Core &$app)
-    {
-        $this->app = $app;
-    }
-
     public function make(array $config)
     {
         return $this->createSingleConnection($config);
@@ -36,6 +25,13 @@ class ConnectionFactory
             $config['prefix'],
             $config
         );
+    }
+
+    protected function getConnectionViaPool()
+    {
+        $obj = App::get('db_pool')->getConnection();
+        
+        return $obj;
     }
 
     protected function createPdoResolver(array $config)

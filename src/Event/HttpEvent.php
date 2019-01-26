@@ -2,7 +2,6 @@
 
 namespace Src\Event;
 
-use Src\App;
 use App\Kernel;
 use Src\Support\Core;
 use Swoole\Http\Server;
@@ -10,18 +9,14 @@ use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Src\Server\RequestServer;
 use Src\Server\ResponseServer;
-use Src\Server\Redis\RedisManager;
-use Src\Support\Contexts\RequestContext;
 
 class HttpEvent
 {
     private $app;
-    private $pool;
 
     public function __construct(Core $app)
     {
         $this->app = $app;
-        $this->pool = new \SplQueue;
     }
 
     /**

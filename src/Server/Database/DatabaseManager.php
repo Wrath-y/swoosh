@@ -2,19 +2,15 @@
 
 namespace Src\Server\Database;
 
+use Src\App;
 use Src\Support\Core;
 use Src\Server\Database\Connections\Connection;
 use Src\Server\Database\Eloquent\ConnectionResolverInterface;
 
 class DatabaseManager implements ConnectionResolverInterface
 {
-    /**
-     * The Core instance.
-     *
-     * @var \Src\Support\Core
-     */
-    protected $app;
-
+    protected $config = [];
+    protected $is_pool = false;
     /**
      * The database connection factory instance.
      *
@@ -22,23 +18,24 @@ class DatabaseManager implements ConnectionResolverInterface
      */
     protected $factory;
 
-    public function __construct(Core $app)
+    public function __construct(array $config)
     {
-        $this->app = $app;
-        $this->factory = $app->get('db.factory');
+        $this->config = $config;
+        $this->is_pool = $config['mode'] === 'pool';
+        $this->factory = App::get('db.factory');
     }
 
     public function connection($name = null)
     {
         $database = $this->parseConnectionName($name);
 
-        if (! isset($this->connections[$name])) {
-            $this->connections[$name] = $this->configure(
-                $this->makeConnection($database)
-            );
+        if (isset($this->connections[$name]) && ! $this->is_pool) {
+            return $this->connections[$name];
         }
 
-        return $this->connections[$name];
+        return $this->connections[$name] = $this->configure(
+            $this->makeConnection($database)
+        );
     }
 
     /**
@@ -61,18 +58,7 @@ class DatabaseManager implements ConnectionResolverInterface
      */
     public function getDefaultConnection()
     {
-        return $this->app->get('config')->get('database.default');
-    }
-
-    /**
-     * Set the default connection name.
-     *
-     * @param  string  $name
-     * @return void
-     */
-    public function setDefaultConnection($name)
-    {
-        $this->app['config']['database.default'] = $name;
+        return App::get('config')->get('database.default');
     }
 
     /**
@@ -112,7 +98,7 @@ class DatabaseManager implements ConnectionResolverInterface
     {
         $name = $name ? : $this->getDefaultConnection();
 
-        $connections = $this->app->get('config')->get('database.connections');
+        $connections = App::get('config')->get('database.connections');
 
         if (is_null($config = ($connections[$name] ?? null))) {
             throw new \Exception("Database [$name] not configured.");
@@ -171,6 +157,18 @@ class DatabaseManager implements ConnectionResolverInterface
      */
     public function __call($method, $parameters)
     {
-        return $this->connection()->$method(...$parameters);
+        switch ($this->is_pool) {
+            case true:
+                $obj = App::get('db_pool')->getConnection();
+                if (!$obj) {
+                    return false;
+                }
+                DBContext::set($this->connection()->$method(...$parameters));
+                App::get('db_pool')->push($obj);
+
+                return DBContext::get();
+            default:
+                return $this->connection()->$method(...$parameters);
+        }
     }
 }
