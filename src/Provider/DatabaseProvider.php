@@ -12,10 +12,12 @@ class DatabaseProvider extends AbstractProvider
     public function register()
     {
         $this->app->set('db.factory', function () {
-            return new ConnectionFactory($this->app);
+            return new ConnectionFactory();
         });
         $this->app->set('db', function () {
-            return new DatabaseManager($this->app);
+            $config = $this->app->get('config')->get('database.connections');
+
+            return new DatabaseManager($config);
 
         });
         $this->app->set('db.connection', function () {

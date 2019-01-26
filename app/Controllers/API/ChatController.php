@@ -2,8 +2,9 @@
 
 namespace App\Controllers\API;
 
-use App\Controllers\Controller;
+use App\Models\Order;
 use App\Services\ChatService;
+use App\Controllers\Controller;
 
 class ChatController extends Controller
 {
@@ -12,7 +13,7 @@ class ChatController extends Controller
      */
     public function index()
     {
-        return success(ChatService::userList());
+        return Order::get();
     }
 
     /**
