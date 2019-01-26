@@ -22,16 +22,8 @@ class ConnectionFactory
             $config['driver'],
             $pdo,
             $config['database'],
-            $config['prefix'],
-            $config
+            $config['prefix']
         );
-    }
-
-    protected function getConnectionViaPool()
-    {
-        $obj = App::get('db_pool')->getConnection();
-        
-        return $obj;
     }
 
     protected function createPdoResolver(array $config)
@@ -89,10 +81,9 @@ class ConnectionFactory
      * @param  \PDO|\Closure     $connection
      * @param  string   $database
      * @param  string   $prefix
-     * @param  array    $config
      * @return \Src\Server\Database\Connection
      */
-    protected function createConnection($driver, $connection, $database, $prefix = '', array $config = [])
+    protected function createConnection($driver, $connection, $database, $prefix = '')
     {
         if ($resolver = Connection::getResolver($driver)) {
             return $resolver($connection, $database, $prefix, $config);
@@ -100,7 +91,7 @@ class ConnectionFactory
 
         switch ($driver) {
             case 'mysql':
-                return new MySqlConnection($connection, $database, $prefix, $config);
+                return new MySqlConnection($connection, $database, $prefix);
         }
 
         throw new Exception("Unsupported driver [$driver]");

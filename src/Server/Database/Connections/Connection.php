@@ -4,6 +4,7 @@ namespace Src\Server\Database\Connections;
 
 use PDO;
 use Closure;
+use Src\App;
 use Exception;
 use PDOException;
 use PDOStatement;
@@ -22,7 +23,7 @@ class Connection implements ConnectionInterface
      *
      * @var \PDO|\Closure
      */
-    protected $pdo;
+    public $pdo;
 
     /**
      * The name of the connected database.
@@ -80,16 +81,17 @@ class Connection implements ConnectionInterface
      */
     protected $fetchMode = PDO::FETCH_OBJ;
 
+    protected $is_pool = false;
+
     /**
      * Create a new database connection instance.
      *
      * @param  \PDO|\Closure     $pdo
      * @param  string   $database
      * @param  string   $tablePrefix
-     * @param  array    $config
      * @return void
      */
-    public function __construct($pdo, $database = '', $tablePrefix = '', array $config = [])
+    public function __construct($pdo, $database = '', $tablePrefix = '')
     {
         $this->pdo = $pdo;
 
@@ -97,7 +99,9 @@ class Connection implements ConnectionInterface
 
         $this->tablePrefix = $tablePrefix;
 
-        $this->config = $config;
+        $this->config = App::get('config')->get('database.connections');
+        
+        $this->is_pool = $this->config['mode'] === 'pool';
 
         $this->useDefaultQueryGrammar();
 
@@ -292,6 +296,12 @@ class Connection implements ConnectionInterface
      */
     public function getPdo()
     {
+        if ($this->is_pool) {
+            $this->pdo = App::get('db_pool')->getConnection();
+            if (!$this->pdo) {
+                return false;
+            }
+        }
         if ($this->pdo instanceof Closure) {
             return $this->pdo = call_user_func($this->pdo);
         }
@@ -467,6 +477,6 @@ class Connection implements ConnectionInterface
 
     public function getName()
     {
-        return isset($this->config['name']) ? $this->config['name'] : '';
+        return isset($this->config['mysql']['name']) ? $this->config['mysql']['name'] : '';
     }
 }
