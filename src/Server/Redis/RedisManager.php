@@ -2,6 +2,10 @@
 
 namespace Src\Server\Redis;
 
+use Src\App;
+use Src\Support\Core;
+use Src\Support\Contexts\RedisContext;
+
 class RedisManager
 {
     /**
@@ -25,6 +29,8 @@ class RedisManager
      */
     protected $connections;
 
+    protected $is_pool = false;
+
     /**
      * Create a new Redis manager instance.
      *
@@ -34,6 +40,7 @@ class RedisManager
      */
     public function __construct(array $config)
     {
+        $this->is_pool = $config['mode'] === 'pool';
         $this->config = $config;
         $this->driver = $config['client'];
     }
@@ -47,7 +54,7 @@ class RedisManager
     {
         $name = $name ? : 'default';
 
-        if (isset($this->connections[$name])) {
+        if (isset($this->connections[$name]) && ! $this->is_pool) {
             return $this->connections[$name];
         }
 
@@ -98,6 +105,18 @@ class RedisManager
      */
     public function __call($method, $parameters)
     {
-        return $this->connection()->{$method}(...$parameters);
+        switch ($this->is_pool) {
+            case true:
+                $obj = App::get('redis_pool')->getConnection();
+                if (!$obj) {
+                    return false;
+                }
+                RedisContext::set($obj['db']->{$method}(...$parameters));
+                App::get('redis_pool')->push($obj);
+
+                return RedisContext::get();
+            default:
+                return $this->connection()->{$method}(...$parameters);
+        }
     }
 }

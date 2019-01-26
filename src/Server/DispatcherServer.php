@@ -5,10 +5,12 @@ namespace Src\Server;
 use Src\App;
 use App\Kernel;
 use Src\Support\Core;
+use Swoole\Coroutine;
 use Src\Helper\ErrorHelper;
 use Src\Server\RequestServer;
 use Src\Server\ResponseServer;
 use Src\Resource\AnnotationResource;
+use Src\Support\Contexts\RedisContext;
 use Src\Support\Contexts\RequestContext;
 
 class DispatcherServer
@@ -28,7 +30,7 @@ class DispatcherServer
     public function handle(RequestServer $request, ResponseServer $response)
     {
         $this->beforeDispatch($request, $response);
-        $request = RequestContext::getRequest();
+
         $table = $this->app->get('routeTable');
         $replace_uri = preg_replace('/\d+/i', '{}', $request->request->server['request_uri']);
         $type = strtolower($request->request->server['request_method']);
@@ -45,7 +47,6 @@ class DispatcherServer
     {
         preg_match('/\d+/i', $request->request->server['request_uri'], $params);
         $kernel = new Kernel($this->app);
-        $kernel->bootstrap();
         $middleware = $kernel->getMiddleware();
         $middleware = array_filter($middleware + [$kernel->getRouteMiddleware($route['middleware'])]);
         $destination = $this->getDestination($request, $response, $route['controller'], $route['method'], end($params));
@@ -57,7 +58,13 @@ class DispatcherServer
             $this->prepareDestination($destination)
         );
 
-        return $pipeline($request);
+        $data = $pipeline($request);
+
+        $response = RequestContext::getResponse();
+
+        $response->end($data);
+
+        $this->afterDispatch();
     }
 
     // Get Controller Closure
@@ -88,5 +95,11 @@ class DispatcherServer
     {
         RequestContext::setRequest($request);
         RequestContext::setResponse($response);
+    }
+
+    protected function afterDispatch()
+    {
+        RequestContext::clearCidContext();
+        RedisContext::clearCidContext();
     }
 }

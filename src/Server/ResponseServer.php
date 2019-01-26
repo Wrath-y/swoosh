@@ -4,11 +4,11 @@ namespace Src\Server;
 
 use Swoole\Http\Response;
 
-class ResponseServer extends Response
+class ResponseServer
 {
     protected $response;
 
-    public function set(Response $response)
+    public function __construct(Response $response)
     {
         $this->response = $response;
     }

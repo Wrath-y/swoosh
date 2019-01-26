@@ -9,6 +9,11 @@ use Swoole\Coroutine;
 class RequestContext
 {
     /**
+     * @var array Coroutine context
+     */
+    public static $context;
+
+    /**
      * Key of current Request
      */
     const REQUEST_KEY = 'request';
@@ -28,20 +33,15 @@ class RequestContext
         return self::getCoroutineContext(self::RESPONSE_KEY);
     }
 
-    /**
-     * @var array Coroutine context
-     */
-    private static $context;
-
     public static function setRequest(RequestServer $request)
     {
-        $coroutineId = Coroutine::getuid();
+        $coroutineId = Coroutine::getCid();
         self::$context[$coroutineId][self::REQUEST_KEY] = $request;
     }
 
     public static function setResponse(ResponseServer $response)
     {
-        $coroutineId = Coroutine::getuid();
+        $coroutineId = Coroutine::getCid();
         self::$context[$coroutineId][self::RESPONSE_KEY] = $response;
     }
 
@@ -53,7 +53,7 @@ class RequestContext
      */
     private static function getCoroutineContext(string $key)
     {
-        $coroutineId = Coroutine::getuid();
+        $coroutineId = Coroutine::getCid();
         if (!isset(self::$context[$coroutineId])) {
             return null;
         }
@@ -62,6 +62,15 @@ class RequestContext
         if (isset($coroutineContext[$key])) {
             return $coroutineContext[$key];
         }
+
         return null;
+    }
+
+    public static function clearCidContext()
+    {
+        $coroutineId = Coroutine::getCid();
+        if (isset(self::$context[$coroutineId])) {
+            unset(self::$context[$coroutineId]);
+        }
     }
 }

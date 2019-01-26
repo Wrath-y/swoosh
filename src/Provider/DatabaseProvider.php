@@ -19,7 +19,7 @@ class DatabaseProvider extends AbstractProvider
 
         });
         $this->app->set('db.connection', function () {
-            return $this->app['db']->connection();
+            return $this->app->get('db')->connection();
         });
 
         Model::setConnectionResolver($this->app->get('db'));
