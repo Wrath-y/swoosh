@@ -31,7 +31,6 @@ class HttpEvent
         $dispatcher = $this->app->get('dispatcher');
         $request = new RequestServer($swrequest, $swresponse);
         $response = new ResponseServer($swresponse);
-
         $dispatcher->handle($request, $response);
     }
 
@@ -62,6 +61,8 @@ class HttpEvent
     {
         $kernel = new Kernel($this->app);
         $kernel->bootstrap();
+        $this->app->get('redis_pool');
+        $this->app->get('db_pool');
     }
 
     /**

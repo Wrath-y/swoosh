@@ -40,14 +40,9 @@ abstract class Pool implements PoolInterface
     public function getConnection()
     {
         $obj = null;
-        if ($this->connections->isEmpty()) {
-            if ($this->count < $this->max) {//连接数没达到最大，新建连接入池
-                $obj = $this->formatDB();
-                $this->push($obj);
-                $this->count++;
-            } else {
-                $obj = $this->connections->pop($this->time_out);//timeout为出队的最大的等待时间
-            }
+        if ($this->connections->isEmpty() && $this->count < $this->max) {
+            $obj = $this->formatDB(); //连接数没达到最大，新建连接入池
+            $this->count++;
         } else {
             $obj = $this->connections->pop($this->time_out);
         }
@@ -64,8 +59,8 @@ abstract class Pool implements PoolInterface
 
     public function gcSpareObject()
     {
-        //大约2分钟检测一次连接
-        swoole_timer_tick(120000, function () {
+        //大约1分钟检测一次连接
+        swoole_timer_tick(6000, function () {
             if ($this->connections->length() > intval($this->max * 0.5)) {
                 $list = [];
                 while (true) {
