@@ -2,24 +2,30 @@
 
 namespace Src\Support\Contexts;
 
+use Closure;
 use Swoole\Coroutine;
 
 class DBContext
 {
     /**
-     * @var array Coroutine context
+     * @param string $key key of context
      */
     public static $context;
 
-    public static function get()
+    public static function get($key)
     {
-        return self::getCoroutineContext();
+        return self::getCoroutineContext($key);
     }
 
-    public static function set($obj)
+    /**
+     * set data into coroutine context by key
+     *
+     * @param string $key key of context
+     */
+    public static function set($key, $obj)
     {
         $coroutineId = Coroutine::getCid();
-        self::$context[$coroutineId] = $obj;
+        self::$context[$coroutineId][$key] = $obj;
     }
 
     /**
@@ -28,15 +34,18 @@ class DBContext
      * @param string $key key of context
      * @return mixed|null
      */
-    private static function getCoroutineContext()
+    private static function getCoroutineContext($key)
     {
         $coroutineId = Coroutine::getCid();
-        if (!isset(self::$context[$coroutineId])) {
+        if (!isset(self::$context[$coroutineId][$key])) {
             return null;
         }
 
-        $coroutineContext = self::$context[$coroutineId];
-        if (isset($coroutineContext)) {
+        $coroutineContext = self::$context[$coroutineId][$key];
+        self::clearCidContext();
+        if ($coroutineContext instanceof Closure) {
+            return $coroutineContext();
+        } else {
             return $coroutineContext;
         }
 

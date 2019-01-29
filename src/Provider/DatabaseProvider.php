@@ -15,13 +15,7 @@ class DatabaseProvider extends AbstractProvider
             return new ConnectionFactory();
         });
         $this->app->set('db', function () {
-            $config = $this->app->get('config')->get('database.connections');
-
-            return new DatabaseManager($config);
-
-        });
-        $this->app->set('db.connection', function () {
-            return $this->app->get('db')->connection();
+            return new DatabaseManager();
         });
 
         Model::setConnectionResolver($this->app->get('db'));

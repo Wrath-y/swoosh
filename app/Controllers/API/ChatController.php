@@ -13,7 +13,7 @@ class ChatController extends Controller
      */
     public function index()
     {
-        return Order::get();
+        return Order::where('id', 1)->get();
     }
 
     /**

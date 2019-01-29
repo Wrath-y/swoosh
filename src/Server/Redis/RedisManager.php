@@ -111,10 +111,13 @@ class RedisManager
                 if (!$obj) {
                     return false;
                 }
-                RedisContext::set($obj['db']->{$method}(...$parameters));
+                RedisContext::set(function () use ($obj, $method, $parameters) {
+                    return $obj['db']->{$method}(...$parameters);
+                });
+                $result = RedisContext::get();
                 App::get('redis_pool')->push($obj);
 
-                return RedisContext::get();
+                return $result;
             default:
                 return $this->connection()->{$method}(...$parameters);
         }

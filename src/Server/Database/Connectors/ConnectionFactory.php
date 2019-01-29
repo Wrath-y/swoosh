@@ -2,10 +2,11 @@
 
 namespace Src\Server\Database\Connectors;
 
+use Src\App;
 use Src\Support\Core;
 use Src\Server\Database\Connections\Connection;
 use Src\Server\Database\Connections\MySqlConnection;
-use Src\App;
+use Src\Support\Contexts\DBContext;
 
 class ConnectionFactory
 {
@@ -16,13 +17,15 @@ class ConnectionFactory
 
     protected function createSingleConnection(array $config)
     {
-        $pdo = $this->createPdoResolver($config);
+        if ($config['mode'] === 'pool') {
+            $pdo = App::get('db_pool')->getConnection();
+        } else {
+            $pdo = $this->createPdoResolver($config);
+        }
 
         return $this->createConnection(
-            $config['driver'],
-            $pdo,
-            $config['database'],
-            $config['prefix']
+            $config,
+            $pdo
         );
     }
 
@@ -31,7 +34,6 @@ class ConnectionFactory
         return function () use ($config) {
             foreach ($this->parseHosts($config) as $host) {
                 $config['host'] = $host;
-
                 try {
                     return $this->createConnector($config)->connect($config);
                 } catch (PDOException $e) {
@@ -77,23 +79,23 @@ class ConnectionFactory
     /**
      * Create a new connection instance.
      *
-     * @param  string   $driver
+     * @param  string   $config['driver']
      * @param  \PDO|\Closure     $connection
-     * @param  string   $database
-     * @param  string   $prefix
+     * @param  string   $config['database']
+     * @param  string   $config['prefix']
      * @return \Src\Server\Database\Connection
      */
-    protected function createConnection($driver, $connection, $database, $prefix = '')
+    protected function createConnection($config, $connection)
     {
-        if ($resolver = Connection::getResolver($driver)) {
-            return $resolver($connection, $database, $prefix, $config);
+        if ($resolver = Connection::getResolver($config['driver'])) {
+            return $resolver($connection, $config['database'], $config['prefix']);
         }
 
-        switch ($driver) {
+        switch ($config['driver']) {
             case 'mysql':
-                return new MySqlConnection($connection, $database, $prefix);
+                return new MySqlConnection($connection, $config, $config['database'], $config['prefix']);
         }
 
-        throw new Exception("Unsupported driver [$driver]");
+        throw new Exception('Unsupported driver [' . $config['driver'] . ']');
     }
 }
