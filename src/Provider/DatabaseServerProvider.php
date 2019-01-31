@@ -7,7 +7,7 @@ use Src\Server\Database\Eloquent\Model;
 use Src\Server\Database\DatabaseManager;
 use Src\Server\Database\Connectors\ConnectionFactory;
 
-class DatabaseProvider extends AbstractProvider
+class DatabaseServerProvider extends AbstractProvider
 {
     public function register()
     {

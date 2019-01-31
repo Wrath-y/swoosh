@@ -8,6 +8,15 @@ use Src\Event\WebSocketEvent;
 class WebSocketServiceProvider extends AbstractProvider
 {
     protected $onList = [
+        'onRequest' => 'Request',
+        'onStart' => 'Start',
+        'onShutdown' => 'Shutdown',
+        'onWorkerStart' => 'WorkerStart',
+        'onWorkerStop' => 'WorkerStop',
+        'onConnect' => 'Connect',
+        'onClose' => 'Close',
+        'onTask' => 'Task',
+        'onFinish' => 'Finish',
         'onOpen' => 'Open',
         'onMessage' => 'Message',
         'onClose' => 'Close',
@@ -20,6 +29,7 @@ class WebSocketServiceProvider extends AbstractProvider
             $server = new Server($config['host'], $config['port']);
             $server->set([
                 'daemonize' => $config['daemonize'],
+                'websocket_subprotocol' => 'chat',
             ]);
             $ws = new WebSocketEvent($this->app);
             foreach ($this->onList as $function => $event) {

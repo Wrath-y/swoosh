@@ -5,7 +5,7 @@ namespace Src\Provider;
 use Src\App;
 use Src\Server\MiddlewareServer;
 
-class MiddlewareProvider extends AbstractProvider
+class MiddlewareServerProvider extends AbstractProvider
 {
     public function register()
     {
