@@ -14,16 +14,17 @@ class RedisPool extends Pool
     protected $count; //当前连接数
     protected $connections; //连接池组
     protected $spareTime; //用于空闲连接回收判断
-    protected $time_out = 6; //用于阻塞等待的时间
+    protected $time_out; //用于阻塞等待的时间
     protected $inited = false;
     protected $config = [];
 
     public function __construct()
     {
-        $this->min = 100;
-        $this->max = 1000;
-        $this->spareTime = 10 * 3600;
+        $this->min = env('REDIS_POOL_MIN', 10);
+        $this->max = env('REDIS_POOL_MAX', 100);
+        $this->spareTime = env('REDIS_POOL_SPARE_TIME', 10 * 3600); // 2 minute
         $this->connections = new Channel($this->max + 1);
+        $this->time_out = env('REDIS_POOL_TIME_OUT', 3);
         $this->config = App::get('config')->get('database.redis');
     }
 

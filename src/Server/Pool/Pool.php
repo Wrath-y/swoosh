@@ -60,7 +60,7 @@ abstract class Pool implements PoolInterface
     public function gcSpareObject()
     {
         //大约1分钟检测一次连接
-        swoole_timer_tick(6000, function () {
+        swoole_timer_tick(env('DB_POOL_TIME_PICK', 6000), function () {
             if ($this->connections->length() > intval($this->max * 0.5)) {
                 $list = [];
                 while (true) {
