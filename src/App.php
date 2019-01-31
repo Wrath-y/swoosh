@@ -66,7 +66,5 @@ class App
                 self::$app->get('http')->start();
                 break;
         }
-        
-        
     }
 }

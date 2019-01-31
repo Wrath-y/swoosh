@@ -11,6 +11,8 @@ class WebSocketServiceProvider extends AbstractProvider
         'onOpen' => 'Open',
         'onMessage' => 'Message',
         'onClose' => 'Close',
+        'onTask' => 'Task',
+        'onFinish' => 'Finish',
     ];
 
     public function register()
@@ -18,9 +20,7 @@ class WebSocketServiceProvider extends AbstractProvider
         $this->app->set('ws', function () {
             $config = $this->app->get('config')->get('app.ws');
             $server = new Server($config['host'], $config['port']);
-            $server->set([
-                'daemonize' => $config['daemonize'],
-            ]);
+            $server->set($config['set']);
             $ws = new WebSocketEvent($this->app);
             foreach ($this->onList as $function => $event) {
                 $server->on($event, [$ws, $function]);

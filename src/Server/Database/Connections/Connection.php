@@ -355,7 +355,7 @@ class Connection implements ConnectionInterface
         return $this->run($query, $bindings, function ($query, $bindings) {
             $statement = $this->prepared($this->getPdo()->prepare($query));
             $this->bindValues($statement, $bindings);
-    
+
             return $this->excute($this->beforeExcute($statement, 'fetchAll', $bindings));
         });
     }
@@ -447,18 +447,18 @@ class Connection implements ConnectionInterface
      */
     public function prepareBindings(array $bindings)
     {
-            $grammar = $this->getQueryGrammar();
+        $grammar = $this->getQueryGrammar();
 
-            foreach ($bindings as $key => $value) {
+        foreach ($bindings as $key => $value) {
                 // Transform all instances of DateTimeInterface into the actual date string
-                if ($value instanceof DateTimeInterface) {
-                    $bindings[$key] = $value->format($grammar->getDateFormat());
-                } elseif (is_bool($value)) {
-                    $bindings[$key] = (int)$value;
-                }
+            if ($value instanceof DateTimeInterface) {
+                $bindings[$key] = $value->format($grammar->getDateFormat());
+            } elseif (is_bool($value)) {
+                $bindings[$key] = (int)$value;
             }
+        }
 
-            return $bindings;
+        return $bindings;
     }
 
     /**
@@ -492,39 +492,25 @@ class Connection implements ConnectionInterface
      */
     protected function beforeExcute($statement, string $mode = '', $bindings = [])
     {
-        $closure = function () {};
-        if ($statement instanceof PDOStatement) {
-            $closure = function () use ($statement, $mode) {
-                $result = $statement->execute();
-                switch ($mode) {
-                    case 'fetchAll':
-                        return $statement->fetchAll();
-                    case 'count':
-                        return $statement->rowCount();
-                    default:
-                        return $result;
-                }
-            };
-        }
-        if ($statement instanceof CoStatement) {
-            $bindings = $this->prepareBindings($bindings);
-            $closure = function () use ($statement, $mode, $bindings) {
-                $result = $statement->execute($bindings);
-                switch ($mode) {
-                    case 'fetchAll':
-                        $result = $statement->fetchAll();
-                        break;
-                    case 'count':
-                        $result = count($statement->fetchAll());
-                        break;
-                    default:
-                        break;
-                }
+        $closure = function () use ($statement, $mode) {
+            $result = $statement->execute();
+            switch ($mode) {
+                case 'fetchAll':
+                    $result = $statement->fetchAll();
+                    break;
+                case 'count':
+                    $result = $statement->rowCount();
+                    break;
+                default:
+                    break;
+            }
+            if ($this->is_pool) {
                 App::get('db_pool')->push($this->pdo);
+            }
 
-                return $result;
-            };
-        }
+            return $result;
+        };
+
         if ($this->is_pool) {
             DBContext::set('closure', $closure);
         }

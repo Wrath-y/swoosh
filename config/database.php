@@ -20,7 +20,7 @@ return [
         ],
     ],
     'redis' => [
-        'client' => 'swredis',
+        'client' => 'hredis',
         'mode' => 'pool',
 
         'default' => [

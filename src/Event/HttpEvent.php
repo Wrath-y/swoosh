@@ -59,10 +59,12 @@ class HttpEvent
      */
     public function onWorkerStart(Server $server)
     {
-        $kernel = new Kernel($this->app);
-        $kernel->bootstrap();
-        $this->app->get('redis_pool');
-        $this->app->get('db_pool');
+        go(function () {
+            $kernel = new Kernel($this->app);
+            $kernel->bootstrap();
+            $this->app->get('redis_pool');
+            $this->app->get('db_pool');
+        });
     }
 
     /**
@@ -71,7 +73,7 @@ class HttpEvent
      * @param Server $server
      * @param int $workerId
      */
-    public function onWorkerStop(Server $server,int $workerId)
+    public function onWorkerStop(Server $server, int $workerId)
     {
     }
 
@@ -82,7 +84,7 @@ class HttpEvent
      * @param int $fd
      * @param int $reactorId
      */
-    public function onConnect(Server $server,int $fd,int $reactorId)
+    public function onConnect(Server $server, int $fd, int $reactorId)
     {
     }
 
@@ -93,7 +95,7 @@ class HttpEvent
      * @param int $fd
      * @param int $reactorId
      */
-    public function onClose(Server $server,int $fd,int $reactorId)
+    public function onClose(Server $server, int $fd, int $reactorId)
     {
     }
 
@@ -104,7 +106,7 @@ class HttpEvent
      * @param array $data
      * @return string
      */
-    public function onTask(Server $server,int $taskId,int $srcWorkerId,array $data)
+    public function onTask(Server $server, \Swoole\Server\Task $task)
     {
     }
 
@@ -114,7 +116,7 @@ class HttpEvent
      * @param $data
      * @return mixed
      */
-    public function onFinish(Server $server,int $taskId,$data)
+    public function onFinish(Server $server, int $taskId, $data)
     {
     }
 }

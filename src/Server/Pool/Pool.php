@@ -3,6 +3,7 @@
 namespace Src\Server\Pool;
 
 use Src\Support\Core;
+use Swoole\Coroutine;
 
 abstract class Pool implements PoolInterface
 {
@@ -11,8 +12,10 @@ abstract class Pool implements PoolInterface
         if ($this->inited) {
             return null;
         }
+
         for ($i = 0; $i < $this->min; $i++) {
             $obj = $this->formatDB();
+
             $this->count++;
             $this->connections->push($obj);
         }
