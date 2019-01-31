@@ -89,8 +89,6 @@ class RedisManager
     protected function connector()
     {
         switch ($this->driver) {
-            case 'swredis':
-                return new Connectors\SwRedisConnector;
             case 'hredis':
                 return new Connectors\HRedisConnector;
         }
@@ -108,6 +106,7 @@ class RedisManager
         switch ($this->is_pool) {
             case true:
                 $obj = App::get('redis_pool')->getConnection();
+
                 if (!$obj) {
                     return false;
                 }

@@ -2,6 +2,7 @@
 
 namespace Src\Server\Database\Connectors;
 
+use PDOException;
 use Src\App;
 use Src\Support\Core;
 use Src\Server\Database\Connections\Connection;
@@ -12,10 +13,15 @@ class ConnectionFactory
 {
     public function make(array $config)
     {
-        return $this->createSingleConnection($config);
+        return $this->getConnection($config);
     }
 
-    protected function createSingleConnection(array $config)
+    public function makeSinglePdo(array $config)
+    {
+        return $this->createPdoResolver($config)();
+    }
+
+    protected function getConnection(array $config)
     {
         if ($config['mode'] === 'pool') {
             $pdo = App::get('db_pool')->getConnection();
@@ -28,6 +34,7 @@ class ConnectionFactory
             $pdo
         );
     }
+    
 
     protected function createPdoResolver(array $config)
     {
@@ -37,7 +44,7 @@ class ConnectionFactory
                 try {
                     return $this->createConnector($config)->connect($config);
                 } catch (PDOException $e) {
-                    throw $e->getMessage();
+                    throw $e;
                 }
             }
 
@@ -96,6 +103,6 @@ class ConnectionFactory
                 return new MySqlConnection($connection, $config, $config['database'], $config['prefix']);
         }
 
-        throw new Exception('Unsupported driver [' . $config['driver'] . ']');
+        throw new \Exception('Unsupported driver [' . $config['driver'] . ']');
     }
 }

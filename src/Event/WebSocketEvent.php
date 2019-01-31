@@ -81,4 +81,25 @@ class WebSocketEvent
             $server->push($f, $data);
         }
     }
+
+    /**
+     * @param Server $server
+     * @param int $taskId
+     * @param int $srcWorkerId
+     * @param array $data
+     * @return string
+     */
+    public function onTask(Server $server, \Swoole\Server\Task $task)
+    {
+    }
+
+    /**
+     * @param Server $server
+     * @param int $taskId
+     * @param $data
+     * @return mixed
+     */
+    public function onFinish(Server $server, int $taskId, $data)
+    {
+    }
 }

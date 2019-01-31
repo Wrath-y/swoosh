@@ -24,10 +24,7 @@ class HttpServiceProvider extends AbstractProvider
         $this->app->set('http', function () {
             $config = $this->app->get('config')->get('app.http');
             $server = new Server($config['host'], $config['port']);
-            $server->set([
-                'daemonize' => $config['daemonize'],
-                'open_http2_protocol' => true,
-            ]);
+            $server->set($config['set']);
             $http = new HttpEvent($this->app);
             foreach ($this->onList as $function => $event){
                 $server->on($event, [$http, $function]);

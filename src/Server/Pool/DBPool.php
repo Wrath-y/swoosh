@@ -24,28 +24,12 @@ class DBPool extends Pool
         $this->spareTime = env('DB_POOL_SPARE_TIME', 2 * 6000); // 2 minute
         $this->connections = new Channel($this->max + 1);
         $this->time_out = env('DB_POOL_TIME_OUT', 3);
-        $this->config = App::get('config')->get('database.connections');
+        $this->config = App::get('config')->get('database.connections.mysql');
     }
 
     protected function createDb()
     {
-        $name = $this->getDefaultConnection();
-        $db = new \Swoole\Coroutine\Mysql();
-        $db->connect([
-            'host' => $this->config[$name]['host'],
-            'port' => $this->config[$name] ['port'],
-            'user' => $this->config[$name] ['username'],
-            'password' => $this->config[$name] ['password'],
-            'database' => $this->config[$name] ['database'],
-            'fetch_mode' => true
-        ]);
-
-        return $db;
-    }
-
-    protected function getDefaultConnection()
-    {
-        return App::get('config')->get('database.default');
+        return App::get('db.factory')->makeSinglePdo($this->config);
     }
 }
 
