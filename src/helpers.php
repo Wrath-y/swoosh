@@ -2,6 +2,7 @@
 
 use Src\App;
 use Src\Helper\StringHelper;
+use Src\Support\Contexts\RequestContext;
 
 /**
  * @param      $key
@@ -200,13 +201,13 @@ if (!function_exists('request')) {
     function request($key = null)
     {
         if (is_array($key)) {
-            return App::get('request')->only($key);
+            return RequestContext::getRequest()->only($key);
         }
         if (is_string($key)) {
-            return App::get('request')->get($key);
+            return RequestContext::getRequest()->get($key);
         }
 
-        return App::get('request');
+        return RequestContext::getRequest();
     }
 }
 

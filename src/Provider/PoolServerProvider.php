@@ -6,7 +6,7 @@ use Src\App;
 use Src\Server\Pool\DBPool;
 use Src\Server\Pool\RedisPool;
 
-class PoolProvider extends AbstractProvider
+class PoolServerProvider extends AbstractProvider
 {
     public function register()
     {

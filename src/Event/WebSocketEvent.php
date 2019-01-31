@@ -4,9 +4,9 @@ namespace Src\Event;
 
 use Src\Support\Core;
 use Src\Support\Kernel;
-use Swoole\Http\Request;
 use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server;
+use Swoole\Http\Request;
 use App\Services\ChatService;
 
 class WebSocketEvent
@@ -20,8 +20,6 @@ class WebSocketEvent
     public function __construct(Core $app)
     {
         $this->app = $app;
-        $kernel = new Kernel($this->app);
-        $kernel->bootstrap();
     }
 
     /**
@@ -56,7 +54,6 @@ class WebSocketEvent
                 'data' => $data,
             ]));
         } else {
-            print_r();
             $server->push($frame->fd, json_encode([
                 'data' => 'Target connection has closed',
             ]));
