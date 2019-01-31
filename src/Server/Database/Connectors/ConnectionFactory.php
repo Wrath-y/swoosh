@@ -76,6 +76,8 @@ class ConnectionFactory
         }
 
         switch ($config['driver']) {
+            case 'co_mysql':
+                return new CoMySqlConnector;
             case 'mysql':
                 return new MySqlConnector;
         }
@@ -99,6 +101,7 @@ class ConnectionFactory
         }
 
         switch ($config['driver']) {
+            case 'co_mysql':
             case 'mysql':
                 return new MySqlConnection($connection, $config, $config['database'], $config['prefix']);
         }

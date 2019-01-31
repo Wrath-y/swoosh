@@ -492,25 +492,45 @@ class Connection implements ConnectionInterface
      */
     protected function beforeExcute($statement, string $mode = '', $bindings = [])
     {
-        $closure = function () use ($statement, $mode) {
-            $result = $statement->execute();
-            switch ($mode) {
-                case 'fetchAll':
-                    $result = $statement->fetchAll();
-                    break;
-                case 'count':
-                    $result = $statement->rowCount();
-                    break;
-                default:
-                    break;
-            }
-            if ($this->is_pool) {
+        if ($statement instanceof PDOStatement) {
+            $closure = function () use ($statement, $mode) {
+                $result = $statement->execute();
+                switch ($mode) {
+                    case 'fetchAll':
+                        $result = $statement->fetchAll();
+                        break;
+                    case 'count':
+                        $result = $statement->fetchAll();
+                        break;
+                    default:
+                        break;
+                }
+                if ($this->is_pool) {
+                    App::get('db_pool')->push($this->pdo);
+                }
+
+                return $result;
+            };
+        }
+        if ($statement instanceof CoStatement) {
+            $bindings = $this->prepareBindings($bindings);
+            $closure = function () use ($statement, $mode, $bindings) {
+                $result = $statement->execute($bindings);
+                switch ($mode) {
+                    case 'fetchAll':
+                        $result = $statement->fetchAll();
+                        break;
+                    case 'count':
+                        $result = count($statement->fetchAll());
+                        break;
+                    default:
+                        break;
+                }
                 App::get('db_pool')->push($this->pdo);
-            }
 
-            return $result;
-        };
-
+                return $result;
+            };
+        }
         if ($this->is_pool) {
             DBContext::set('closure', $closure);
         }
