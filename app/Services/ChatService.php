@@ -2,20 +2,14 @@
 
 namespace App\Services;
 
+use Swoole\WebSocket\Server;
+
 class ChatService extends Service
 {
-    public function userList()
+    public function fetchUserList(Server $server, $task_id, $data)
     {
-        return \PHPRedis::hvals('chat_users');
-    }
-
-    public function set($data)
-    {
-        return \PHPRedis::hset('chat_users', $data['name'], json_encode($data));
-    }
-
-    public function delete($name)
-    {
-        return \PHPRedis::hdel('chat_users', $name);
+        foreach ($server->connections as $fd) {
+            $server->push($fd, $data);
+        }
     }
 }

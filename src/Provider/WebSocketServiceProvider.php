@@ -8,15 +8,7 @@ use Src\Event\WebSocketEvent;
 class WebSocketServiceProvider extends AbstractProvider
 {
     protected $onList = [
-        'onRequest' => 'Request',
-        'onStart' => 'Start',
-        'onShutdown' => 'Shutdown',
         'onWorkerStart' => 'WorkerStart',
-        'onWorkerStop' => 'WorkerStop',
-        'onConnect' => 'Connect',
-        'onClose' => 'Close',
-        'onTask' => 'Task',
-        'onFinish' => 'Finish',
         'onOpen' => 'Open',
         'onMessage' => 'Message',
         'onClose' => 'Close',

@@ -2,8 +2,7 @@
 
 namespace App\Controllers\API;
 
-use App\Models\Order;
-use App\Services\ChatService;
+use App\Services\ChatRedisService;
 use App\Controllers\Controller;
 
 class ChatController extends Controller
@@ -13,8 +12,7 @@ class ChatController extends Controller
      */
     public function index()
     {
-        return Order::where('id', 1)->get();
-        return success(ChatService::userList());
+        return '123';
     }
 
     /**
@@ -22,7 +20,7 @@ class ChatController extends Controller
      */
     public function store()
     {
-        return success(ChatService::set(request('data')));
+        return success(ChatRedisService::set(request('data')));
     }
 
     /**
@@ -30,6 +28,6 @@ class ChatController extends Controller
      */
     public function destroy()
     {
-        return success(ChatService::delete(request('name')));
+        return success(ChatRedisService::delete(request('name')));
     }
 }

@@ -10,7 +10,6 @@ use Src\Helper\ErrorHelper;
 use Src\Server\RequestServer;
 use Src\Server\ResponseServer;
 use Src\Resource\AnnotationResource;
-use Src\Support\Contexts\RedisContext;
 use Src\Support\Contexts\RequestContext;
 
 class DispatcherServer
@@ -30,7 +29,7 @@ class DispatcherServer
     public function handle(RequestServer $request, ResponseServer $response)
     {
         $this->beforeDispatch($request, $response);
-
+        $request = RequestContext::getRequest();
         $table = $this->app->get('routeTable');
         $replace_uri = preg_replace('/\d+/i', '{}', $request->request->server['request_uri']);
         $type = strtolower($request->request->server['request_method']);
