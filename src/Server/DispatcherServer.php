@@ -30,7 +30,6 @@ class DispatcherServer
     public function handle(RequestServer $request, ResponseServer $response)
     {
         $this->beforeDispatch($request, $response);
-
         $table = $this->app->get('routeTable');
         $replace_uri = preg_replace('/\d+/i', '{}', $request->request->server['request_uri']);
         $type = strtolower($request->request->server['request_method']);
