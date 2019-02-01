@@ -116,7 +116,7 @@ class HttpEvent
      * @param $data
      * @return mixed
      */
-    public function onFinish(Server $server, int $taskId, $data)
+    public function onFinish(Server $server, int $task_id, $data)
     {
     }
 }

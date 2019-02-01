@@ -3,10 +3,12 @@
 namespace Src\Event;
 
 use Src\Support\Core;
-use Src\Support\Kernel;
+use App\Kernel;
 use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server;
 use Swoole\Http\Request;
+use Swoole\Server\Task;
+use App\Services\ChatRedisService;
 use App\Services\ChatService;
 
 class WebSocketEvent
@@ -20,6 +22,21 @@ class WebSocketEvent
     public function __construct(Core $app)
     {
         $this->app = $app;
+    }
+
+    /**
+     * Execute when the worker start
+     *
+     * @param Server $server
+     */
+    public function onWorkerStart(Server $server)
+    {
+        go(function () {
+            $kernel = new Kernel($this->app);
+            $kernel->bootstrap();
+            $this->app->get('redis_pool');
+            $this->app->get('db_pool');
+        });
     }
 
     /**
@@ -45,9 +62,7 @@ class WebSocketEvent
     {
         $data = json_decode($frame->data);
         if ($data === 'fetchUserList') {
-            foreach ($server->connections as $fd) {
-                $server->push($fd, $frame->data);
-            }
+            $server->task($frame->data, -1, [new ChatService, 'fetchUserList']);
         } else if (! empty($data->fd) && $server->connection_info($data->fd)) {
             $server->push($data->fd, json_encode([
                 'source_fd' => $frame->fd,
@@ -68,11 +83,11 @@ class WebSocketEvent
      */
     public function onClose($server, $fd)
     {
-        $user_list = ChatService::userList();
+        $user_list = ChatRedisService::userList();
         foreach ($user_list as $user) {
             if (strpos($user, ":$fd}")) {
                 $user = json_decode($user);
-                ChatService::delete($user->name);
+                ChatRedisService::delete($user->name);
                 break;
             }
         }
@@ -84,22 +99,21 @@ class WebSocketEvent
 
     /**
      * @param Server $server
-     * @param int $taskId
-     * @param int $srcWorkerId
-     * @param array $data
+     * @param \Swoole\Server\Task $task
      * @return string
      */
-    public function onTask(Server $server, \Swoole\Server\Task $task)
+    public function onTask(Server $server, Task $task)
     {
+        $server->finish($task->data);
     }
 
-    /**
+    /** Execute when $server->finish($data) on onTask
      * @param Server $server
-     * @param int $taskId
-     * @param $data
+     * @param int $task_id
+     * @param string $data
      * @return mixed
      */
-    public function onFinish(Server $server, int $taskId, $data)
+    public function onFinish(Server $server, int $task_id, $data)
     {
     }
 }

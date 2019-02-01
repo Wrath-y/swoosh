@@ -32,6 +32,7 @@ return [
             'max_request' => env('WS_MAX_REQUEST', 10),
             'task_worker_num' => env('WS_TASK_WORKER_NUM', 2),
             'daemonize' => env('WS_DAEMONIZE', 0),
+            'task_enable_coroutine' => true,
         ],
     ],
 ];
