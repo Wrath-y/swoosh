@@ -18,9 +18,9 @@ class ChatService extends Service
     {
         go(function () use ($data) {
             ChatLog::insert([
-                'source_fd' => $data['source_fd'],
-                'fd' => $data['data']->fd,
-                'data' => $data['data']->message,
+                'source_name' => $data->source_name,
+                'target_name' => $data->target_name,
+                'data' => $data->message,
                 'updated_at' => date('Y-m-d H:i:s'),
                 'created_at' => date('Y-m-d H:i:s'),
             ]);

@@ -2,7 +2,7 @@
 
 namespace App\Controllers\API;
 
-use App\Models\User;
+use App\Models\ChatLog;
 use App\Services\ChatRedisService;
 use App\Controllers\Controller;
 
@@ -30,5 +30,15 @@ class ChatController extends Controller
     public function destroy()
     {
         return success(ChatRedisService::delete(request('name')));
+    }
+
+    /**
+     * @Get('/api/chat-logs')
+     */
+    public function chatLogs()
+    {
+        $data = ChatLog::where('target_name', request('target_name'))->where('source_name', request('source_name'))->get();
+
+        return success($data);
     }
 }

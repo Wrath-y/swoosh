@@ -17,12 +17,13 @@ class ResponseServer
     public function end($html = null)
     {
         $this->header('Content-Type', 'application/json; charset=UTF-8');
-        if (is_array($html) && current($html) instanceof Model) {
-            foreach ($html as &$value) {
+
+        if (is_array($html['data']) && current($html['data']) instanceof Model) {
+            foreach ($html['data'] as &$value) {
                 $value = $value->getAttributes();
             }
-        } else if (is_object($html && $html instanceof Model)) {
-            $html = $html->getAttributes();
+        } else if (is_object($html['data'] && $html['data'] instanceof Model)) {
+            $html['data'] = $html['data']->getAttributes();
         }
         $html = json_encode($html, JSON_UNESCAPED_UNICODE);
 
