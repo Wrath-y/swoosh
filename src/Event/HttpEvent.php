@@ -45,8 +45,7 @@ class HttpEvent
      */
     public function onStart(Server $server)
     {
-        $redis = $this->app->get('php_redis');
-        dd($redis->connection());
+        $this->app->get('php_redis');
     }
 
     /**
