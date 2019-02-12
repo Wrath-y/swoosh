@@ -59,11 +59,15 @@ class WebSocketEvent
         $data = json_decode($frame->data);
         if ($data === 'fetchUserList') {
             $server->task($frame->data, -1, [new ChatService, 'fetchUserList']);
-        } else if (! empty($data->fd) && $server->connection_info($data->fd)) {
+        } else if (!empty($data->fd) && $server->connection_info($data->fd)) {
             $server->push($data->fd, json_encode([
                 'source_fd' => $frame->fd,
                 'data' => $data,
             ]));
+            $server->task([
+                'source_fd' => $frame->fd,
+                'data' => $data
+            ], -1, [new ChatService, 'takeNote']);
         } else {
             print_r();
             $server->push($frame->fd, json_encode([

@@ -2,6 +2,7 @@
 
 namespace App\Controllers\API;
 
+use App\Models\User;
 use App\Services\ChatRedisService;
 use App\Controllers\Controller;
 
