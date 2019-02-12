@@ -200,7 +200,7 @@ abstract class Model
      * Resolve a connection instance.
      *
      * @param  string|null  $connection
-     * @return \Src\Server\Database\Connection
+     * @return \Src\Server\Database\Connections\Connection
      */
     public static function resolveConnection($connection = null)
     {

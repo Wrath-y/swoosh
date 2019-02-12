@@ -204,6 +204,72 @@ class Grammar extends BaseGrammar
     }
 
     /**
+     * Compile an insert statement into SQL.
+     *
+     * @param  \Src\Server\Database\Query\Builder  $query
+     * @param  array  $values
+     * @return string
+     */
+    public function compileInsert(Builder $query, array $values)
+    {
+        // Essentially we will force every insert to be treated as a batch insert which
+        // simply makes creating the SQL easier for us since we can utilize the same
+        // basic routine regardless of an amount of records given to us to insert.
+        $table = $this->wrapTable($query->from);
+
+        if (!is_array(reset($values))) {
+            $values = [$values];
+        }
+
+        $columns = $this->columnize(array_keys(reset($values)));
+
+        // We need to build a list of parameter place-holders of values that are bound
+        // to the query. Each insert should have the exact same amount of parameter
+        // bindings so we will loop through the record and parameterize them all.
+        $parameters = implode(',', array_map(function ($record) {
+            return '(' . $this->parameterize($record) . ')';
+        }, $values));
+
+        return "insert into $table ($columns) values $parameters";
+    }
+
+    /**
+     * Compile an update statement into SQL.
+     *
+     * @param  \Src\Server\Database\Query\Builder  $query
+     * @param  array  $values
+     * @return string
+     */
+    public function compileUpdate(Builder $query, $values)
+    {
+        $table = $this->wrapTable($query->from);
+
+        // Each one of the columns in the update statements needs to be wrapped in the
+        // keyword identifiers, also a place-holder needs to be created for each of
+        // the values in the list of bindings so we can make the sets statements.
+        array_walk($values, function (&$value, $key) {
+            $value = $this->wrap($key) . ' = ' . $this->parameter($value);
+        });
+        $columns = implode(', ', $values);
+
+        // If the query has any "join" clauses, we will setup the joins on the builder
+        // and compile them so we can attach them to this update, as update queries
+        // can get join statements to attach to other tables when they're needed.
+        $joins = '';
+
+        if (isset($query->joins)) {
+            $joins = ' ' . $this->compileJoins($query, $query->joins);
+        }
+
+        // Of course, update queries may also be constrained by where clauses so we'll
+        // need to compile the where clauses and attach it to the query so only the
+        // intended records are updated by the SQL statements we generate to run.
+        $where = $this->compileWheres($query);
+
+        return rtrim("update {$table}{$joins} set $columns $where");
+    }
+
+    /**
      * Format the where clause statements into one string.
      *
      * @param  \Src\Server\Database\Query\Builder  $query
@@ -259,5 +325,21 @@ class Grammar extends BaseGrammar
     public function getOperators()
     {
         return $this->operators;
+    }
+
+    /**
+     * Prepare the bindings for an update statement.
+     *
+     * @param  array  $bindings
+     * @param  array  $values
+     * @return array
+     */
+    public function prepareBindingsForUpdate(array $bindings, array $values)
+    {
+        $cleanBindings = array_except($bindings, ['join', 'select']);
+
+        return array_values(
+            array_merge($bindings['join'], $values, flatten($cleanBindings))
+        );
     }
 }
