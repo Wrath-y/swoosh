@@ -102,7 +102,7 @@ class WebSocketEvent
      */
     public function onTask(Server $server, Task $task)
     {
-        $server->finish($task->data);
+        $task->finish($task->data);
     }
 
     /** Execute when $server->finish($data) on onTask
