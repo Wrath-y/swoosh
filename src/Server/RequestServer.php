@@ -9,7 +9,6 @@ use Swoole\Http\Response;
 class RequestServer
 {
     public $request;
-    public $response;
 
     public function __construct(Request $request, Response $response)
     {
@@ -17,7 +16,6 @@ class RequestServer
             $request->post = json_decode($post_data, true);
         }
         $this->request = $request;
-        $this->response = $response;
     }
 
     public function get($key = null)
