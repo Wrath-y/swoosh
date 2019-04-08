@@ -2,10 +2,8 @@
 
 namespace Src\Server;
 
-use Src\App;
 use App\Kernel;
 use Src\Support\Core;
-use Swoole\Coroutine;
 use Src\Helper\ErrorHelper;
 use Src\Server\RequestServer;
 use Src\Server\ResponseServer;
@@ -60,7 +58,7 @@ class DispatcherServer
         $data = $pipeline($request);
 
         $response = RequestContext::getResponse();
-
+        
         $response->end($data);
 
         $this->afterDispatch();

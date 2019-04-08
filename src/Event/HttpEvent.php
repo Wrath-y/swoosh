@@ -27,15 +27,12 @@ class HttpEvent
      */
     public function onRequest(Request $swrequest, Response $swresponse)
     {
-        $dispatcher = $this->app->get('dispatcher');
-        $request = $this->app->get('request');
-        $response = $this->app->get('response');
-        $request->set($swrequest, $swresponse);
-        $response->set($swresponse);
-
-        $res = $dispatcher->handle($request, $response);
-
-        $response->end($res);
+        go(function () use ($swrequest, $swresponse) {
+            $dispatcher = $this->app->get('dispatcher');
+            $request = new RequestServer($swrequest);
+            $response = new ResponseServer($swresponse);
+            $dispatcher->handle($request, $response);
+        });
     }
 
     /**
@@ -63,6 +60,10 @@ class HttpEvent
      */
     public function onWorkerStart(Server $server)
     {
+        $kernel = new Kernel($this->app);
+        $kernel->bootstrap();
+        $this->app->get('redis_pool');
+        $this->app->get('db_pool');
     }
 
     /**

@@ -2,8 +2,6 @@
 
 namespace Src\Support;
 
-use Src\App;
-
 class Kernel
 {
     /**
