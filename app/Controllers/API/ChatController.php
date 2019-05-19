@@ -5,6 +5,7 @@ namespace App\Controllers\API;
 use App\Models\ChatLog;
 use App\Services\ChatRedisService;
 use App\Controllers\Controller;
+use App\Models\User;
 
 class ChatController extends Controller
 {
@@ -13,7 +14,8 @@ class ChatController extends Controller
      */
     public function index()
     {
-        return '123';
+        return success(ChatRedisService::userList());
+        // return success(User::get());
     }
 
     /**

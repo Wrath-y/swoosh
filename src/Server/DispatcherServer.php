@@ -4,6 +4,8 @@ namespace Src\Server;
 
 use App\Kernel;
 use Src\Support\Core;
+use Swoole\WebSocket\Server;
+use Swoole\WebSocket\Frame;
 use Src\Helper\ErrorHelper;
 use Src\Server\RequestServer;
 use Src\Server\ResponseServer;
@@ -24,7 +26,7 @@ class DispatcherServer
         $resource->getDefinitions();
     }
 
-    public function handle(RequestServer $request, ResponseServer $response)
+    public function httpHandle(RequestServer $request, ResponseServer $response)
     {
         $this->beforeDispatch($request, $response);
         $request = RequestContext::getRequest();
@@ -34,13 +36,13 @@ class DispatcherServer
         $routes = $table->all();
         switch (isset($routes[$type . '@' . $replace_uri])) {
             case true:
-                return $this->dispatch($request, $response, $routes[$type . '@' . $replace_uri]);
+                return $this->dispatchHttp($request, $response, $routes[$type . '@' . $replace_uri]);
             case false:
                 return error(ErrorHelper::ROUTE_ERROR_CODE, ErrorHelper::ROUTE_ERROR_MSG);
         }
     }
 
-    public function dispatch(RequestServer $request, ResponseServer $response, $route)
+    public function dispatchHttp(RequestServer $request, ResponseServer $response, $route)
     {
         preg_match('/\d+/i', $request->request->server['request_uri'], $params);
         $kernel = new Kernel($this->app);
@@ -62,6 +64,28 @@ class DispatcherServer
         $response->end($data);
 
         $this->afterDispatch();
+    }
+    
+    public function wsHandle(Server $server, Frame $frame)
+    {
+        $request = $frame->data = json_decode($frame->data);
+        if (is_null($request->data)) {
+            return $server->push($frame->fd, json_encode(error(ErrorHelper::ROUTE_ERROR_CODE, ErrorHelper::ROUTE_ERROR_MSG)));
+        }
+        $table = $this->app->get('routeTable');
+        $type = strtolower($request->type);
+        $routes = $table->all();
+        switch (isset($routes[$type . '@' . $request->url])) {
+            case true:
+                return $this->dispatchWs($server, $frame, $routes[$type . '@' . $request->url]);
+            case false:
+                return $server->push($frame->fd, json_encode(error(ErrorHelper::ROUTE_ERROR_CODE, ErrorHelper::ROUTE_ERROR_MSG)));
+        }
+    }
+
+    public function dispatchWs(Server $server, Frame $frame, $route)
+    {
+        $server->task($frame, -1, [new $route['controller'], $route['method']]);
     }
 
     // Get Controller Closure

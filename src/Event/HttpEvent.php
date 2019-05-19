@@ -31,7 +31,7 @@ class HttpEvent
             $dispatcher = $this->app->get('dispatcher');
             $request = new RequestServer($swrequest);
             $response = new ResponseServer($swresponse);
-            $dispatcher->handle($request, $response);
+            $dispatcher->httpHandle($request, $response);
         });
     }
 

@@ -8,8 +8,6 @@ use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server;
 use Swoole\Server\Task;
 use App\Services\ChatRedisService;
-use App\Services\ChatService;
-use Swoole\Http\Request;
 
 class WebSocketEvent
 {
@@ -27,12 +25,10 @@ class WebSocketEvent
      */
     public function onWorkerStart(Server $server)
     {
-        go(function () {
-            $kernel = new Kernel($this->app);
-            $kernel->bootstrap();
-            $this->app->get('redis_pool');
-            $this->app->get('db_pool');
-        });
+        $kernel = new Kernel($this->app);
+        $kernel->bootstrap();
+        $this->app->get('redis_pool');
+        $this->app->get('db_pool');
     }
 
     /**
@@ -43,9 +39,9 @@ class WebSocketEvent
      */
     public function onOpen(Server $server, Request $request)
     {
-        $server->push($request->fd, json_encode([
+        $server->push($request->fd, json_encode(success([
             'fd' => $request->fd
-        ]));
+        ])));
     }
 
     /**
@@ -56,21 +52,8 @@ class WebSocketEvent
      */
     public function onMessage(Server $server, Frame $frame)
     {
-        $data = json_decode($frame->data);
-        if ($data === 'fetchUserList') {
-            $server->task($frame->data, -1, [new ChatService, 'fetchUserList']);
-        } else if (!empty($data->target_fd) && $server->connection_info($data->target_fd)) {
-            $server->push($data->target_fd, json_encode([
-                'source_fd' => $frame->fd,
-                'data' => $data,
-            ]));
-            $server->task($data, -1, [new ChatService, 'takeNote']);
-        } else {
-            print_r();
-            $server->push($frame->fd, json_encode([
-                'data' => 'Target connection has closed',
-            ]));
-        }
+        $dispatcher = $this->app->get('dispatcher');
+        $dispatcher->wsHandle($server, $frame);
     }
 
     /**
@@ -81,18 +64,6 @@ class WebSocketEvent
      */
     public function onClose($server, $fd)
     {
-        $user_list = ChatRedisService::userList();
-        foreach ($user_list as $user) {
-            if (strpos($user, ":\"$fd\"}")) {
-                $user = json_decode($user);
-                ChatRedisService::delete($user->name);
-                break;
-            }
-        }
-        $data = json_encode('fetchUserList');
-        foreach ($server->connections as $f) {
-            $server->push($f, $data);
-        }
     }
 
     /**
