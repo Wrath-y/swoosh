@@ -2,12 +2,13 @@
 
 namespace Src\Event;
 
-use Src\App;
+use App\Kernel;
 use Src\Support\Core;
 use Swoole\Http\Server;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
-use Src\Server\Redis\RedisManager;
+use Src\Server\RequestServer;
+use Src\Server\ResponseServer;
 
 class HttpEvent
 {
@@ -72,7 +73,7 @@ class HttpEvent
      * @param Server $server
      * @param int $workerId
      */
-    public function onWorkerStop(Server $server,int $workerId)
+    public function onWorkerStop(Server $server, int $workerId)
     {
     }
 
@@ -83,7 +84,7 @@ class HttpEvent
      * @param int $fd
      * @param int $reactorId
      */
-    public function onConnect(Server $server,int $fd,int $reactorId)
+    public function onConnect(Server $server, int $fd, int $reactorId)
     {
     }
 
@@ -94,7 +95,7 @@ class HttpEvent
      * @param int $fd
      * @param int $reactorId
      */
-    public function onClose(Server $server,int $fd,int $reactorId)
+    public function onClose(Server $server, int $fd, int $reactorId)
     {
     }
 
@@ -105,7 +106,7 @@ class HttpEvent
      * @param array $data
      * @return string
      */
-    public function onTask(Server $server,int $taskId,int $srcWorkerId,array $data)
+    public function onTask(Server $server, \Swoole\Server\Task $task)
     {
     }
 
@@ -115,7 +116,7 @@ class HttpEvent
      * @param $data
      * @return mixed
      */
-    public function onFinish(Server $server,int $taskId,$data)
+    public function onFinish(Server $server, int $task_id, $data)
     {
     }
 }
