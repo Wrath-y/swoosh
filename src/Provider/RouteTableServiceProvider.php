@@ -9,7 +9,7 @@ class RouteTableServiceProvider extends AbstractProvider
 {
     public function register()
     {
-        $this->app->set('routeTable', function () {
+        $this->app->set('route_table', function () {
             return new RouteTableServer();
         });
     }

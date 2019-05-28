@@ -11,7 +11,7 @@ class RouteTableServer
 
     public function __construct()
     {
-        $config = App::get('config')->get('routeTable');
+        $config = App::get('config')->get('route_table');
         $this->table = new Table($config['size']);
         $this->table->column('type', Table::TYPE_STRING, 6);
         $this->table->column('controller', Table::TYPE_STRING, 40);

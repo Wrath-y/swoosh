@@ -30,7 +30,7 @@ class DispatcherServer
     public function httpHandle(RequestServer $request, ResponseServer $response)
     {
         $this->beforeDispatch($request, $response);
-        $table = $this->app->get('routeTable');
+        $table = $this->app->get('route_table');
         $replace_uri = preg_replace('/\d+/i', '{}', $request->request->server['request_uri']);
         $type = strtolower($request->request->server['request_method']);
         $routes = $table->all();
@@ -72,7 +72,7 @@ class DispatcherServer
         if (is_null($request->data)) {
             return $server->push($frame->fd, json_encode(error(ErrorHelper::ROUTE_ERROR_CODE, ErrorHelper::ROUTE_ERROR_MSG)));
         }
-        $table = $this->app->get('routeTable');
+        $table = $this->app->get('route_table');
         $type = strtolower($request->type);
         $routes = $table->all();
         switch (isset($routes[$type . '@' . $request->url])) {

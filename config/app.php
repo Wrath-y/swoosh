@@ -7,7 +7,7 @@ return [
         'App\Controllers\API',
         'App\Controllers\WS',
     ],
-    'routeTable' => [
+    'route_table' => [
         'size' => env('SIZE', 8192),
     ],
     'aliases' => [
@@ -26,6 +26,17 @@ return [
         ],
     ],
     'ws' => [
+        'host' => env('WS_HOST', '127.0.0.1'),
+        'port' => env('WS_PORT', 9501),
+        'set' => [
+            'worker_num' => env('WS_WORKER_NUM', 1),
+            'max_request' => env('WS_MAX_REQUEST', 10),
+            'task_worker_num' => env('WS_TASK_WORKER_NUM', 2),
+            'daemonize' => env('WS_DAEMONIZE', 0),
+            'task_enable_coroutine' => true,
+        ],
+    ],
+    'rpc_server' => [
         'host' => env('WS_HOST', '127.0.0.1'),
         'port' => env('WS_PORT', 9501),
         'set' => [

@@ -6,12 +6,12 @@ use Src\App;
 
 class DocResource
 {
-    private $routeTable;
+    private $route_table;
     private $middleware;
 
     public function __construct()
     {
-        $this->routeTable = App::get('routeTable');
+        $this->route_table = App::get('route_table');
     }
 
     public function setMiddleware(string $middleware)
@@ -59,7 +59,7 @@ class DocResource
         }
         $method = $method ?? 'index';
 
-        $this->routeTable->set('get@' . $url, [
+        $this->route_table->set('get@' . $url, [
             'type' => 'get',
             'controller' => '\\' . $class,
             'method' => $method,
@@ -70,7 +70,7 @@ class DocResource
     public function setPost(string $url, string $class, string $method = '')
     {
         $method = $method ?? 'store';
-        $this->routeTable->set('post@' . $url, [
+        $this->route_table->set('post@' . $url, [
             'type' => 'post',
             'controller' => '\\' . $class,
             'method' => $method,
@@ -81,7 +81,7 @@ class DocResource
     public function setPut(string $url, string $class, string $method = '')
     {
         $method = $method ?? 'update';
-        $this->routeTable->set('put@' . $url, [
+        $this->route_table->set('put@' . $url, [
             'type' => 'put',
             'controller' => '\\' . $class,
             'method' => $method,
@@ -92,7 +92,7 @@ class DocResource
     public function setDelete(string $url, string $class, string $method = '')
     {
         $method = $method ?? 'destroy';
-        $this->routeTable->set('delete@' . $url, [
+        $this->route_table->set('delete@' . $url, [
             'type' => 'delete',
             'controller' => '\\' . $class,
             'method' => $method,
