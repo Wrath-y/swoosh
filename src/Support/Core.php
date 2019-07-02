@@ -33,6 +33,15 @@ class Core
         return $this->app[$name];
     }
 
+    public function active($name)
+    {
+        if ($this->app[$name] instanceof \Closure) {
+            $this->app[$name] = $this->app[$name]();
+        }
+
+        return $this->app[$name];
+    }
+
     /**
      * Run the given array of bootstrap classes.
      *

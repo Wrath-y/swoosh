@@ -1,7 +1,7 @@
 > # 一款基于swoole的框架
 作者：ysama
 
-链接：ysama.cn
+链接：wrath.cc
 
 > ### 门面模式
 

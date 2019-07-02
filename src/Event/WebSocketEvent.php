@@ -2,40 +2,13 @@
 
 namespace Src\Event;
 
-use Src\Support\Core;
-use App\Kernel;
 use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server;
 use Swoole\Http\Request;
-use Swoole\Server\Task;
-use App\Services\ChatRedisService;
+use Src\Server\Server\BaseServer;
 
-class WebSocketEvent
+class WebSocketEvent extends BaseServer
 {
-    const WEBSOCKET_STATUS_CONNECTION = 1; // 连接进入等待握手
-    const WEBSOCKET_STATUS_HANDSHAKE = 2; // 正在握手
-    const WEBSOCKET_STATUS_FRAME = 3; // 握手成功等待浏览器发送数据帧
-
-    private $app;
-
-    public function __construct(Core $app)
-    {
-        $this->app = $app;
-    }
-
-    /**
-     * Execute when the worker start
-     *
-     * @param Server $server
-     */
-    public function onWorkerStart(Server $server)
-    {
-        $kernel = new Kernel($this->app);
-        $kernel->bootstrap();
-        $this->app->get('redis_pool');
-        $this->app->get('db_pool');
-    }
-
     /**
      * Execute when open link
      *
@@ -59,35 +32,5 @@ class WebSocketEvent
     {
         $dispatcher = $this->app->get('dispatcher');
         $dispatcher->wsHandle($server, $frame);
-    }
-
-    /**
-     * Execute when receive message from client
-     *
-     * @param Swoole\WebSocket\Server $server
-     * @param $fd
-     */
-    public function onClose($server, $fd)
-    {
-    }
-
-    /**
-     * @param Server $server
-     * @param \Swoole\Server\Task $task
-     * @return string
-     */
-    public function onTask(Server $server, Task $task)
-    {
-        $task->finish($task->data);
-    }
-
-    /** Execute when $server->finish($data) on onTask
-     * @param Server $server
-     * @param int $task_id
-     * @param string $data
-     * @return mixed
-     */
-    public function onFinish(Server $server, int $task_id, $data)
-    {
     }
 }
