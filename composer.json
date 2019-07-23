@@ -1,18 +1,21 @@
 {
   "require": {
     "symfony/var-dumper": "^4.1",
-    "vlucas/phpdotenv": "^2.5"
+    "vlucas/phpdotenv": "^2.5",
+    "google/protobuf": "^3.9"
   },
   "repositories": {
     "packagist": {
       "type": "composer",
-      "url": "https://packagist.laravel-china.org"
+      "url": "https://packagist.phpcomposer.com"
     }
   },
   "autoload": {
     "psr-4": {
       "App\\": "app/",
-      "Src\\": "src/"
+      "Src\\": "src/",
+      "Protos\\": "protobuf/compile/Protos/",
+      "GPBMetadata\\Protobuf\\Protos\\": "protobuf/compile/GPBMetadata/Protobuf/Protos/"
     },
     "files": [
       "src/helpers.php"

@@ -2,10 +2,10 @@
 
 namespace App\Controllers\API;
 
+use Protos\User;
 use App\Models\ChatLog;
-use App\Services\ChatRedisService;
 use App\Controllers\Controller;
-use App\Models\User;
+use App\Services\ChatRedisService;
 
 class ChatController extends Controller
 {
@@ -14,7 +14,19 @@ class ChatController extends Controller
      */
     public function index()
     {
-        return success(ChatRedisService::userList());
+        $user = new User();
+        $user->setId(1);
+        $user->setName("ysama");
+        $packed = $user->serializeToString();
+
+        $res = new User();
+        $res->mergeFromString($packed);
+        $jsonArr = [
+            "id"=> $res->getId(),
+            "name"=> $res->getName(),
+        ];
+        return success($jsonArr);
+        // return success(ChatRedisService::userList());
         // return success(User::get());
     }
 
