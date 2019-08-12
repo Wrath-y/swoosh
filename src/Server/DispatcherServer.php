@@ -36,13 +36,13 @@ class DispatcherServer
         $routes = $table->all();
         switch (isset($routes[$type . '@' . $replace_uri])) {
             case true:
-                return $this->dispatchHttp($request, $response, $routes[$type . '@' . $replace_uri]);
+                return $this->httpDispatch($request, $response, $routes[$type . '@' . $replace_uri]);
             case false:
                 return error(ErrorHelper::ROUTE_ERROR_CODE, ErrorHelper::ROUTE_ERROR_MSG);
         }
     }
 
-    public function dispatchHttp(RequestServer $request, ResponseServer $response, $route)
+    public function httpDispatch(RequestServer $request, ResponseServer $response, $route)
     {
         preg_match('/\d+/i', $request->request->server['request_uri'], $params);
         $kernel = new Kernel($this->app);
@@ -77,13 +77,13 @@ class DispatcherServer
         $routes = $table->all();
         switch (isset($routes[$type . '@' . $request->url])) {
             case true:
-                return $this->dispatchWs($server, $frame, $routes[$type . '@' . $request->url]);
+                return $this->wsDispatch($server, $frame, $routes[$type . '@' . $request->url]);
             case false:
                 return $server->push($frame->fd, json_encode(error(ErrorHelper::ROUTE_ERROR_CODE, ErrorHelper::ROUTE_ERROR_MSG)));
         }
     }
 
-    public function dispatchWs(Server $server, Frame $frame, $route)
+    public function wsDispatch(Server $server, Frame $frame, $route)
     {
         $server->task($frame, -1, [new $route['controller'], $route['method']]);
     }
