@@ -14,6 +14,5 @@ class RedisServiceProvider extends AbstractProvider
 
             return new RedisManager($config);
         });
-        $this->app->get('php_redis');
     }
 }

@@ -8,8 +8,6 @@ class RpcServerServiceProvider extends AbstractProvider
     {
         $this->app->set('rpc_server', function () {
             $config = $this->app->get('config')->get('rpc.server');
-
-            return new RedisManager($config);
         });
     }
 }
