@@ -23,12 +23,12 @@ class RequestContext
      */
     const RESPONSE_KEY = 'response';
 
-    public static function getRequest()
+    public static function getRequest() : RequestServer
     {
         return self::getCoroutineContext(self::REQUEST_KEY);
     }
 
-    public static function getResponse()
+    public static function getResponse() : ResponseServer
     {
         return self::getCoroutineContext(self::RESPONSE_KEY);
     }
@@ -49,7 +49,7 @@ class RequestContext
      * Get data from coroutine context by key
      *
      * @param string $key key of context
-     * @return mixed|null
+     * @return mixed
      */
     private static function getCoroutineContext(string $key)
     {
