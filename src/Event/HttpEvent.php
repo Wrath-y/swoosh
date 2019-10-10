@@ -2,9 +2,6 @@
 
 namespace Src\Event;
 
-use App\Kernel;
-use Src\Support\Core;
-use Swoole\Http\Server;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Src\Server\RequestServer;

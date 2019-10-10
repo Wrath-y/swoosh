@@ -10,4 +10,4 @@ $app = require __DIR__ . '/bootstrap/app.php';
     'max_coroutine' => 300000,
 ]);
 
-$app->start($argv[1] ?? '');
+$app->start($argv);

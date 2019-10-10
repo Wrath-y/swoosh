@@ -55,16 +55,24 @@ class App
         }
     }
 
-    public function start($type = '')
+    public function start(array $args)
     {
-        switch ($type) {
-            case 'ws':
-                self::$app->get('ws')->start();
-                break;
-            case 'http':
-            default:
-                self::$app->get('http')->start();
-                break;
+        foreach ($args as $key => $value) {
+            if (!$key) {
+                continue;
+            }
+            switch ($value) {
+                case 'rpc':
+                    self::$app->get('rpc_server')->start();
+                    break;
+                case 'ws':
+                    self::$app->get('ws')->start();
+                    break;
+                case 'http':
+                default:
+                    self::$app->get('http')->start();
+                    break;
+            }
         }
     }
 }
