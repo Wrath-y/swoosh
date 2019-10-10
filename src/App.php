@@ -19,7 +19,7 @@ class App
         }
 
         // Load config
-        self::$app = new Src\Support\App();
+        self::$app = new \Src\Support\App();
         self::$app->set('config', function (){
             return new Config();
         });
@@ -56,9 +56,6 @@ class App
     public function start(array $args)
     {
         foreach ($args as $key => $value) {
-            if (!$key) {
-                continue;
-            }
             switch ($value) {
                 case 'rpc':
                     self::$app->get('rpc_server')->start();
