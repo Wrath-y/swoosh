@@ -2,14 +2,14 @@
 
 namespace Src\Foundation\Bootstrap;
 
-use Src\Support\Core;
+use Src\Support\App;
 use Src\Foundation\AliasLoader;
 use Src\Support\Facades\Facade;
 
 
 class RegisterFacades
 {
-    public function bootstrap(Core $app)
+    public function bootstrap(App $app)
     {
         Facade::setFacadeApplication($app);
 

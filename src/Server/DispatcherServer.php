@@ -3,7 +3,7 @@
 namespace Src\Server;
 
 use App\Kernel;
-use Src\Support\Core;
+use Src\Support\App;
 use Swoole\WebSocket\Server;
 use Swoole\WebSocket\Frame;
 use Src\Helper\ErrorHelper;
@@ -17,7 +17,7 @@ class DispatcherServer
 {
     private $app;
 
-    public function __construct(Core $app)
+    public function __construct(App $app)
     {
         $this->app = $app;
         // Get routes

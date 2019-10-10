@@ -2,8 +2,6 @@
 
 namespace Src\Support\Contexts;
 
-use Src\Server\RequestServer;
-use Src\Server\ResponseServer;
 use Swoole\Coroutine;
 
 class RedisContext

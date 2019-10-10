@@ -2,9 +2,6 @@
 
 namespace Src\Server\Pool;
 
-use Src\Support\Core;
-use Swoole\Coroutine;
-
 abstract class Pool implements PoolInterface
 {
     public function init()

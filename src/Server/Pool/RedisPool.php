@@ -3,7 +3,6 @@
 namespace Src\Server\Pool;
 
 use Src\App;
-use Src\Support\Core;
 use Swoole\Coroutine\Channel;
 use Src\Server\Redis\RedisManager;
 

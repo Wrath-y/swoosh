@@ -2,9 +2,7 @@
 
 namespace Src\Server;
 
-use Src\App;
 use Swoole\Http\Request;
-use Swoole\Http\Response;
 
 class RequestServer
 {

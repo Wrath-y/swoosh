@@ -3,7 +3,7 @@
 namespace Src\Server\Server;
 
 use App\Kernel;
-use Src\Support\Core;
+use Src\Support\App;
 use Swoole\Http\Server;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
@@ -14,7 +14,7 @@ abstract class BaseServer
 {
     protected $app;
 
-    public function __construct(Core $app)
+    public function __construct(App $app)
     {
         $this->app = $app;
     }

@@ -6,7 +6,7 @@ use ReflectionClass;
 use Src\Foundation\AliasLoader;
 
 
-class Core
+class App
 {
     private $app;
 

@@ -2,7 +2,7 @@
 
 namespace Src\Provider;
 
-use Src\Support\Core;
+use Src\Support\App;
 
 /**
  * \Apps\Provider\AbstractProvider
@@ -21,7 +21,7 @@ abstract class AbstractProvider
 
     public $table;
 
-    public function __construct(Core &$app)
+    public function __construct(App &$app)
     {
         $this->app = $app;
     }

@@ -4,10 +4,8 @@ namespace Src\Server\Database\Connectors;
 
 use PDOException;
 use Src\App;
-use Src\Support\Core;
 use Src\Server\Database\Connections\Connection;
 use Src\Server\Database\Connections\MySqlConnection;
-use Src\Support\Contexts\DBContext;
 
 class ConnectionFactory
 {

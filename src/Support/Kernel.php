@@ -7,7 +7,7 @@ class Kernel
     /**
      * The application implementation.
      *
-     * @var Src\App
+     * @var App
      */
     protected $app;
 
@@ -29,7 +29,7 @@ class Kernel
         \Src\Foundation\Bootstrap\RegisterFacades::class,
     ];
 
-    public function __construct(Core &$app)
+    public function __construct(App &$app)
     {
         $this->app = $app;
     }
@@ -69,7 +69,7 @@ class Kernel
     /**
      * Get the Laravel application instance.
      *
-     * @return Src\Core
+     * @return App
      */
     public function getApp()
     {

@@ -3,7 +3,6 @@
 namespace Src\Server\Redis;
 
 use Src\App;
-use Src\Support\Core;
 use Src\Support\Contexts\RedisContext;
 
 class RedisManager
