@@ -15,7 +15,7 @@ return [
         'DB' => Src\Support\Facades\Database::class,
     ],
     'http' => [
-        'host' => env('HTTP_HOST', '127.0.0.1'),
+        'host' => env('HTTP_HOST', '0.0.0.0'),
         'port' => env('HTTP_PORT', 8081),
         'set' => [
             'worker_num' => env('HTTP_WORKER_NUM', 2),
@@ -26,7 +26,7 @@ return [
         ],
     ],
     'ws' => [
-        'host' => env('WS_HOST', '127.0.0.1'),
+        'host' => env('WS_HOST', '0.0.0.0'),
         'port' => env('WS_PORT', 9501),
         'set' => [
             'worker_num' => env('WS_WORKER_NUM', 1),
@@ -37,7 +37,7 @@ return [
         ],
     ],
     'rpc_server' => [
-        'host' => env('RPC_HOST', '127.0.0.1'),
+        'host' => env('RPC_HOST', '0.0.0.0'),
         'port' => env('RPC_PORT', 9527),
         'set' => [
             'worker_num' => env('RPC_WORKER_NUM', 1),
