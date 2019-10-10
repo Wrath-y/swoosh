@@ -35,11 +35,7 @@ class Core
 
     public function active($name)
     {
-        if ($this->app[$name] instanceof \Closure) {
-            $this->app[$name] = $this->app[$name]();
-        }
-
-        return $this->app[$name];
+        return $this->get($name);
     }
 
     /**
