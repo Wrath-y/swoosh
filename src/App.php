@@ -55,7 +55,10 @@ class App
 
     public function start(array $args)
     {
-        foreach ($args as $key => $value) {
+        if (count($args) == 1) {
+            self::$app->get('http')->start();   
+        }
+        foreach ($args as $value) {
             switch ($value) {
                 case 'rpc':
                     self::$app->get('rpc_server')->start();
@@ -64,7 +67,6 @@ class App
                     self::$app->get('ws')->start();
                     break;
                 case 'http':
-                default:
                     self::$app->get('http')->start();
                     break;
             }

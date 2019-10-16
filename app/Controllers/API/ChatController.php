@@ -18,7 +18,10 @@ class ChatController extends Controller
         $user->setId(1);
         $user->setName("ysama");
         $packed = $user->serializeToString();
-        return success(pack("A4", $packed));
+
+        $packed = pack("A*", $packed);
+        $packed = unpack("A*", $packed);
+
         $res = new User();
         $res->mergeFromString($packed);
         $jsonArr = [

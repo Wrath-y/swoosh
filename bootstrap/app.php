@@ -11,6 +11,7 @@ $app->initializeServices([
     Src\Provider\PoolServerProvider::class,
     Src\Provider\HttpServiceProvider::class,
     Src\Provider\WebSocketServiceProvider::class,
+    Src\Provider\RpcServerServiceProvider::class
 ]);
 
 return $app;
