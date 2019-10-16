@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 \Swoole\Runtime::enableCoroutine();
 
 require __DIR__ . '/bootstrap/autoload.php';
