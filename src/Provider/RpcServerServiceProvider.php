@@ -2,14 +2,14 @@
 
 namespace Src\Provider;
 
-use Swoole\Http\Server;
+use Swoole\Server;
 use Src\Event\RpcServerEvent;
 use Src\Server\RPC\RPCServerManager;
 
 class RpcServerServiceProvider extends AbstractProvider
 {
     protected $onList = [
-        'onRequest'=>'Request',
+        'onReceive' => 'Receive',
         'onStart'=>'Start',
         'onShutdown'=>'Shutdown',
         'onWorkerStart'=>'WorkerStart',

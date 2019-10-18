@@ -35,7 +35,7 @@ class Kernel
     }
 
     /**
-     * Bootstrap the application for HTTP/WebSocket requests.
+     * Bootstrap the application for HTTP/WebSocket/RPC requests.
      *
      * @return void
      */

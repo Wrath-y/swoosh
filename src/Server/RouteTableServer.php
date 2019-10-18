@@ -14,7 +14,7 @@ class RouteTableServer
         $config = App::get('config')->get('route_table');
         $this->table = new Table($config['size']);
         $this->table->column('type', Table::TYPE_STRING, 6);
-        $this->table->column('controller', Table::TYPE_STRING, 40);
+        $this->table->column('controller', Table::TYPE_STRING, 100);
         $this->table->column('method', Table::TYPE_STRING, 20);
         $this->table->column('middleware', Table::TYPE_STRING, 20);
         $this->table->create();

@@ -7,16 +7,12 @@ use Src\Server\RPC\ConnectionInterface;
 class Connection implements ConnectionInterface
 {
     /**
-     * The address of remote server.
-     *
-     * @var string
+     * @var string The host of this service
      */
-    protected $ip;
+    protected $host = '127.0.0.1';
 
     /**
-     * The port of remote server.
-     *
-     * @var string
+     * @var int The port of this service
      */
-    protected $port;
+    protected $port = 9527;
 }

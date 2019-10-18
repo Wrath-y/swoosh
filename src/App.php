@@ -53,23 +53,38 @@ class App
         }
     }
 
+    /**
+     * Initialization service
+     */
+    public function destructServices()
+    {
+        foreach (App::get('config')->get('destruct') as $className){
+            (new $className(self::$app))->destruct();
+        }
+    }
+
     public function start(array $args)
     {
         if (count($args) == 1) {
             self::$app->get('http')->start();   
         }
+
         foreach ($args as $value) {
             switch ($value) {
                 case 'rpc':
-                    self::$app->get('rpc_server')->start();
+                    $is_close = self::$app->get('rpc_server')->start();
                     break;
                 case 'ws':
-                    self::$app->get('ws')->start();
+                    $is_close = self::$app->get('ws')->start();
                     break;
                 case 'http':
-                    self::$app->get('http')->start();
+                    $is_close = self::$app->get('http')->start();
                     break;
             }
+        }
+
+        if ($is_close) {
+            $this->destructServices();
         }
     }
 }

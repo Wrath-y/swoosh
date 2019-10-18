@@ -20,7 +20,7 @@ class ChatController extends Controller
         $packed = $user->serializeToString();
 
         $packed = pack("A*", $packed);
-        $packed = unpack("A*", $packed);
+        // $packed = unpack("A*", $packed);
 
         $res = new User();
         $res->mergeFromString($packed);

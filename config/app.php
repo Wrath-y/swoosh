@@ -6,6 +6,7 @@ return [
         'App\Controllers\Admin',
         'App\Controllers\API',
         'App\Controllers\WS',
+        'App\Controllers\RPC'
     ],
     'route_table' => [
         'size' => env('SIZE', 8192),
@@ -53,7 +54,7 @@ return [
         'name' => env('RPC_NAME', 'service'),
         'remote_host' => env('REMOTE_HOST', '127.0.0.1'),
         'remote_port' => env('REMOTE_PORT', 8500),
-        'health_check_url' => env('RPC_HEALTH_CHECK_URL', 'http://127.0.0.1'),
+        'health_check_url' => env('RPC_HEALTH_CHECK_URL', '/health_check'),
         'health_check_interval' => env('RPC_HEALTH_CHECK_INTERVAL', '10s'), // 健康检查间隔时间
         'tags' => [
             'v1'

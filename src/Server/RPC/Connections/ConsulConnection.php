@@ -22,16 +22,6 @@ class ConsulConnection extends Connection
     protected $tags = [];
 
     /**
-     * @var string The host of this service
-     */
-    protected $host = '127.0.0.1';
-
-    /**
-     * @var int The port of this service
-     */
-    protected $port = 8500;
-
-    /**
      * @var string The address of this register server
      */
     protected $remote_host = '127.0.0.1';
@@ -79,7 +69,7 @@ class ConsulConnection extends Connection
             'Address' => $this->host,
             'Port' => $this->port,
             'Check' => [
-                'HTTP' => $this->health_check_url,
+                'HTTP' => $this->host . ':' . $this->port . $this->health_check_url,
                 'Interval' => $this->health_check_interval
             ]
         ];
@@ -98,7 +88,7 @@ class ConsulConnection extends Connection
      * deregister service
      * @return string
      */
-    public function deregister()
+    public function destruct()
     {
         return $this->put('/v1/agent/service/deregister/'.$this->service_id);
     }
