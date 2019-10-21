@@ -233,7 +233,7 @@ if (!function_exists('success')) {
      *
      * @param  array|string  $data
      */
-    function success($data, bool $toJson = false)
+    function success($data = '', bool $toJson = false)
     {
         if ($toJson) {
             return json_encode([

@@ -63,7 +63,7 @@ class App
         }
     }
 
-    public function start(array $args)
+    public function command(array $args)
     {
         if (count($args) == 1) {
             self::$app->get('http')->start();   

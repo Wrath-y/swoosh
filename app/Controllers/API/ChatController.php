@@ -21,14 +21,21 @@ class ChatController extends Controller
 
         $packed = pack("A*", $packed);
         // $packed = unpack("A*", $packed);
-
-        $res = new User();
-        $res->mergeFromString($packed);
-        $jsonArr = [
-            "id"=> $res->getId(),
-            "name"=> $res->getName(),
-        ];
-        return success($jsonArr);
+        $client = new \Swoole\Client(SWOOLE_SOCK_TCP);
+        if (!$client->connect('127.0.0.1', 9527, -1)) {
+            exit("connect failed. Error: {$client->errCode}\n");
+        }
+        $client->send($packed);
+        echo $client->recv();
+        $client->close();
+        return success();
+        // $res = new User();
+        // $res->mergeFromString($packed);
+        // $jsonArr = [
+        //     "id"=> $res->getId(),
+        //     "name"=> $res->getName(),
+        // ];
+        // return success($jsonArr);
         // return success(ChatRedisService::userList());
         // return success(User::get());
     }

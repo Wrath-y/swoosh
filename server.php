@@ -12,4 +12,4 @@ $app = require __DIR__ . '/bootstrap/app.php';
     'max_coroutine' => 300000,
 ]);
 
-$app->start($argv);
+$app->command($argv);

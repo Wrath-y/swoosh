@@ -50,7 +50,7 @@ return [
         ],
     ],
     'consul' => [
-        'id' => env('RPC_ID', 's1'),
+        'id' => env('RPC_ID', 'blog'),
         'name' => env('RPC_NAME', 'service'),
         'remote_host' => env('REMOTE_HOST', '127.0.0.1'),
         'remote_port' => env('REMOTE_PORT', 8500),
