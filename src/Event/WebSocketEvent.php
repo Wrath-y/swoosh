@@ -30,7 +30,9 @@ class WebSocketEvent extends BaseServer
      */
     public function onMessage(Server $server, Frame $frame)
     {
-        $dispatcher = $this->app->get('dispatcher');
-        $dispatcher->wsHandle($server, $frame);
+        go(function () use ($server, $frame) {
+            $dispatcher = $this->app->get('dispatcher');
+            $dispatcher->wsHandle($server, $frame);
+        });
     }
 }
