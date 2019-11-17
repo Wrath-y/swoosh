@@ -6,6 +6,7 @@ use Protos\User;
 use App\Models\ChatLog;
 use App\Controllers\Controller;
 use App\Services\ChatRedisService;
+use Src\Server\RPCClient\RPCClient;
 
 class ChatController extends Controller
 {
@@ -17,18 +18,11 @@ class ChatController extends Controller
         $user = new User();
         $user->setId(1);
         $user->setName("ysama");
-        $packed = $user->serializeToString();
-
-        $packed = pack("A*", $packed);
-        // $packed = unpack("A*", $packed);
-        $client = new \Swoole\Client(SWOOLE_SOCK_TCP);
-        if (!$client->connect('127.0.0.1', 9527, -1)) {
-            exit("connect failed. Error: {$client->errCode}\n");
-        }
-        $client->send($packed);
-        echo $client->recv();
-        $client->close();
-        return success();
+        $connection = (new RPCClient)->makeConnection();
+        $connection->send('health_check', $user);
+        $res = $connection->recv();
+        $connection->close();
+        return success($res);
         // $res = new User();
         // $res->mergeFromString($packed);
         // $jsonArr = [

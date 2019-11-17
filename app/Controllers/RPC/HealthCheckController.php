@@ -7,7 +7,7 @@ use App\Controllers\Controller;
 class HealthCheckController extends Controller
 {
     /**
-     * @Get('/health_check')
+     * @Service('/health_check')
      */
     public function get()
     {

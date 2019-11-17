@@ -3,7 +3,7 @@
 namespace Src\Provider;
 
 use Src\App;
-use Src\Server\MiddlewareServer;
+use Src\Server\Middleware\Contract;
 
 class MiddlewareServerProvider extends AbstractProvider
 {

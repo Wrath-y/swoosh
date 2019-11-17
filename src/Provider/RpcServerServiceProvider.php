@@ -4,7 +4,7 @@ namespace Src\Provider;
 
 use Swoole\Server;
 use Src\Event\RpcServerEvent;
-use Src\Server\RPC\RPCServerManager;
+use Src\Server\RPCServer\RPCServerManager;
 
 class RpcServerServiceProvider extends AbstractProvider
 {
@@ -22,12 +22,7 @@ class RpcServerServiceProvider extends AbstractProvider
 
     public function register()
     {
-        $this->app->set('rpc', function () {
-            return new RPCServerManager;
-        });
-
         $this->app->set('rpc_server', function () {
-            $this->app->get('rpc')->register();
             $config = $this->app->get('config')->get('app.rpc_server');
             $server = new Server($config['host'], $config['port']);
             $server->set($config['set']);

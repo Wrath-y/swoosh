@@ -1,8 +1,8 @@
 <?php
 
-namespace Src\Server\RPC\Connections;
+namespace Src\Server\RPCServer\Connections;
 
-use Src\Server\RPC\ConnectionInterface;
+use Src\Server\RPCServer\Contract\ConnectionInterface;
 
 class Connection implements ConnectionInterface
 {

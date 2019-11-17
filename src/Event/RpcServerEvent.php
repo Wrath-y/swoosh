@@ -18,7 +18,7 @@ class RpcServerEvent extends BaseServer
      */
     public function onReceive(Server $server, int $fd, int $reactor_id, string $data)
     {
-        $server->send($fd, 'Swoole: '.$data);
+        $server->send($fd, $data);
         $server->close($fd);
     }
 }

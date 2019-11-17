@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Interfaces;
+namespace Src\Server\Middleware\Contract;
 
 use Src\Server\RequestServer;
 

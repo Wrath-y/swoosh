@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Server\RPC\Connections;
+namespace Src\Server\RPCServer\Connections;
 
 use Src\App;
 
@@ -101,21 +101,24 @@ class ConsulConnection extends Connection
      */
     public function put($uri, array $params = [])
     {
-        $ch = curl_init();
-        $header[] = 'Content-type:application/json';
-
-        curl_setopt($ch, CURLOPT_URL, $this->remote_host.':'.$this->remote_port.$uri);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"PUT");
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params, JSON_UNESCAPED_UNICODE));
-
-        $res = curl_exec($ch);
-        curl_close($ch);
-        if ($res === '') {
-            return true;
+        try {
+            $ch = curl_init();
+            $header[] = 'Content-type:application/json';
+    
+            curl_setopt($ch, CURLOPT_URL, $this->remote_host.':'.$this->remote_port.$uri);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"PUT");
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params, JSON_UNESCAPED_UNICODE));
+    
+            $res = curl_exec($ch);
+            curl_close($ch);
+            if ($res === '') {
+                return true;
+            }
+        } catch(\Exception $e) {
+            throw $e;
         }
-        throw new \Exception($res);
     }
 }

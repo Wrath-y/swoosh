@@ -3,7 +3,7 @@
 namespace App\Moddlewares;
 
 use Src\Server\RequestServer;
-use Src\Server\MiddlewareServer;
+use Src\Server\Middleware\MiddlewareServer;
 
 class AuthMiddleware extends MiddlewareServer
 {

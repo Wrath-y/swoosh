@@ -1,9 +1,9 @@
 <?php
 
-namespace Src\Server\RPC;
+namespace Src\Server\RPCServer;
 
 use Src\App;
-use Src\Server\RPC\Connections\ConsulConnection;
+use Src\Server\RPCServer\Connections\ConsulConnection;
 
 class RPCServerManager
 {

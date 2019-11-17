@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Server\RPC;
+namespace Src\Server\RPCServer\Contract;
 
 interface ConnectionInterface
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Src\Server;
+namespace Src\Server\Middleware;
 
 use Src\Server\RequestServer;
-use Src\Interfaces\MiddlewareInterface;
+use Src\Server\Middleware\Contract\MiddlewareInterface;
 
 abstract class MiddlewareServer implements MiddlewareInterface
 {

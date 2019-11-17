@@ -3,7 +3,7 @@
 namespace App\Middlewares;
 
 use Src\Server\RequestServer;
-use Src\Server\MiddlewareServer;
+use Src\Server\Middleware\MiddlewareServer;
 use Src\Helper\JWTHelper;
 
 class AuthMiddleware extends MiddlewareServer
