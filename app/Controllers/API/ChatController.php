@@ -18,10 +18,11 @@ class ChatController extends Controller
         $user = new User();
         $user->setId(1);
         $user->setName("ysama");
-        $connection = (new RPCClient)->makeConnection();
-        $connection->send('health_check', $user);
-        $res = $connection->recv();
-        $connection->close();
+        $client = new RPCClient;
+        $client->send('health_check', $user);
+        $res = $client->recv();
+        $client->close();
+        dd($res);
         return success($res);
         // $res = new User();
         // $res->mergeFromString($packed);

@@ -117,6 +117,7 @@ class AnnotationResource
             if (preg_match('/@Mid\(\'(.+?)\'\)/i', $classAnnotations, $middleware)) {
                 $docResource->setMiddleware($middleware[1]);
             }
+            // Set all type except service
             if (preg_match('/@Map\(\'(.+?)\'\)/i', $classAnnotations, $classAnnotation)) {
                 $docResource->setRestful($classAnnotation[1], $className);
                 return;

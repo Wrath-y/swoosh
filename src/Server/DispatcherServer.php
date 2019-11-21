@@ -4,18 +4,21 @@ namespace Src\Server;
 
 use App\Kernel;
 use Src\Support\App;
-use Swoole\WebSocket\Server;
+use Swoole\Server;
+use Swoole\WebSocket\Server as WsServer;
 use Swoole\WebSocket\Frame;
 use Src\Helper\ErrorHelper;
 use Src\Server\RequestServer;
 use Src\Server\ResponseServer;
 use Src\Resource\AnnotationResource;
+use Src\Server\RPC\Packet\Encoder;
 use Src\Support\Contexts\RedisContext;
 use Src\Support\Contexts\RequestContext;
 
 class DispatcherServer
 {
     private $app;
+    private $routes;
 
     public function __construct(App $app)
     {
@@ -25,18 +28,18 @@ class DispatcherServer
         $resource = new AnnotationResource($bootScan);
         $resource->scanNamespace();
         $resource->getDefinitions();
+
+        $this->routes = $app->get('route_table')->all();
     }
 
     public function httpHandle(RequestServer $request, ResponseServer $response)
     {
         $this->beforeDispatch($request, $response);
-        $table = $this->app->get('route_table');
         $replace_uri = preg_replace('/\d+/i', '{}', $request->request->server['request_uri']);
         $type = strtolower($request->request->server['request_method']);
-        $routes = $table->all();
-        switch (isset($routes[$type . '@' . $replace_uri])) {
+        switch (isset($this->routes[$type . '@' . $replace_uri])) {
             case true:
-                return $this->httpDispatch($request, $response, $routes[$type . '@' . $replace_uri]);
+                return $this->httpDispatch($request, $response, $this->routes[$type . '@' . $replace_uri]);
             case false:
                 return error(ErrorHelper::ROUTE_ERROR_CODE, ErrorHelper::ROUTE_ERROR_MSG);
         }
@@ -64,28 +67,6 @@ class DispatcherServer
         $response->end($data);
 
         $this->afterDispatch();
-    }
-    
-    public function wsHandle(Server $server, Frame $frame)
-    {
-        $request = $frame->data = json_decode($frame->data);
-        if (is_null($request->data)) {
-            return $server->push($frame->fd, json_encode(error(ErrorHelper::ROUTE_ERROR_CODE, ErrorHelper::ROUTE_ERROR_MSG)));
-        }
-        $table = $this->app->get('route_table');
-        $type = strtolower($request->type);
-        $routes = $table->all();
-        switch (isset($routes[$type . '@' . $request->url])) {
-            case true:
-                return $this->wsDispatch($server, $frame, $routes[$type . '@' . $request->url]);
-            case false:
-                return $server->push($frame->fd, json_encode(error(ErrorHelper::ROUTE_ERROR_CODE, ErrorHelper::ROUTE_ERROR_MSG)));
-        }
-    }
-
-    public function wsDispatch(Server $server, Frame $frame, $route)
-    {
-        $server->task($frame, -1, [new $route['controller'], $route['method']]);
     }
 
     // Get Controller Closure
@@ -122,5 +103,52 @@ class DispatcherServer
     {
         RequestContext::clearCidContext();
         RedisContext::clearCidContext();
+    }
+    
+    public function wsHandle(WsServer $server, Frame $frame)
+    {
+        $request = $frame->data = json_decode($frame->data);
+        if (is_null($request->data)) {
+            return $server->push($frame->fd, json_encode(error(ErrorHelper::ROUTE_ERROR_CODE, ErrorHelper::ROUTE_ERROR_MSG)));
+        }
+        $type = strtolower($request->type);
+        switch (isset($this->routes[$type . '@' . $request->url])) {
+            case true:
+                return $this->wsDispatch($server, $frame, $this->routes[$type . '@' . $request->url]);
+            case false:
+                return $server->push($frame->fd, json_encode(error(ErrorHelper::ROUTE_ERROR_CODE, ErrorHelper::ROUTE_ERROR_MSG)));
+        }
+    }
+
+    public function wsDispatch(WsServer $server, Frame $frame, $route)
+    {
+        $server->task($frame, -1, [new $route['controller'], $route['method']]);
+    }
+
+    public function rpcHandle(Server $server, int $fd, string $data)
+    {
+        $rpcProtocol = Encoder::rpcDecode($data);
+        $service_name = $rpcProtocol->getMethod();
+        $proto_class_name = $rpcProtocol->getProtoClassName();
+        $proto_str = $rpcProtocol->getProtoStr();
+        switch (isset($this->routes['service@' . $service_name])) {
+            case true:
+                return $this->rpcDispatch($server, $fd, $this->routes['service@' . $service_name], $proto_class_name, $proto_str);
+            case false:
+                $server->close($fd);
+                return $server->send($fd, json_encode(error(ErrorHelper::ROUTE_ERROR_CODE, ErrorHelper::ROUTE_ERROR_MSG)));
+        }
+    }
+
+    public function rpcDispatch(Server $server, int $fd, array $route, string $proto_class_name, string $proto_str)
+    {
+        $proto = new $proto_class_name;
+        $proto->mergeFromString($proto_str);
+        $response = call_user_func([new $route['controller'], $route['method']], $proto);
+        $status_len = strlen($response['status']);
+        $code_len = strlen($response['code']);
+        $str = pack("A{$status_len}A{$code_len}A*", $response['status'], $response['code'], json_encode($response['data'], JSON_UNESCAPED_UNICODE));
+        $server->send($fd, $status_len.'-'.$code_len.'-'.$str."\r\n");
+        $server->close($fd);
     }
 }

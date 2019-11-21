@@ -2,15 +2,16 @@
 
 namespace App\Controllers\RPC;
 
-use App\Controllers\Controller;
-
-class HealthCheckController extends Controller
+class HealthCheckController
 {
     /**
-     * @Service('/health_check')
+     * @Service('health_check')
      */
-    public function get()
+    public function healthCheck($data)
     {
-        return success('');
+        return success([
+            "id"=> $data->getId(),
+            "name"=> $data->getName(),
+        ]);
     }
 }

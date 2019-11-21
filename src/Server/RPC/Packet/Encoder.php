@@ -7,15 +7,13 @@ use Src\Server\RPC\Contract\EncoderInterface;
 
 class Encoder implements EncoderInterface
 {
-    public static function rpc_encode(RpcProtocol $protocol): string
+    public static function rpcEncode(RpcProtocol $protocol): string
     {
-        return $protocol->getMethod() . "\r\n" . $protocol->getProtoStr();
+        return $protocol->getMethod() . "\r\n" . $protocol->getProtoClassName() . "\r\n" . $protocol->getProtoStr();
     }
 
-    public static function rpc_decode(string $str): RpcProtocol
+    public static function rpcDecode(string $str): RpcProtocol
     {
-        [$method, $params] = explode('\r\n', $str);
-
-        return RpcProtocol::init($method, $params);
+        return RpcProtocol::init(...explode("\r\n", $str));
     }
 }

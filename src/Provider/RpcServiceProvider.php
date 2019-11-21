@@ -3,9 +3,9 @@
 namespace Src\Provider;
 
 use Src\Server\RPC\RpcProtocol;
-use Src\Server\RPCClient\Connection;
 use Src\Server\RPCClient\RPCClient;
 use Src\Server\RPCServer\RPCServerManager;
+use Src\Server\RPCClient\ConnectionFactory;
 
 class RpcServiceProvider extends AbstractProvider
 {
@@ -24,7 +24,7 @@ class RpcServiceProvider extends AbstractProvider
         });
 
         $this->app->set('rpc_connection', function () {
-            return new Connection;
+            return (new ConnectionFactory)->createConnection($this->app->get('config')->get('app.rpc_client'));
         });
     }
 }

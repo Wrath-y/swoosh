@@ -2,8 +2,10 @@
 
 namespace Src\Server\RPCClient;
 
+use Src\App;
 use Src\Server\RPCClient\Connection;
 use Src\Server\RPC\Contract\EncoderInterface;
+use Src\Server\RPCClient\Contract\ConnectionInterface;
 
 class RPCClient
 {
@@ -30,14 +32,13 @@ class RPCClient
     protected $encoder;
 
     /**
-     * @return Connection
+     * @return ConnectionInterface
      */
-    public function makeConnection(): Connection
+    public function __construct()
     {
-        $connection = Connection::init($this);
+        $connection = App::get('rpc_connection');
+        $connection = $connection->init($this);
         $connection->makeConnection();
-
-        return $connection;
     }
 
     /**
@@ -82,5 +83,10 @@ class RPCClient
             'open_eof_split' => true,
             'package_eof'    => "\r\n",
         ];
+    }
+
+    public function __call($method, $parameters)
+    {
+        return App::get('rpc_connection')->$method(...$parameters);
     }
 }

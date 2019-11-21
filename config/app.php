@@ -37,6 +37,9 @@ return [
             'task_enable_coroutine' => true,
         ],
     ],
+    'rpc_client' => [
+        'driver' => 'co'
+    ],
     'rpc_server' => [
         'host' => env('RPC_HOST', '127.0.0.1'),
         'port' => env('RPC_PORT', 9527),

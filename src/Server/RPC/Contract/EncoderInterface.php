@@ -11,12 +11,12 @@ interface EncoderInterface
      *
      * @return string
      */
-    public static function rpc_encode(RpcProtocol $protocol): string;
+    public static function rpcEncode(RpcProtocol $protocol): string;
 
     /**
      * @param string $str
      *
      * @return RpcProtocol
      */
-    public static function rpc_decode(string $str): RpcProtocol;
+    public static function rpcDecode(string $str): RpcProtocol;
 }

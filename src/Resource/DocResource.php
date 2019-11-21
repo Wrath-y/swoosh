@@ -29,20 +29,23 @@ class DocResource
         $this->setDelete($url, $class);
     }
 
-    public function setByType(string $type, string $con, string $class, string $method)
+    public function setByType(string $type, string $name, string $class, string $method)
     {
         switch ($type) {
             case 'Get':
-                $this->setGet($con, $class, $method);
+                $this->setGet($name, $class, $method);
                 break;
             case 'Post':
-                $this->setPost($con, $class, $method);
+                $this->setPost($name, $class, $method);
                 break;
             case 'Put':
-                $this->setPut($con, $class, $method);
+                $this->setPut($name, $class, $method);
                 break;
             case 'Delete':
-                $this->setDelete($con, $class, $method);
+                $this->setDelete($name, $class, $method);
+                break;
+            case 'Service':
+                $this->setService($name, $class, $method);
                 break;
             default:
                 break;
@@ -94,6 +97,16 @@ class DocResource
         $method = $method ?? 'destroy';
         $this->route_table->set('delete@' . $url, [
             'type' => 'delete',
+            'controller' => '\\' . $class,
+            'method' => $method,
+            'middleware' => $this->middleware,
+        ]);
+    }
+
+    public function setService(string $name, string $class, string $method = '')
+    {
+        $this->route_table->set('service@' . $name, [
+            'type' => 'service',
             'controller' => '\\' . $class,
             'method' => $method,
             'middleware' => $this->middleware,

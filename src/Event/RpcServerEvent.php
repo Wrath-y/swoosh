@@ -18,7 +18,9 @@ class RpcServerEvent extends BaseServer
      */
     public function onReceive(Server $server, int $fd, int $reactor_id, string $data)
     {
-        $server->send($fd, $data);
-        $server->close($fd);
+        go(function () use ($server, $fd, $data) {
+            $dispatcher = $this->app->get('dispatcher');
+            $dispatcher->rpcHandle($server, $fd, $data);
+        });
     }
 }
