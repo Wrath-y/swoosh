@@ -35,8 +35,12 @@ class SyncConnection extends Connection
         if ($res === false) {
             throw new \Exception('获取数据失败', $this->connection->errCode);
         }
-
-        $res = unpack("A7A{$res[0]}A5A{$res[1]}A5A*", $res);
+        $res_len_arr = explode("-", $res);
+        $status_len = $res_len_arr[0];
+        $code_len = $res_len_arr[1];
+        $res = substr($res, strlen($status_len) + strlen($code_len) + 2, -1);
+        $res = unpack("A{$status_len}status/A{$code_len}code/A*data", $res);
+        $res['data'] = json_decode($res['data'], true);
 
         return $res;
     }

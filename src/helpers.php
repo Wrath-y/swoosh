@@ -279,3 +279,34 @@ if (!function_exists('redirect')) {
         $response->status(302);
     }
 }
+
+if (!function_exists('str_to_bin')) {
+    /**
+     * hexdec 16 - 10
+     * decbin 10 - 2
+     * bindec 2 - 10
+     * dechex 10 - 16
+     */
+    function str_to_bin($str){
+        $arr = preg_split('/(?<!^)(?!$)/u', $str);
+        foreach($arr as &$v){
+            $hex = unpack('h*', $v);
+            $v = decbin(hexdec($hex[1]));
+            unset($hex);
+        }
+        
+        return join(' ',$arr);
+    }
+}
+
+if (!function_exists('bin_to_str')) {
+    function bin_to_str($str)
+    {
+        $arr = explode(' ', $str);
+        foreach ($arr as &$v) {
+            $v = pack("h*", dechex(bindec($v)));
+        }
+
+        return join('', $arr);
+    }
+}

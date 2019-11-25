@@ -148,7 +148,8 @@ class DispatcherServer
         $status_len = strlen($response['status']);
         $code_len = strlen($response['code']);
         $str = pack("A{$status_len}A{$code_len}A*", $response['status'], $response['code'], json_encode($response['data'], JSON_UNESCAPED_UNICODE));
-        $server->send($fd, $status_len.'-'.$code_len.'-'.$str."\r\n");
+        $binary_str = str_to_bin($status_len.'-'.$code_len.'-'.$str);
+        $server->send($fd, $binary_str."\r\n");
         $server->close($fd);
     }
 }
