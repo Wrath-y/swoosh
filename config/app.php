@@ -2,6 +2,11 @@
 
 return [
     'mode' => env('MODE', 'pool'),
+    'log_level' => [
+        'enable' => env('LOG_ENABLE', false),
+        'level' => env('LOG_LEVEL', 'debug'),
+        'log_dir' => '/storage/log/'
+    ],
     'bootScan'  => [
         'App\Controllers\Admin',
         'App\Controllers\API',
@@ -14,6 +19,7 @@ return [
     'aliases' => [
         'PHPRedis' => Src\Support\Facades\Redis::class,
         'DB' => Src\Support\Facades\Database::class,
+        'Log' => Src\Support\Facades\Logger::class
     ],
     'http' => [
         'host' => env('HTTP_HOST', '0.0.0.0'),

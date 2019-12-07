@@ -26,6 +26,9 @@ class App
 
     public function get($name)
     {
+        if (!isset($this->app[$name])) {
+            return;
+        }
         if ($this->app[$name] instanceof \Closure) {
             $this->app[$name] = $this->app[$name]();
         }

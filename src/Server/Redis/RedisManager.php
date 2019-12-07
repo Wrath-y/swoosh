@@ -102,22 +102,21 @@ class RedisManager
      */
     public function __call($method, $parameters)
     {
-        switch ($this->is_pool) {
-            case true:
-                $obj = App::get('redis_pool')->getConnection();
+        if ($this->is_pool) {
+            $obj = App::get('redis_pool')->getConnection();
 
-                if (!$obj) {
-                    return false;
-                }
-                RedisContext::set(function () use ($obj, $method, $parameters) {
-                    return $obj['db']->{$method}(...$parameters);
-                });
-                $result = RedisContext::get();
-                App::get('redis_pool')->push($obj);
+            if (!$obj) {
+                return false;
+            }
+            RedisContext::set(function () use ($obj, $method, $parameters) {
+                return $obj['db']->{$method}(...$parameters);
+            });
+            $result = RedisContext::get();
+            App::get('redis_pool')->push($obj);
 
-                return $result;
-            default:
-                return $this->connection()->{$method}(...$parameters);
+            return $result;
         }
+
+        return $this->connection()->{$method}(...$parameters);
     }
 }

@@ -58,30 +58,33 @@ class App
      */
     public function destructServices()
     {
-        foreach (App::get('config')->get('destruct') as $className){
+        foreach (self::$app->get('config')->get('destruct') as $className){
             (new $className(self::$app))->destruct();
         }
     }
 
     public function command(array $args)
     {
+        self::$app->get('log')->info(123);
+        return;
         if (count($args) == 1) {
-            self::$app->get('http')->start();   
-        }
-
-        foreach ($args as $value) {
-            switch ($value) {
-                case 'rpc':
-                    $is_close = self::$app->get('rpc_server')->start();
-                    break;
-                case 'ws':
-                    $is_close = self::$app->get('ws')->start();
-                    break;
-                case 'http':
-                    $is_close = self::$app->get('http')->start();
-                    break;
+            $is_close = self::$app->get('http')->start();   
+        } else {
+            foreach ($args as $value) {
+                switch ($value) {
+                    case 'rpc':
+                        $is_close = self::$app->get('rpc_server')->start();
+                        break;
+                    case 'ws':
+                        $is_close = self::$app->get('ws')->start();
+                        break;
+                    case 'http':
+                        $is_close = self::$app->get('http')->start();
+                        break;
+                }
             }
         }
+        
 
         if ($is_close) {
             $this->destructServices();
