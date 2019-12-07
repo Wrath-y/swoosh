@@ -65,8 +65,6 @@ class App
 
     public function command(array $args)
     {
-        self::$app->get('log')->info(123);
-        return;
         if (count($args) == 1) {
             $is_close = self::$app->get('http')->start();   
         } else {
