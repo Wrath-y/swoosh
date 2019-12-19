@@ -6,10 +6,10 @@ use Src\Support\App;
 
 class EventServer
 {
-    public static $app;
+    public $app;
     public function __construct(App $app)
     {
-        self::$app = $app;
+        $this->app = $app;
     }
 
     public function __call($method, $parameters)
