@@ -2,11 +2,12 @@
 
 namespace Src\Server\Log;
 
+use Src\Support\App;
 use Src\Server\Log\Appender\ConsoleAppender;
 use Src\Server\Log\Appender\FileAppender;
 use Src\Server\Log\Contract\AppenderInterface;
 
-class LoggerManage
+class LoggerManager
 {
     /**
      * @var AppenderInterface
@@ -14,8 +15,9 @@ class LoggerManage
     private $appender;
     private $enable = true;
     
-    public function __construct(array $config)
+    public function __construct(App $app)
     {
+        $config = $this->app->get('config')->get('app.log_level');
         $this->enable = $config['enable'];
 
         if (!$this->enable) {
