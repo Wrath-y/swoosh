@@ -26,7 +26,7 @@ class Kernel
      * @var array
      */
     protected $bootstrappers = [
-        \Src\Foundation\Bootstrap\RegisterFacades::class,
+        \Src\Alias\Bootstrap\RegisterFacades::class,
     ];
 
     public function __construct(App &$app)

@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Event;
+namespace Src\ServerEvent;
 
 use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server;

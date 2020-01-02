@@ -3,7 +3,7 @@
 namespace Src\Provider;
 
 use Swoole\WebSocket\Server;
-use Src\Event\WebSocketEvent;
+use Src\ServerEvent\WebSocketEvent;
 
 class WebSocketServiceProvider extends AbstractProvider
 {

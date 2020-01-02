@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Foundation;
+namespace Src\Alias;
 
 class AliasLoader
 {
@@ -14,7 +14,7 @@ class AliasLoader
     /**
      * The singleton instance of the loader.
      *
-     * @var \Src\Foundation\AliasLoader
+     * @var \Src\Alias\AliasLoader
      */
     protected static $instance;
 
@@ -40,7 +40,7 @@ class AliasLoader
      * Get or create the singleton alias loader instance.
      *
      * @param  array  $aliases
-     * @return \Src\Foundation\AliasLoader
+     * @return \Src\Alias\AliasLoader
      */
     public static function getInstance(array $aliases = [])
     {

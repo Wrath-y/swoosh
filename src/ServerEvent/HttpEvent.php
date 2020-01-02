@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Event;
+namespace Src\ServerEvent;
 
 use Swoole\Http\Request;
 use Swoole\Http\Response;

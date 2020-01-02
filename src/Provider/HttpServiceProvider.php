@@ -3,7 +3,7 @@
 namespace Src\Provider;
 
 use Swoole\Http\Server;
-use Src\Event\HttpEvent;
+use Src\ServerEvent\HttpEvent;
 
 class HttpServiceProvider extends AbstractProvider
 {

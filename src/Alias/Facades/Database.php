@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Support\Facades;
+namespace Src\Alias\Facades;
 
 class Database extends Facade
 {

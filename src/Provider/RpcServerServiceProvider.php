@@ -3,7 +3,7 @@
 namespace Src\Provider;
 
 use Swoole\Server;
-use Src\Event\RpcServerEvent;
+use Src\ServerEvent\RpcServerEvent;
 use Src\Server\RPCServer\RPCServerManager;
 
 class RpcServerServiceProvider extends AbstractProvider

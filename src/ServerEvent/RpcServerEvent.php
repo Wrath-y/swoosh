@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Event;
+namespace Src\ServerEvent;
 
 use Swoole\Server;
 use Src\Server\Server\BaseServer;

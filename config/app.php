@@ -17,9 +17,9 @@ return [
         'size' => env('SIZE', 8192),
     ],
     'aliases' => [
-        'PHPRedis' => Src\Support\Facades\Redis::class,
-        'DB' => Src\Support\Facades\Database::class,
-        'Log' => Src\Support\Facades\Logger::class
+        'PHPRedis' => Src\Alias\Facades\Redis::class,
+        'DB' => Src\Alias\Facades\Database::class,
+        'Log' => Src\Alias\Facades\Logger::class
     ],
     'http' => [
         'host' => env('HTTP_HOST', '0.0.0.0'),

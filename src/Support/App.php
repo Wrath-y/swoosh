@@ -3,7 +3,7 @@
 namespace Src\Support;
 
 use ReflectionClass;
-use Src\Foundation\AliasLoader;
+use Src\Alias\AliasLoader;
 
 
 class App

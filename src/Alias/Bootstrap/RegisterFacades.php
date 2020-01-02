@@ -1,10 +1,10 @@
 <?php
 
-namespace Src\Foundation\Bootstrap;
+namespace Src\Alias\Bootstrap;
 
 use Src\Support\App;
-use Src\Foundation\AliasLoader;
-use Src\Support\Facades\Facade;
+use Src\Alias\AliasLoader;
+use Src\Alias\Facades\Facade;
 
 
 class RegisterFacades
