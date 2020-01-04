@@ -3,7 +3,7 @@
 namespace Src;
 
 use Dotenv\Dotenv;
-use Src\Support\Config;
+use Src\Core\Config;
 
 class App
 {
@@ -19,7 +19,7 @@ class App
         }
 
         // Load config
-        self::$app = new \Src\Support\App();
+        self::$app = new \Src\Core\App();
         self::$app->set('config', function (){
             return new Config();
         });

@@ -6,7 +6,7 @@ use Protos\User;
 use App\Models\ChatLog;
 use App\Controllers\Controller;
 use App\Services\ChatRedisService;
-use Src\Server\RPCClient\RPCClient;
+use Src\RPCClient\RPCClient;
 
 class ChatController extends Controller
 {
@@ -15,14 +15,14 @@ class ChatController extends Controller
      */
     public function index()
     {
-        $user = new User();
-        $user->setId(1);
-        $user->setName("ysama");
-        $client = new RPCClient;
-        $client->send('health_check', $user);
-        $res = $client->recv();
-        $client->close();
-        dd($res);
+        // $user = new User();
+        // $user->setId(1);
+        // $user->setName("ysama");
+        // $client = new RPCClient;
+        // $client->send('health_check', $user);
+        // $res = $client->recv();
+        // $client->close();
+        // dd($res);
         return success($res);
         // $res = new User();
         // $res->mergeFromString($packed);

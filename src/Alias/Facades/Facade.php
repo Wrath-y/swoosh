@@ -9,7 +9,7 @@ abstract class Facade
     /**
      * The application instance being facaded.
      *
-     * @var \Src\Support\App
+     * @var \Src\Core\App
      */
     protected static $app;
 
@@ -23,7 +23,7 @@ abstract class Facade
     /**
      * Set the application instance.
      *
-     * @param  \Src\Support\App  $app
+     * @param  \Src\Core\App  $app
      * @return void
      */
     public static function setFacadeApplication($app)

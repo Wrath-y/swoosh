@@ -2,7 +2,7 @@
 
 namespace Src\Alias\Bootstrap;
 
-use Src\Support\App;
+use Src\Core\App;
 use Src\Alias\AliasLoader;
 use Src\Alias\Facades\Facade;
 

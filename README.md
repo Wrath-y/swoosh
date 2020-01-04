@@ -9,7 +9,7 @@
 ```php
 // config\app.php
 'aliases' => [
-    'PHPRedis' => Src\Support\Facades\Redis::class,
+    'PHPRedis' => Src\Core\Facades\Redis::class,
 ],
 $app->initializeServices([
     ...
@@ -25,7 +25,7 @@ public function register()
         return new RedisManager();
     });
 }
-// Src\Support\Facades\Redis
+// Src\Core\Facades\Redis
 protected static function getFacadeAccessor()
 {
     return 'php_redis';

@@ -5,7 +5,6 @@ namespace Src\ServerEvent;
 use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server;
 use Swoole\Http\Request;
-use Src\Server\Server\BaseServer;
 
 class WebSocketEvent extends BaseServer
 {

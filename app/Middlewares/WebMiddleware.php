@@ -2,8 +2,8 @@
 
 namespace App\Moddlewares;
 
-use Src\Server\RequestServer;
-use Src\Server\Middleware\MiddlewareServer;
+use Src\Dispatcher\RequestServer;
+use Src\Middleware\MiddlewareServer;
 
 class AuthMiddleware extends MiddlewareServer
 {

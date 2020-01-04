@@ -3,7 +3,7 @@
 namespace App;
 
 use App\Middlewares\AuthMiddleware;
-use Src\Support\Kernel as Base;
+use Src\Core\Kernel as Base;
 
 class Kernel extends Base
 {

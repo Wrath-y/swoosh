@@ -4,9 +4,8 @@ namespace Src\ServerEvent;
 
 use Swoole\Http\Request;
 use Swoole\Http\Response;
-use Src\Server\RequestServer;
-use Src\Server\ResponseServer;
-use Src\Server\Server\BaseServer;
+use Src\Dispatcher\RequestServer;
+use Src\Dispatcher\ResponseServer;
 
 class HttpEvent extends BaseServer
 {
