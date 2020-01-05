@@ -15,14 +15,13 @@ class ChatController extends Controller
      */
     public function index()
     {
-        // $user = new User();
-        // $user->setId(1);
-        // $user->setName("ysama");
-        // $client = new RPCClient;
-        // $client->send('health_check', $user);
-        // $res = $client->recv();
-        // $client->close();
-        // dd($res);
+        $user = new User();
+        $user->setId(1);
+        $user->setName("ysama");
+        $client = new RPCClient;
+        $client->send('health_check', $user);
+        $res = $client->recv();
+        $client->close();
         return success($res);
         // $res = new User();
         // $res->mergeFromString($packed);

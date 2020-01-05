@@ -2,23 +2,33 @@
   "require": {
     "symfony/var-dumper": "^4.1",
     "vlucas/phpdotenv": "^2.5",
-    "google/protobuf": "^3.9"
+    "google/protobuf": "^3.9",
+    "swoosh/alias": "^0.1",
+    "swoosh/database": "^0.1",
+    "swoosh/dispatcher": "^0.1",
+    "swoosh/event": "^0.1",
+    "swoosh/framework": "^0.1",
+    "swoosh/helper": "^0.1",
+    "swoosh/log": "^0.1",
+    "swoosh/middleware": "^0.1",
+    "swoosh/pool": "^0.1",
+    "swoosh/redis": "^0.1",
+    "swoosh/rpc": "^0.1",
+    "swoosh/rpc-client": "^0.1",
+    "swoosh/rpc-server": "^0.1",
+    "swoosh/server-event": "^0.1"
   },
   "repositories": {
     "packagist": {
       "type": "composer",
-      "url": "https://packagist.phpcomposer.com"
+      "url": "https://mirrors.aliyun.com/composer/"
     }
   },
   "autoload": {
     "psr-4": {
       "App\\": "app/",
-      "Src\\": "src/",
       "Protos\\": "protobuf/compile/Protos/",
       "GPBMetadata\\Protobuf\\Protos\\": "protobuf/compile/GPBMetadata/Protobuf/Protos/"
-    },
-    "files": [
-      "src/helpers.php"
-    ]
+    }
   }
 }
