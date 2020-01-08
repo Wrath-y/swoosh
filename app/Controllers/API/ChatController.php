@@ -5,7 +5,10 @@ namespace App\Controllers\API;
 use Protos\User;
 use App\Models\ChatLog;
 use App\Controllers\Controller;
+use App\Events\RegisterEvent;
+use App\Models\User as ModelsUser;
 use App\Services\ChatRedisService;
+use Src\App;
 use Src\RPCClient\RPCClient;
 
 class ChatController extends Controller
@@ -15,14 +18,14 @@ class ChatController extends Controller
      */
     public function index()
     {
-        $user = new User();
-        $user->setId(1);
-        $user->setName("ysama");
-        $client = new RPCClient;
-        $client->send('health_check', $user);
-        $res = $client->recv();
-        $client->close();
-        return success($res);
+        // $user = new User();
+        // $user->setId(1);
+        // $user->setName("ysama");
+        // $client = new RPCClient;
+        // $client->send('health_check', $user);
+        // $res = $client->recv();
+        // $client->close();
+        // return success($res);
         // $res = new User();
         // $res->mergeFromString($packed);
         // $jsonArr = [
@@ -32,6 +35,9 @@ class ChatController extends Controller
         // return success($jsonArr);
         // return success(ChatRedisService::userList());
         // return success(User::get());
+
+        event(new RegisterEvent(new ModelsUser));
+        return success();
     }
 
     /**

@@ -4,6 +4,7 @@ $app = new Src\App(dirname(__DIR__));
 
 $app->initializeServices([
     Src\Log\Provider\LogServiceProvider::class,
+    Src\Event\Provider\EventServiceProvider::class,
     Src\Dispatcher\Provider\RouteTableServiceProvider::class,
     Src\Dispatcher\Provider\DispatchServiceProvider::class,
     Src\Middleware\Provider\MiddlewareServerProvider::class,
