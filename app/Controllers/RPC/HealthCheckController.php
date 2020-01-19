@@ -5,13 +5,21 @@ namespace App\Controllers\RPC;
 class HealthCheckController
 {
     /**
-     * @Service('health_check')
+     * @Service('blog')
      */
-    public function healthCheck($data)
+    public function blog($data)
     {
         return success([
             "id"=> $data->getId(),
             "name"=> $data->getName(),
         ]);
+    }
+
+    /**
+     * @Get('/health_check')
+     */
+    public function healthCheck1()
+    {
+        return success();
     }
 }

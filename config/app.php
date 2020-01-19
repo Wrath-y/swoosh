@@ -49,7 +49,8 @@ return [
     'rpc_server' => [
         'host' => env('RPC_HOST', '127.0.0.1'),
         'port' => env('RPC_PORT', 9527),
-        'driver' => 'consul',
+        'driver' => 'zookeeper',
+        'need_registered' => true,
         'set' => [
             'worker_num' => env('RPC_WORKER_NUM', 1),
             'max_request' => env('RPC_MAX_REQUEST', 10),
@@ -61,12 +62,12 @@ return [
     'consul' => [
         'id' => env('RPC_ID', 'blog'),
         'name' => env('RPC_NAME', 'service'),
-        'remote_host' => env('REMOTE_HOST', '127.0.0.1'),
-        'remote_port' => env('REMOTE_PORT', 8500),
+        'server_stub_host' => env('SERVER_STUB_HOST', 'http://127.0.0.1'),
+        'server_stub_port' => env('SERVER_STUB_PORT', 8500),
         'health_check_url' => env('RPC_HEALTH_CHECK_URL', '/health_check'),
         'health_check_interval' => env('RPC_HEALTH_CHECK_INTERVAL', '10s'), // 健康检查间隔时间
         'tags' => [
             'v1'
         ],
-    ]
+    ],
 ];
