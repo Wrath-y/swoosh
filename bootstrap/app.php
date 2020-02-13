@@ -8,7 +8,7 @@ $app->initializeServices([
     Src\Dispatcher\Provider\RouteTableServiceProvider::class,
     Src\Dispatcher\Provider\DispatchServiceProvider::class,
     Src\Middleware\Provider\MiddlewareServerProvider::class,
-    // RedisServiceProvider::class,
+    Src\Redis\Provider\RedisServiceProvider::class,
     // DatabaseServerProvider::class,
     // PoolServerProvider::class,
     Src\Dispatcher\Provider\HttpServiceProvider::class,
