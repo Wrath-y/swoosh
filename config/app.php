@@ -59,7 +59,7 @@ return [
             'task_enable_coroutine' => true,
         ],
     ],
-    'consul' => [
+    'register_center' => [
         'id' => env('RPC_ID', 'blog'),
         'name' => env('RPC_NAME', 'service'),
         'server_stub_host' => env('SERVER_STUB_HOST', 'http://127.0.0.1'),
@@ -69,5 +69,5 @@ return [
         'tags' => [
             'v1'
         ],
-    ],
+    ]
 ];
