@@ -69,5 +69,12 @@ return [
         'tags' => [
             'v1'
         ],
+    ],
+    'mq' =>[
+        'driver' => env('MQ_DRIVER', 'rabbitmq'),
+        'host' => env('MQ_HOST', '0.0.0.0'),
+        'port' => env('MQ_PORT', '5672'),
+        'user' => env('MQ_USER', 'guest'),
+        'password' => env('MQ_PASSWORD', 'guest')
     ]
 ];

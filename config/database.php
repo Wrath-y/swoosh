@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_DRIVER', 'mysql'),
     'connections' => [
         'mysql' => [
             'mode' => 'pool',
