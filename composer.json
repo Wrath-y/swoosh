@@ -3,7 +3,6 @@
     "symfony/var-dumper": "^4.1",
     "vlucas/phpdotenv": "^2.5",
     "google/protobuf": "^3.9",
-    "php-amqplib/php-amqplib": ">=2.9.0",
     "swoosh/alias": "^0.1",
     "swoosh/database": "^0.1",
     "swoosh/dispatcher": "^0.1",
@@ -17,7 +16,8 @@
     "swoosh/rpc": "^0.1",
     "swoosh/rpc-client": "^0.1",
     "swoosh/rpc-server": "^0.1",
-    "swoosh/server-event": "^0.1"
+    "swoosh/server-event": "^0.1",
+    "swoosh/mq": "^0.1"
   },
   "repositories": {
     "packagist": {
