@@ -46,4 +46,24 @@ class DemoController extends Controller
     {  
         return success(Administrator::get());
     }
+
+    /**
+     * @Get('/api/mq_send')
+     */
+    public function mq()
+    {  
+        // for ($i = 0; $i < 10; $i++) {
+            App::get('mq')->send('demo', serialize(new RegisterEvent(new ModelsUser)));
+        // }
+        return success();
+    }
+
+    /**
+     * @Get('/api/mq_receive')
+     */
+    public function mqReceive()
+    {
+        App::get('mq')->receive('queue1');
+        return success();
+    }
 }

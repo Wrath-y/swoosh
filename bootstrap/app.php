@@ -15,7 +15,8 @@ $app->initializeServices([
     Src\Dispatcher\Provider\WebSocketServiceProvider::class,
     Src\RPC\Provider\RpcServiceProvider::class,
     Src\RPCServer\Provider\RpcServerServiceProvider::class,
-    Src\RPCClient\Provider\RpcClientServiceProvider::class
+    Src\RPCClient\Provider\RpcClientServiceProvider::class,
+    Src\MQ\Provider\MQServiceProvider::class
 ]);
 
 return $app;

@@ -70,11 +70,12 @@ return [
             'v1'
         ],
     ],
-    'mq' =>[
+    'mq' => [
         'driver' => env('MQ_DRIVER', 'rabbitmq'),
         'host' => env('MQ_HOST', '0.0.0.0'),
         'port' => env('MQ_PORT', '5672'),
         'user' => env('MQ_USER', 'guest'),
-        'password' => env('MQ_PASSWORD', 'guest')
+        'password' => env('MQ_PASSWORD', 'guest'),
+        'ack' => env('MQ_ACK', true)
     ]
 ];
