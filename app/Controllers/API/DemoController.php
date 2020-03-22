@@ -52,18 +52,11 @@ class DemoController extends Controller
      */
     public function mq()
     {  
+        App::get('mq_receiver');
         // for ($i = 0; $i < 10; $i++) {
-            App::get('mq')->send('demo', serialize(new RegisterEvent(new ModelsUser)));
+            // App::get('mq')->send_to_queue('demo', serialize(new RegisterEvent(new ModelsUser)));
+            App::get('mq')->send_to_exchange('ex_direct', serialize(new RegisterEvent(new ModelsUser)), 'r1');
         // }
-        return success();
-    }
-
-    /**
-     * @Get('/api/mq_receive')
-     */
-    public function mqReceive()
-    {
-        App::get('mq')->receive('queue1');
         return success();
     }
 }

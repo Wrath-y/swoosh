@@ -76,7 +76,7 @@ return [
         'port' => env('MQ_PORT', '5672'),
         'user' => env('MQ_USER', 'guest'),
         'password' => env('MQ_PASSWORD', 'guest'),
-        'ack' => env('MQ_ACK', true),
+        'no_ack' => env('MQ_NO_ACK', false),
         'durability' => env('MQ_DURABILITY', false)
     ]
 ];
