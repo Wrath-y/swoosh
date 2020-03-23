@@ -5,7 +5,7 @@ return [
         'q1'
     ],
     'exchanges' => [
-        'ex_anout' => [
+        'ex_fanout' => [
             'type' => 'fanout'
         ],
         'ex_direct' => [
@@ -16,6 +16,17 @@ return [
                 ],
                 'q3' => [
                     'r2'
+                ]
+            ]
+        ],
+        'ex_topic' => [
+            'type' => 'topic',
+            'queues' => [
+                'q3' => [
+                    'r1.*'
+                ],
+                'q4' => [
+                    '#.r2'
                 ]
             ]
         ]

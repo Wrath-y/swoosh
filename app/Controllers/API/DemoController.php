@@ -55,7 +55,7 @@ class DemoController extends Controller
         App::get('mq_receiver');
         // for ($i = 0; $i < 10; $i++) {
             // App::get('mq')->send_to_queue('demo', serialize(new RegisterEvent(new ModelsUser)));
-            App::get('mq')->send_to_exchange('ex_direct', serialize(new RegisterEvent(new ModelsUser)), 'r1');
+            App::get('mq')->send('ex_topic', serialize(new RegisterEvent(new ModelsUser)), 'r1.111');
         // }
         return success();
     }
