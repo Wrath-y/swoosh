@@ -17,7 +17,8 @@
     "swoosh/rpc-client": "dev-master",
     "swoosh/rpc-server": "dev-master",
     "swoosh/server-event": "dev-master",
-    "swoosh/mq": "dev-master"
+    "swoosh/mq": "dev-master",
+    "swoosh/elasticsearch": "dev-master"
   },
   "repositories": {
     "packagist": {
