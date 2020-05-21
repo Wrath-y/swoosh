@@ -18,4 +18,9 @@ class Kernel extends Base
     protected $routeMiddleware = [
         'auth' => AuthMiddleware::class,
     ];
+
+    protected $needActiveProviders = [
+        // \Src\Pool\Provider\PoolServerProvider::class,
+        // \Src\MQ\Provider\MQServiceProvider::class,
+    ];
 }
