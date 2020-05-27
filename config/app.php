@@ -19,7 +19,8 @@ return [
     'aliases' => [
         'PHPRedis' => Src\Alias\Facades\Redis::class,
         'DB' => Src\Alias\Facades\Database::class,
-        'Log' => Src\Alias\Facades\Logger::class
+        'Log' => Src\Alias\Facades\Logger::class,
+        'ES' => Src\Alias\Facades\Elasticsearch::class
     ],
     'http' => [
         'host' => env('HTTP_HOST', '0.0.0.0'),
