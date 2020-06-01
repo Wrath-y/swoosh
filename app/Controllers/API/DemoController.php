@@ -58,22 +58,4 @@ class DemoController extends Controller
         // }
         return success();
     }
-
-    /**
-     * @Get('/api/es_index')
-     */
-    public function es_index()
-    {
-        $resp = App::get('elasticsearch')->index('test_index_1', 'test', 1, ['name' => 'wrath']);
-        return success($resp);
-    }
-
-    /**
-     * @Get('/api/es_get')
-     */
-    public function es_get()
-    {
-        $resp = App::get('elasticsearch')->get('test_index_1', 'test', 1);
-        return success($resp);
-    }
 }
