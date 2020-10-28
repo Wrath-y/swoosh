@@ -4,6 +4,7 @@ namespace App\Controllers\API;
 
 use Src\App;
 use App\Controllers\Controller;
+use App\Models\Article;
 
 class ElasticSearchController extends Controller
 {
@@ -103,5 +104,15 @@ class ElasticSearchController extends Controller
         ]);
         
         return success($resp);
+    }
+
+    /**
+     * @Get('/api/es_sync_db')
+     */
+    public function es_sync_db()
+    {
+        $articles = (new Article)->get();
+        
+        return success($articles);
     }
 }
