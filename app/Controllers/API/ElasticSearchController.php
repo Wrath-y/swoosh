@@ -76,10 +76,18 @@ class ElasticSearchController extends Controller
      */
     public function es_match()
     {
-        $resp = \ES::search('test_index_1', 'test', [
+        $resp = \ES::search('blog', 'article', [
             'query' => [
-                'match' => [
-                    'name' => 'wrath1'
+                'bool' => [
+                    'filter' => [
+                        [
+                            'multi_match' => [
+                                'type' => 'best_fields',
+                                'query' => 'php',
+                                'lienient' => true
+                            ]
+                        ]
+                    ]
                 ]
             ]
         ]);
@@ -112,6 +120,7 @@ class ElasticSearchController extends Controller
     public function es_sync_db()
     {
         $articles = (new Article)->get();
+        \ES::bulk('blog', 'articles', $articles);
         
         return success($articles);
     }
